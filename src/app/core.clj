@@ -268,11 +268,12 @@
 
 (defn printSingletonType [cus threshold]
   "Print the not private constructors which takes threshold or more parameters"
-  (doseq [t (.getTypes cus)]
+  (doseq [cu cus]
+    (doseq [t (.getTypes cu)]
     (let [st (getSingletonType t)]
       (if (not-nil? st)
         (println (classQname t) " : " st)
-        nil))))
+        nil)))))
 
 ; ============================================
 ; Interactive mode
@@ -310,7 +311,7 @@
   (let [dirname (:dir opts)
         th (:threshold opts)
         query (name2query (:query opts))
-        cus (cus dirname)]
+        cus (filter not-nil? (cus dirname))]
     (do
       (println "Considering" (.size cus) "Java files")
       (query cus th))))
@@ -331,26 +332,27 @@
       ])
     opts (:options optsMap)
     banner (:summary optsMap)]
-    (when (:interactive opts)
-      (do
-        (interactive {})
-        (System/exit 0)))
-    (when (:help opts)
-      (do
-        (println ("Printing help message, as asked"))
-        (println banner))
-      (System/exit 0))
-    (if
-      (and
-        (:dir opts)
-        (:query opts)
-        (name2query (:query opts))
-        (nil? (:errors opts)))
-      (run opts)
-      (do
-        (println "Incorrect usage")
-        (when (:errors opts)
-          (doseq [e (:errors opts)]
-            (println " * " e)))
-        (println banner)
-        (System/exit 1)))))
+    (do
+      (when (:interactive opts)
+        (do
+          (interactive {})
+          (System/exit 0)))
+      (when (:help opts)
+        (do
+          (println ("Printing help message, as asked"))
+          (println banner))
+        (System/exit 0))
+      (if
+        (and
+          (:dir opts)
+          (:query opts)
+          (name2query (:query opts))
+          (nil? (:errors opts)))
+        (run opts)
+        (do
+          (println "Incorrect usage")
+          (when (:errors opts)
+            (doseq [e (:errors opts)]
+              (println " * " e)))
+          (println banner)
+          (System/exit 1))))))
