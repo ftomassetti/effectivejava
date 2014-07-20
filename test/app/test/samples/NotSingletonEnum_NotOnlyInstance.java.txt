@@ -1,0 +1,6 @@
+package app.test.samples;
+
+public enum SingletonEnum {
+    INSTANCE,
+    SOMETHING_ELSE;
+}

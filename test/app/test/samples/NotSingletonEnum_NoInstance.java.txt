@@ -1,0 +1,5 @@
+package app.test.samples;
+
+public enum SingletonEnum {
+    NOT_INSTANCE;
+}

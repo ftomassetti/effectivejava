@@ -1,0 +1,7 @@
+package app.test.samples;
+
+public class ClassWithPublicMethodSingleton {
+    public static ClassWithPublicFieldSingleton getInstance(){
+        return null;
+    }
+}

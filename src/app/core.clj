@@ -6,8 +6,10 @@
 (import japa.parser.JavaParser)
 (import japa.parser.ast.CompilationUnit)
 (import japa.parser.ast.body.ClassOrInterfaceDeclaration)
+(import japa.parser.ast.body.EnumDeclaration)
 (import japa.parser.ast.body.ConstructorDeclaration)
 (import japa.parser.ast.body.FieldDeclaration)
+(import japa.parser.ast.body.MethodDeclaration)
 (import japa.parser.ast.body.ModifierSet)
 
 ; ============================================
@@ -60,6 +62,9 @@
   (and
     (instance? ClassOrInterfaceDeclaration n)
     (not (.isInterface n))))
+
+(defn isEnum? [n]
+  (instance? EnumDeclaration n))
 
 (defn packageName [n]
   (if (instance? CompilationUnit n)
@@ -133,6 +138,9 @@
 (defn getClasses [cu]
   (filter isClass? (.getTypes cu)))
 
+(defn getEnums [cu]
+  (filter isEnum? (.getTypes cu)))
+
 (defn getClassesForCus [cus]
   (flatten
     (for [cu cus]
@@ -152,6 +160,9 @@
 
 (defn getConstructors [cl]
   (filter (fn [m] (instance? ConstructorDeclaration m)) (.getMembers cl)))
+
+(defn getMethods [cl]
+  (filter (fn [m] (instance? MethodDeclaration m)) (.getMembers cl)))
 
 (defn getFields [cl]
   (filter (fn [m] (instance? FieldDeclaration m)) (.getMembers cl)))
@@ -176,23 +187,6 @@
     (if (nil? ps)
       (java.util.ArrayList. )
       ps)))
-
-(defn isPublicFieldSingleton? [cl]
-  (not (empty?
-    (filter
-      (fn [f]
-        (and
-          (isPublicOrHasPackageLevelAccess? f)
-          (isStatic? f)
-          (= (getName f) "INSTANCE")))
-       (getFieldsVariablesTuples cl)))))
-
-(defn getSingletonType
-  "Return the singleton type or nil: :publicField :getInstance "
-  [cl]
-  (cond
-    (isPublicFieldSingleton? cl) :publicField
-    :else nil))
 
 ; ============================================
 ; ITEM 1
@@ -224,12 +218,59 @@
 ; ITEM 3
 ; ============================================
 
+(defn isPublicFieldSingleton? [cl]
+  (not (empty?
+         (filter
+           (fn [f]
+             (and
+               (isPublicOrHasPackageLevelAccess? f)
+               (isStatic? f)
+               (= (getName f) "INSTANCE")))
+           (getFieldsVariablesTuples cl)))))
+
+(defn isPublicMethodSingleton? [cl]
+  (not (empty?
+         (filter
+           (fn [m]
+             (and
+               (isPublicOrHasPackageLevelAccess? m)
+               (isStatic? m)
+               (= (getName m) "getInstance")))
+           (getMethods cl)))))
+
+(defn isSingletonEnum? [e]
+  (and
+    (=
+      1
+      (.size
+        (.getEntries e)))
+    (=
+      "INSTANCE"
+      (getName
+        (first
+          (.getEntries e))))))
+
+(defn getSingletonType
+  "Return the singleton type or nil: :publicField :getInstance "
+  [t]
+  (cond
+    (and
+      (isClass? t)
+      (isPublicFieldSingleton? t)) :publicField
+    (and
+      (isClass? t)
+      (isPublicMethodSingleton? t)) :staticFactory
+    (and
+      (isEnum? t)
+      (isSingletonEnum? t)) :singletonEnum
+    :else nil))
+
 (defn printSingletonType [cus threshold]
   "Print the not private constructors which takes threshold or more parameters"
-  (doseq [cl (getClassesForCus cus)]
-    (let [st (getSingletonType cl)]
+  (doseq [t (.getTypes cus)]
+    (let [st (getSingletonType t)]
       (if (not-nil? st)
-        (println (classQname cl) " : " st)
+        (println (classQname t) " : " st)
         nil))))
 
 ; ============================================
@@ -243,16 +284,9 @@
     (= "st" name) printSingletonType
     :else nil))
 
-(defn threshold2number [th]
-  (if (number? th)
-    th
-    (try
-      (Integer/parseInt th)
-      (catch NumberFormatException e nil))))
-
 (defn run [opts]
   (let [dirname (:dir opts)
-        th (threshold2number (:threshold opts))
+        th (:threshold opts)
         query (name2query (:query opts))
         cus (cus dirname)]
     (do
