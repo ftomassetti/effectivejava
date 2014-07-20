@@ -1,6 +1,7 @@
 (ns app.core
   (:require [clojure.java.io :as io])
   (:require [clojure.tools.cli :refer [parse-opts]])
+  (:require [instaparse.core :as insta])
   (:gen-class :main true))
 
 (import japa.parser.JavaParser)
@@ -274,6 +275,27 @@
         nil))))
 
 ; ============================================
+; Interactive mode
+; ============================================
+
+(def command-parser
+  (insta/parser
+    (str
+      "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM   \n"
+      "WS  = #'[\t ]+'            \n"
+      "NUM = #'[0-9]+'            \n"
+      "STR = #'\"[^\"]*\"'        \n")))
+
+(defn process [state input]
+  (println "processing " input))
+
+(defn interactive [state]
+  (do
+    (print "> ")
+    (flush)
+    (process state (read-line))))
+
+; ============================================
 ; CLI
 ; ============================================
 
@@ -300,6 +322,7 @@
     (parse-opts args
       [
         ["-h" "--help" "Show help" :flag true :default false]
+        ["-i" "--interactive" "launch interactive move" :flag true :default false]
         ["-d" "--dir DIRNAME" "REQUIRED: Directory containing the code to check"]
         ["-q" "--query QUERYNAME" "REQUIRED: Query to perform: mc=many constructors, mcp=many constructor parameters, st=singleton type"]
         ["-t" "--threshold VALUE" "Threshold to be used in the query" :default 0
@@ -308,6 +331,10 @@
       ])
     opts (:options optsMap)
     banner (:summary optsMap)]
+    (when (:interactive opts)
+      (do
+        (interactive {})
+        (System/exit 0)))
     (when (:help opts)
       (do
         (println ("Printing help message, as asked"))
@@ -325,4 +352,5 @@
         (when (:errors opts)
           (doseq [e (:errors opts)]
             (println " * " e)))
-        (println banner)))))
+        (println banner)
+        (System/exit 1)))))
