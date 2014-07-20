@@ -10,7 +10,7 @@ Feel free to rename it (effectivejava-0.1.0-SNAPSHOT-standalone.jar is a mouthfu
 
 Now, suppose you want to know which classes has 5 or more constructor; you can run this command:
 ```bash
-java -jar effectivejava-0.1.0-SNAPSHOT-standalone.jar -q mc -d "<myJavaProjectDir>" -t 5
+java -jar effectivejava-0.1.1-SNAPSHOT-standalone.jar -q mc -d "<myJavaProjectDir>" -t 5
 ```
 You can expect a similar output:
 ```
@@ -23,10 +23,11 @@ japa.parser.ast.body.FieldDeclaration  :  5
 
 What queries can I run
 ======================
-I am just getting started so I implemented only a couple of queries for now:
+I am just getting started so I implemented only a few queries for now:
 
 * mc=many constructors : find the classes which contain the same number of constructors as the given threshold, or more
 * mcp=many constructor parameters : find the constructors which contain the same number of parameters as the given threshold, or more
+* st=singleton type: find if a type implements the singleton pattern and distinguish between the three types (public field, static factory, singleton enum)
 
 Dev info
 ========
