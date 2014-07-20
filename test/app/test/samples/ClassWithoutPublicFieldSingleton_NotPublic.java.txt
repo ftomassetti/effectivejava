@@ -1,0 +1,5 @@
+package app.test.samples;
+
+public class ClassWithPublicFieldSingleton {
+    private static final ClassWithPublicFieldSingleton NOT_INSTANCE = new ClassWithPublicFieldSingleton();
+}

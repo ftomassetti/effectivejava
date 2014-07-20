@@ -1,12 +1,14 @@
 (ns app.core
   (:require [clojure.java.io :as io])
-  (:use [clojure.tools.cli :only (cli)])
+  (:require [clojure.tools.cli :refer [parse-opts]])
   (:gen-class :main true))
 
 (import japa.parser.JavaParser)
 (import japa.parser.ast.CompilationUnit)
 (import japa.parser.ast.body.ClassOrInterfaceDeclaration)
 (import japa.parser.ast.body.ConstructorDeclaration)
+(import japa.parser.ast.body.FieldDeclaration)
+(import japa.parser.ast.body.ModifierSet)
 
 ; ============================================
 ; Misc
@@ -35,22 +37,20 @@
     (JavaParser/parse file)
     (catch Exception e nil)))
 
+(defn parseString [s]
+  (let [reader (java.io.StringReader. s)]
+    (try
+      (JavaParser/parse reader false)
+      (catch Exception e nil))))
+
 (defn parse [filename]
   (parseFile (new java.io.File filename)))
 
 (defn parseAllFiles [files]
   (map (fn [f] {:file f :cu (parseFile f)}) files))
 
-(defn parseAllDir [dirname]
-  (parseAllFiles (java-files dirname)))
-
 (defn parseDir [dirname]
-  (let [d (java.io.File. dirname)]
-    (doseq [f (.listFiles d)]
-      (if (.isDirectory f)
-        (print "d ")
-        (print "- "))
-      (println (.getName f)))))
+  (parseAllFiles (java-files dirname)))
 
 ; ============================================
 ; Model
@@ -75,6 +75,12 @@
           (packageName pn)))
     (catch Exception e (str "STR PN " (nil? (.getParentNode n)) e) ))))
 
+(defn getName [el]
+  (if
+    (map? el)
+    (.getName (.getId (:variable el)))
+    (.getName el)))
+
 (defn classQname [cl]
   (let
       [pn (packageName cl),
@@ -83,13 +89,63 @@
       cn
       (str pn "." cn))))
 
+(defn getModifiers [el]
+  (if (map? el)
+    (getModifiers (:field el))
+    (.getModifiers el)))
+
+(defn isPrivate? [cl]
+  (let [ms (getModifiers cl)]
+    (ModifierSet/isPrivate ms)))
+
+(defn isPublic? [cl]
+  (let [ms (getModifiers cl)]
+    (ModifierSet/isPublic ms)))
+
+(defn isProtected? [cl]
+  (let [ms (getModifiers cl)]
+    (ModifierSet/isProtected ms)))
+
+(defn isStatic? [cl]
+  (let [ms (getModifiers cl)]
+    (ModifierSet/isStatic ms)))
+
+(defn isFinal? [cl]
+  (let [ms (getModifiers cl)]
+    (ModifierSet/isFinal ms)))
+
+(defn hasPackageLevelAccess? [cl]
+  (not
+    (or
+      (isPublic? cl)
+      (isPrivate? cl)
+      (isProtected? cl))))
+
+(defn isPublicOrHasPackageLevelAccess? [el]
+  (or
+    (isPublic? el)
+    (hasPackageLevelAccess? el)))
+
+(defn isNotPrivate? [cl]
+  (complement isPrivate?))
+
 ; TODO Consider internal classes
 (defn getClasses [cu]
   (filter isClass? (.getTypes cu)))
 
+(defn getClassesForCus [cus]
+  (flatten
+    (for [cu cus]
+      (getClasses cu))))
+
+(defn getClassesForCusTuples [cusTuples]
+  (flatten
+    (for [cuTuple cusTuples]
+      (getClasses (:cu cuTuple)))))
+
 ; Get tuples of [filename cu]
 (defn cusTuples [dirname]
-  (filter not-nil? (parseAllDir dirname)))
+  (filter not-nil? (parseDir dirname)))
 
 (defn cus [dirname]
   (map (fn [cuTuple] (:cu cuTuple)) (cusTuples dirname)))
@@ -97,8 +153,23 @@
 (defn getConstructors [cl]
   (filter (fn [m] (instance? ConstructorDeclaration m)) (.getMembers cl)))
 
+(defn getFields [cl]
+  (filter (fn [m] (instance? FieldDeclaration m)) (.getMembers cl)))
+
+(defn getFieldsVariablesTuples [cl]
+  (flatten
+    (for [f (getFields cl)]
+      (for [v (.getVariables f)]
+        {:field f, :variable v}))))
+
+(defn getNotPrivateConstructors [cl]
+  (filter isNotPrivate? (getConstructors cl)))
+
 (defn nConstructors [cl]
   (.size (getConstructors cl)))
+
+(defn nNotPrivateConstructors [cl]
+  (.size (getNotPrivateConstructors cl)))
 
 (defn getParameters [m]
   (let [ps (.getParameters m)]
@@ -106,30 +177,60 @@
       (java.util.ArrayList. )
       ps)))
 
+(defn isPublicFieldSingleton? [cl]
+  (not (empty?
+    (filter
+      (fn [f]
+        (and
+          (isPublicOrHasPackageLevelAccess? f)
+          (isStatic? f)
+          (= (getName f) "INSTANCE")))
+       (getFieldsVariablesTuples cl)))))
+
+(defn getSingletonType
+  "Return the singleton type or nil: :publicField :getInstance "
+  [cl]
+  (cond
+    (isPublicFieldSingleton? cl) :publicField
+    :else nil))
+
 ; ============================================
 ; ITEM 1
 ; ============================================
 
-(defn printClassesWithManyConstructors [cus threshold]
-  (doseq [cu cus]
-    (doseq [cl (getClasses cu)]
-      (let [nc (nConstructors cl)]
-        (if (>= nc threshold)
-          (println (classQname cl) " : " nc)
-          nil)))))
+(defn printClassesWithManyConstructors
+  "Print the classes which have threshold or more not private constructors"
+  [cus threshold]
+  (doseq [cl (getClassesForCus cus)]
+    (let [nc (nNotPrivateConstructors cl)]
+      (if (>= nc threshold)
+        (println (classQname cl) " : " nc)
+        nil))))
 
 ; ============================================
 ; ITEM 2
 ; ============================================
 
 (defn printConstructorsWithManyParameters [cus threshold]
-  (doseq [cu cus]
-    (doseq [cl (getClasses cu)]
-      (doseq [cs (getConstructors cl)]
-        (let [np (.size (getParameters cs))]
-          (if (>= np threshold)
-            (println (classQname cl) "." cs " : " np)
-            nil))))))
+  "Print the not private constructors which takes threshold or more parameters"
+  (doseq [cl (getClassesForCus cus)]
+    (doseq [cs (getNotPrivateConstructors cl)]
+      (let [np (.size (getParameters cs))]
+        (if (>= np threshold)
+          (println (classQname cl) "." cs " : " np)
+          nil)))))
+
+; ============================================
+; ITEM 3
+; ============================================
+
+(defn printSingletonType [cus threshold]
+  "Print the not private constructors which takes threshold or more parameters"
+  (doseq [cl (getClassesForCus cus)]
+    (let [st (getSingletonType cl)]
+      (if (not-nil? st)
+        (println (classQname cl) " : " st)
+        nil))))
 
 ; ============================================
 ; CLI
@@ -139,6 +240,7 @@
   (cond
     (= "mc" name) printClassesWithManyConstructors
     (= "mcp" name) printConstructorsWithManyParameters
+    (= "st" name) printSingletonType
     :else nil))
 
 (defn threshold2number [th]
@@ -160,21 +262,33 @@
 (defn -main
   "What I do"
   [& args]
-  (let [[opts args banner]
-    (cli args
-      ["-h" "--help" "Show help" :flag true :default false]
-      ["-d" "--dir" "REQUIRED: Directory containing the code to check"]
-      ["-q" "--query" "REQUIRED: Query to perform: mc=many constructors, mcp=many constructor parameters"]
-      ["-t" "--threshold" "Threshold to be used in the query" :default 0]
-      )]
+  (let [optsMap
+    (parse-opts args
+      [
+        ["-h" "--help" "Show help" :flag true :default false]
+        ["-d" "--dir DIRNAME" "REQUIRED: Directory containing the code to check"]
+        ["-q" "--query QUERYNAME" "REQUIRED: Query to perform: mc=many constructors, mcp=many constructor parameters, st=singleton type"]
+        ["-t" "--threshold VALUE" "Threshold to be used in the query" :default 0
+         :parse-fn #(Integer/parseInt %)
+         :validate [#(>= % 0) "Must be a number equal or greater to 0"]]
+      ])
+    opts (:options optsMap)
+    banner (:summary optsMap)]
     (when (:help opts)
-      (println banner)
+      (do
+        (println ("Printing help message, as asked"))
+        (println banner))
       (System/exit 0))
     (if
       (and
         (:dir opts)
         (:query opts)
         (name2query (:query opts))
-        (threshold2number (:threshold opts) ))
+        (nil? (:errors opts)))
       (run opts)
-      (println banner))))
+      (do
+        (println "Incorrect usage")
+        (when (:errors opts)
+          (doseq [e (:errors opts)]
+            (println " * " e)))
+        (println banner)))))
