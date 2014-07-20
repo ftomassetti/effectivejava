@@ -1,6 +1,7 @@
 (ns app.core
   (:require [clojure.java.io :as io])
   (:require [clojure.tools.cli :refer [parse-opts]])
+  (:require [instaparse.core :as insta])
   (:gen-class :main true))
 
 (import japa.parser.JavaParser)
@@ -267,11 +268,33 @@
 
 (defn printSingletonType [cus threshold]
   "Print the not private constructors which takes threshold or more parameters"
-  (doseq [t (.getTypes cus)]
+  (doseq [cu cus]
+    (doseq [t (.getTypes cu)]
     (let [st (getSingletonType t)]
       (if (not-nil? st)
         (println (classQname t) " : " st)
-        nil))))
+        nil)))))
+
+; ============================================
+; Interactive mode
+; ============================================
+
+(def command-parser
+  (insta/parser
+    (str
+      "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM   \n"
+      "WS  = #'[\t ]+'            \n"
+      "NUM = #'[0-9]+'            \n"
+      "STR = #'\"[^\"]*\"'        \n")))
+
+(defn process [state input]
+  (println "processing " input))
+
+(defn interactive [state]
+  (do
+    (print "> ")
+    (flush)
+    (process state (read-line))))
 
 ; ============================================
 ; CLI
@@ -288,7 +311,7 @@
   (let [dirname (:dir opts)
         th (:threshold opts)
         query (name2query (:query opts))
-        cus (cus dirname)]
+        cus (filter not-nil? (cus dirname))]
     (do
       (println "Considering" (.size cus) "Java files")
       (query cus th))))
@@ -300,6 +323,7 @@
     (parse-opts args
       [
         ["-h" "--help" "Show help" :flag true :default false]
+        ["-i" "--interactive" "launch interactive move" :flag true :default false]
         ["-d" "--dir DIRNAME" "REQUIRED: Directory containing the code to check"]
         ["-q" "--query QUERYNAME" "REQUIRED: Query to perform: mc=many constructors, mcp=many constructor parameters, st=singleton type"]
         ["-t" "--threshold VALUE" "Threshold to be used in the query" :default 0
@@ -308,21 +332,27 @@
       ])
     opts (:options optsMap)
     banner (:summary optsMap)]
-    (when (:help opts)
-      (do
-        (println ("Printing help message, as asked"))
-        (println banner))
-      (System/exit 0))
-    (if
-      (and
-        (:dir opts)
-        (:query opts)
-        (name2query (:query opts))
-        (nil? (:errors opts)))
-      (run opts)
-      (do
-        (println "Incorrect usage")
-        (when (:errors opts)
-          (doseq [e (:errors opts)]
-            (println " * " e)))
-        (println banner)))))
+    (do
+      (when (:interactive opts)
+        (do
+          (interactive {})
+          (System/exit 0)))
+      (when (:help opts)
+        (do
+          (println ("Printing help message, as asked"))
+          (println banner))
+        (System/exit 0))
+      (if
+        (and
+          (:dir opts)
+          (:query opts)
+          (name2query (:query opts))
+          (nil? (:errors opts)))
+        (run opts)
+        (do
+          (println "Incorrect usage")
+          (when (:errors opts)
+            (doseq [e (:errors opts)]
+              (println " * " e)))
+          (println banner)
+          (System/exit 1))))))
