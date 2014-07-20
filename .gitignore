@@ -5,3 +5,5 @@
 /.lein-failures
 /checkouts
 /.lein-deps-sum
+/.idea
+app.iml
