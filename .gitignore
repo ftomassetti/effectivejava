@@ -7,3 +7,10 @@
 /.lein-deps-sum
 /.idea
 app.iml
+pom.xml.asc
+/target/
+/checkouts/
+.lein-deps-sum
+.lein-repl-history
+.lein-plugins/
+.lein-failures
