@@ -1,6 +1,7 @@
 (ns app.test.core
   (:use [app.core])
-  (:use [clojure.test]))
+  (:use [clojure.test])
+  (:require [instaparse.core :as insta]))
 
 (defn parseClass [filename]
   (let [resourceName (str "app/test/samples/" filename ".java.txt")
@@ -51,3 +52,19 @@
 (deftest testIsNotSingletonEnumNotOnlyInstance
   (let [cl (parseType "NotSingletonEnum_NotOnlyInstance")]
     (is (not (isSingletonEnum? cl)))))
+
+; =============================================================
+; Command parser
+; =============================================================
+
+(deftest testUnknown
+  (is (insta/failure? (command-parser "a not valid command"))))
+
+(deftest testParsingQ
+  (is (= [:EXIT 'q']) (command-parser "q")))
+
+(deftest testParsingQuit
+  (is (= [:EXIT 'quit']) (command-parser "quit")))
+
+(deftest testParsingExit
+  (is (= [:EXIT 'exit']) (command-parser "exit")))
