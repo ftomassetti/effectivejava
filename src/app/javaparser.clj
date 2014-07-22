@@ -11,7 +11,9 @@
 ; Parsing
 ; ============================================
 
-(defn parseFile [file]
+(defn parseFile
+  "Parse a file, and return nil if the file cannot be loaded"
+  [file]
   (try
     (JavaParser/parse file)
     (catch Exception e nil)))
@@ -22,14 +24,14 @@
       (JavaParser/parse reader false)
       (catch Exception e nil))))
 
-(defn parse [filename]
+(defn parseFileByName [filename]
   (parseFile (new java.io.File filename)))
 
-(defn parseAllFiles [files]
+(defn parseFiles [files]
   (map (fn [f] {:file f :cu (parseFile f)}) files))
 
-(defn parseDir [dirname]
-  (parseAllFiles (java-files dirname)))
+(defn parseDirByName [dirname]
+  (parseFiles (java-files dirname)))
 
 ; ============================================
 ; Model
@@ -133,7 +135,7 @@
 
 ; Get tuples of [filename cu]
 (defn cusTuples [dirname]
-  (filter not-nil? (parseDir dirname)))
+  (filter not-nil? (parseDirByName dirname)))
 
 (defn cus [dirname]
   (map (fn [cuTuple] (:cu cuTuple)) (cusTuples dirname)))
