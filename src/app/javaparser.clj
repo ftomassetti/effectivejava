@@ -5,6 +5,7 @@
 (import japa.parser.ast.body.ConstructorDeclaration)
 (import japa.parser.ast.body.FieldDeclaration)
 (import japa.parser.ast.body.MethodDeclaration)
+(import japa.parser.ast.body.TypeDeclaration)
 (import japa.parser.ast.body.ModifierSet)
 
 ; ============================================
@@ -34,7 +35,7 @@
   (parseFiles (java-files dirname)))
 
 ; ============================================
-; Model
+; Recognize node types
 ; ============================================
 
 (defn isClass? [n]
@@ -42,44 +43,32 @@
     (instance? ClassOrInterfaceDeclaration n)
     (not (.isInterface n))))
 
+(defn isInterface? [n]
+  (and
+    (instance? ClassOrInterfaceDeclaration n)
+    (.isInterface n)))
+
 (defn isEnum? [n]
   (instance? EnumDeclaration n))
 
-(defn packageName [n]
-  (if (instance? CompilationUnit n)
-    (let
-      [p (.getPackage n)]
-      (if (nil? p)
-        ""
-        (.toString (.getName p))))
-    (try
-      (let [pn (.getParentNode n)]
-        (if (nil? pn)
-          ""
-          (packageName pn)))
-      (catch Exception e (str "STR PN " (nil? (.getParentNode n)) e) ))))
+; ============================================
+; Modifiers
+; ============================================
 
-(defn getName [el]
-  (if
-    (map? el)
-    (.getName (.getId (:variable el)))
-    (.getName el)))
+(defprotocol modifiersProtocol
+  (getModifiers [this]))
 
-(defn classQname [cl]
-  (let
-    [pn (packageName cl),
-     cn (.getName cl)]
-    (if (.isEmpty pn)
-      cn
-      (str pn "." cn))))
+(extend-protocol modifiersProtocol
+  TypeDeclaration
+  (getModifiers [this] (.getModifiers this)))
 
-(defn typeQname [t]
-  (classQname t))
+(extend-protocol modifiersProtocol
+  MethodDeclaration
+  (getModifiers [this] (.getModifiers this)))
 
-(defn getModifiers [el]
-  (if (map? el)
-    (getModifiers (:field el))
-    (.getModifiers el)))
+(extend-protocol modifiersProtocol
+  FieldDeclaration
+  (getModifiers [this] (.getModifiers this)))
 
 (defn isPrivate? [cl]
   (let [ms (getModifiers cl)]
@@ -115,6 +104,49 @@
 
 (defn isNotPrivate? [cl]
   (complement isPrivate?))
+
+; ============================================
+; Abstractions
+; ============================================
+
+(defrecord SingleFieldDeclaration [field variable]
+  modifiersProtocol
+    (getModifiers [this] (getModifiers field)))
+
+; ============================================
+; Model
+; ============================================
+
+(defn packageName [n]
+  (if (instance? CompilationUnit n)
+    (let
+      [p (.getPackage n)]
+      (if (nil? p)
+        ""
+        (.toString (.getName p))))
+    (try
+      (let [pn (.getParentNode n)]
+        (if (nil? pn)
+          ""
+          (packageName pn)))
+      (catch Exception e (str "STR PN " (nil? (.getParentNode n)) e) ))))
+
+(defn getName [el]
+  (if
+    (map? el)
+    (.getName (.getId (:variable el)))
+    (.getName el)))
+
+(defn classQname [cl]
+  (let
+    [pn (packageName cl),
+     cn (.getName cl)]
+    (if (.isEmpty pn)
+      cn
+      (str pn "." cn))))
+
+(defn typeQname [t]
+  (classQname t))
 
 ; TODO Consider internal classes
 (defn getClasses [cu]
@@ -153,7 +185,7 @@
   (flatten
     (for [f (getFields cl)]
       (for [v (.getVariables f)]
-        {:field f, :variable v}))))
+        (SingleFieldDeclaration. f v)))))
 
 (defn getNotPrivateConstructors [cl]
   (filter isNotPrivate? (getConstructors cl)))
