@@ -1,5 +1,6 @@
 (import japa.parser.JavaParser)
 (import japa.parser.ast.CompilationUnit)
+(import japa.parser.ast.Node)
 (import japa.parser.ast.body.ClassOrInterfaceDeclaration)
 (import japa.parser.ast.body.EnumDeclaration)
 (import japa.parser.ast.body.ConstructorDeclaration)
@@ -55,18 +56,18 @@
 ; Modifiers
 ; ============================================
 
-(defprotocol modifiersProtocol
+(defprotocol withModifiers
   (getModifiers [this]))
 
-(extend-protocol modifiersProtocol
+(extend-protocol withModifiers
   TypeDeclaration
   (getModifiers [this] (.getModifiers this)))
 
-(extend-protocol modifiersProtocol
+(extend-protocol withModifiers
   MethodDeclaration
   (getModifiers [this] (.getModifiers this)))
 
-(extend-protocol modifiersProtocol
+(extend-protocol withModifiers
   FieldDeclaration
   (getModifiers [this] (.getModifiers this)))
 
@@ -110,26 +111,30 @@
 ; ============================================
 
 (defrecord SingleFieldDeclaration [field variable]
-  modifiersProtocol
+  withModifiers
     (getModifiers [this] (getModifiers field)))
 
 ; ============================================
 ; Model
 ; ============================================
 
-(defn packageName [n]
-  (if (instance? CompilationUnit n)
+(defprotocol withPackageName
+  (packageName [this]))
+
+(extend-protocol withPackageName
+  CompilationUnit
+  (packageName [this]
     (let
-      [p (.getPackage n)]
+      [p (.getPackage this)]
       (if (nil? p)
         ""
-        (.toString (.getName p))))
-    (try
-      (let [pn (.getParentNode n)]
-        (if (nil? pn)
-          ""
-          (packageName pn)))
-      (catch Exception e (str "STR PN " (nil? (.getParentNode n)) e) ))))
+        (.toString (.getName p))))))
+
+(extend-protocol withPackageName
+  Node
+  (packageName [this]
+    (let [pn (.getParentNode this)]
+      (packageName pn))))
 
 (defn getName [el]
   (if
