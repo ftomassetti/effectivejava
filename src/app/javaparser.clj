@@ -136,6 +136,19 @@
     (let [pn (.getParentNode this)]
       (packageName pn))))
 
+(defprotocol Named
+  (getName [this]))
+
+(extend-protocol Named
+  TypeDeclaration
+  (getName [this]
+    (.getName this)))
+
+(extend-protocol Named
+  SingleFieldDeclaration
+  (getName [this]
+    (getName (.getId (.variable this)))))
+
 (defn getName [el]
   (if
     (map? el)
