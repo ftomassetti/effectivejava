@@ -185,14 +185,6 @@
   (getName [this]
     (getName (.getId (.variable this)))))
 
-(defn typeQname [cl]
-  (let
-    [pn (packageName cl),
-     cn (.getName cl)]
-    (if (.isEmpty pn)
-      cn
-      (str pn "." cn))))
-
 ; TODO Consider internal classes
 (defn getClasses [cu]
   (filter isClass? (.getTypes cu)))

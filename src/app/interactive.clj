@@ -34,7 +34,7 @@
                   (println "Listing types currently loaded:")
                   (doseq [cu (:cus state)]
                     (doseq [t (.getTypes cu)]
-                      (println " *" (typeQname t)))))
+                      (println " *" (getQName t)))))
                 (println "No classes loaded. Use <load> first"))
               (rp state)))
           (= command :HELP)
