@@ -64,7 +64,7 @@
     (is (not (hasPackageLevelAccess? t)))))
 
 ; ============================================
-; Model
+; Naming
 ; ============================================
 
 (deftest packageNameCompilationUnitEmpty
@@ -90,3 +90,19 @@
 (deftest packageNameSingleFieldDeclarationNotEmpty
   (let [sfd (parseTypeMember "ASimpleClassInAPackage")]
     (is (= "some.path" (packageName sfd)))))
+
+; ============================================
+; Accessing nodes
+; ============================================
+
+(deftest testTopLevelTypes
+  (let [cu (parseResource "AnnidatedTypes")
+        tlt (topLevelTypes cu)
+        tltNames (set (map getQName tlt))]
+    (is (= #{"E1" "I3"} tltNames))))
+
+(deftest testAllTypes
+  (let [cu (parseResource "AnnidatedTypes")
+        at (allTypes cu)
+        atNames (set (map getQName at))]
+    (is (= #{"E1" "E1_C1" "E1_C1_I1" "E1_C1_C2" "E1_I2" "I3"} atNames))))

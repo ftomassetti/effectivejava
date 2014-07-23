@@ -117,7 +117,7 @@
     (getModifiers [this] (getModifiers field)))
 
 ; ============================================
-; Model
+; Naming
 ; ============================================
 
 (defprotocol withPackageName
@@ -185,22 +185,47 @@
   (getName [this]
     (getName (.getId (.variable this)))))
 
-; TODO Consider internal classes
-(defn getClasses [cu]
-  (filter isClass? (.getTypes cu)))
+; ============================================
+; Accessing nodes
+; ============================================
+
+(defn topLevelTypes [cu]
+  (.getTypes cu))
+
+(defn directlyAnnidatedTypes [t]
+  (filter (fn [m] (instance? TypeDeclaration m)) (.getMembers t)))
+
+(defn annidatedTypes
+  "Get the types annidated in the given type, recursively"
+  [t]
+  (flatten
+    (map
+      (fn [dat] [dat, (directlyAnnidatedTypes dat)])
+      (directlyAnnidatedTypes t))))
+
+(defn allTypes
+  "Get all the types in the Compilation Unit includin both top level types and annidated types"
+  [cu]
+  (flatten
+    (map
+      (fn [t] [t, (annidatedTypes t)])
+      (topLevelTypes cu))))
+
+(defn allClasses [cu]
+  (filter isClass? (allTypes cu)))
 
 (defn getEnums [cu]
   (filter isEnum? (.getTypes cu)))
 
-(defn getClassesForCus [cus]
+(defn allClassesForCus [cus]
   (flatten
     (for [cu cus]
-      (getClasses cu))))
+      (allClasses cu))))
 
-(defn getClassesForCusTuples [cusTuples]
+(defn allClassesForCusTuples [cusTuples]
   (flatten
     (for [cuTuple cusTuples]
-      (getClasses (:cu cuTuple)))))
+      (allClasses (:cu cuTuple)))))
 
 ; Get tuples of [filename cu]
 (defn cusTuples [dirname]

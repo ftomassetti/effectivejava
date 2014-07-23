@@ -5,7 +5,7 @@
 (defn printClassesWithManyConstructors
   "Print the classes which have threshold or more not private constructors"
   [cus threshold]
-  (doseq [cl (getClassesForCus cus)]
+  (doseq [cl (allClassesForCus cus)]
     (let [nc (nNotPrivateConstructors cl)]
       (if (>= nc threshold)
         (println (getQName cl) " : " nc)
@@ -17,7 +17,7 @@
 
 (defn printConstructorsWithManyParameters [cus threshold]
   "Print the not private constructors which takes threshold or more parameters"
-  (doseq [cl (getClassesForCus cus)]
+  (doseq [cl (allClassesForCus cus)]
     (doseq [cs (getNotPrivateConstructors cl)]
       (let [np (.size (getParameters cs))]
         (if (>= np threshold)
