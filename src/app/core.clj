@@ -34,7 +34,7 @@
   (doseq [cl (getClassesForCus cus)]
     (let [nc (nNotPrivateConstructors cl)]
       (if (>= nc threshold)
-        (println (classQname cl) " : " nc)
+        (println (typeQname cl) " : " nc)
         nil))))
 
 ; ============================================
@@ -47,7 +47,7 @@
     (doseq [cs (getNotPrivateConstructors cl)]
       (let [np (.size (getParameters cs))]
         (if (>= np threshold)
-          (println (classQname cl) "." cs " : " np)
+          (println (typeQname cl) "." cs " : " np)
           nil)))))
 
 ; ============================================
@@ -107,7 +107,7 @@
     (doseq [t (.getTypes cu)]
     (let [st (getSingletonType t)]
       (if (not-nil? st)
-        (println (classQname t) " : " st)
+        (println (typeQname t) " : " st)
         nil)))))
 
 ; ============================================

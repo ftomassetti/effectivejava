@@ -155,17 +155,13 @@
     (.getName (.getId (:variable el)))
     (.getName el)))
 
-; TODO remove this one
-(defn classQname [cl]
+(defn typeQname [cl]
   (let
     [pn (packageName cl),
      cn (.getName cl)]
     (if (.isEmpty pn)
       cn
       (str pn "." cn))))
-
-(defn typeQname [t]
-  (classQname t))
 
 ; TODO Consider internal classes
 (defn getClasses [cu]
