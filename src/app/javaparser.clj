@@ -155,6 +155,7 @@
     (.getName (.getId (:variable el)))
     (.getName el)))
 
+; TODO remove this one
 (defn classQname [cl]
   (let
     [pn (packageName cl),

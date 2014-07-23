@@ -81,6 +81,26 @@
     (is (not (hasPackageLevelAccess? t)))))
 
 ; ============================================
+; Model
+; ============================================
+
+(deftest packageNameCompilationUnitEmpty
+  (let [cu (parseResource "ASimpleClass")]
+    (is (= "" (packageName cu)))))
+
+(deftest packageNameCompilationUnitNotEmpty
+  (let [cu (parseResource "ASimplePackage")]
+    (is (= "a.simple.package_" (packageName cu)))))
+
+(deftest packageNameNodeEmpty
+  (let [t (parseType "ASimpleClass")]
+    (is (= "" (packageName t)))))
+
+(deftest packageNameNodeNotEmpty
+  (let [t (parseType "ASimpleClassInAPackage")]
+    (is (= "some.path" (packageName t)))))
+
+; ============================================
 ; Other FIXME organize!
 ; ============================================
 
