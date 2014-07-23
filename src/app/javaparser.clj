@@ -144,22 +144,36 @@
     (packageName (.variable this))))
 
 (defprotocol Named
-  (getName [this]))
+  (getName [this])
+  (getQName [this]))
 
 (extend-protocol Named
   TypeDeclaration
   (getName [this]
-    (.getName this)))
+    (.getName this))
+  (getQName [this]
+    (let
+      [pn (packageName this),
+       cn (getName this)]
+      (if (.isEmpty pn)
+        cn
+        (str pn "." cn)))))
 
 (extend-protocol Named
   EnumConstantDeclaration
   (getName [this]
-    (.getName this)))
+    (.getName this))
+  (getQName [this]
+    (let [pn (.getParentNode this)]
+      (str (getQName pn) "." (getName this)))))
 
 (extend-protocol Named
   MethodDeclaration
   (getName [this]
-    (.getName this)))
+    (.getName this))
+  (getQName [this]
+    (let [pn (.getParentNode this)]
+      (str (getQName pn) "." (getName this)))))
 
 (extend-protocol Named
   VariableDeclaratorId
