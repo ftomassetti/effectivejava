@@ -11,27 +11,27 @@
 ; ============================================
 
 (deftest testIsPublicFieldSingletonPositive
-  (let [cl (parseClass "ClassWithPublicFieldSingleton")]
+  (let [cl (parseType "ClassWithPublicFieldSingleton")]
     (is (isPublicFieldSingleton? cl))))
 
 (deftest testIsPublicFieldSingletonNotNamedInstance
-  (let [cl (parseClass "ClassWithoutPublicFieldSingleton_NotNamedInstance")]
+  (let [cl (parseType "ClassWithoutPublicFieldSingleton_NotNamedInstance")]
     (is (not (isPublicFieldSingleton? cl)))))
 
 (deftest testIsPublicFieldSingletonNotPublic
-  (let [cl (parseClass "ClassWithoutPublicFieldSingleton_NotPublic")]
+  (let [cl (parseType "ClassWithoutPublicFieldSingleton_NotPublic")]
     (is (not (isPublicFieldSingleton? cl)))))
 
 (deftest testIsPublicFieldSingletonNotStatic
-  (let [cl (parseClass "ClassWithoutPublicFieldSingleton_NotStatic")]
+  (let [cl (parseType "ClassWithoutPublicFieldSingleton_NotStatic")]
     (is (not (isPublicFieldSingleton? cl)))))
 
 (deftest testIsPublicMethodSingletonPositive
-  (let [cl (parseClass "ClassWithPublicMethodSingleton")]
+  (let [cl (parseType "ClassWithPublicMethodSingleton")]
     (is (isPublicMethodSingleton? cl))))
 
 (deftest testIsPublicMethodSingletonNotNamedGetInstance
-  (let [cl (parseClass "ClassWithoutPublicMethodSingleton_NotNamedGetInstance")]
+  (let [cl (parseType "ClassWithoutPublicMethodSingleton_NotNamedGetInstance")]
     (is (not (isPublicMethodSingleton? cl)))))
 
 (deftest testIsSingletonEnum?

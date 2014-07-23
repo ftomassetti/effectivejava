@@ -6,12 +6,6 @@
 (defn parseResource [filename]
   (parseString (readResource filename)))
 
-; TODO remove this method and use parseType
-(defn parseClass [filename]
-  (let [cu (parseResource filename)
-        cl (first (getClasses cu))]
-    cl))
-
 (defn parseType [filename]
   (let [cu (parseResource filename)
         cl (first (.getTypes cu))]
