@@ -3,11 +3,13 @@
 (import japa.parser.ast.Node)
 (import japa.parser.ast.body.ClassOrInterfaceDeclaration)
 (import japa.parser.ast.body.EnumDeclaration)
+(import japa.parser.ast.body.EnumConstantDeclaration)
 (import japa.parser.ast.body.ConstructorDeclaration)
 (import japa.parser.ast.body.FieldDeclaration)
 (import japa.parser.ast.body.MethodDeclaration)
-(import japa.parser.ast.body.TypeDeclaration)
 (import japa.parser.ast.body.ModifierSet)
+(import japa.parser.ast.body.TypeDeclaration)
+(import japa.parser.ast.body.VariableDeclaratorId)
 
 ; ============================================
 ; Parsing
@@ -150,15 +152,24 @@
     (.getName this)))
 
 (extend-protocol Named
+  EnumConstantDeclaration
+  (getName [this]
+    (.getName this)))
+
+(extend-protocol Named
+  MethodDeclaration
+  (getName [this]
+    (.getName this)))
+
+(extend-protocol Named
+  VariableDeclaratorId
+  (getName [this]
+    (.getName this)))
+
+(extend-protocol Named
   SingleFieldDeclaration
   (getName [this]
     (getName (.getId (.variable this)))))
-
-(defn getName [el]
-  (if
-    (map? el)
-    (.getName (.getId (:variable el)))
-    (.getName el)))
 
 (defn typeQname [cl]
   (let
