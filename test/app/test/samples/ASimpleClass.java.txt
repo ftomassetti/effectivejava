@@ -1,3 +1,5 @@
 class ASimpleClass {
 
+    int a;
+
 }

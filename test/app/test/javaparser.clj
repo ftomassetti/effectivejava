@@ -82,3 +82,11 @@
 (deftest packageNameNodeNotEmpty
   (let [t (parseType "ASimpleClassInAPackage")]
     (is (= "some.path" (packageName t)))))
+
+(deftest packageNameSingleFieldDeclarationEmpty
+  (let [sfd (parseTypeMember "ASimpleClass")]
+    (is (= "" (packageName sfd)))))
+
+(deftest packageNameSingleFieldDeclarationNotEmpty
+  (let [sfd (parseTypeMember "ASimpleClassInAPackage")]
+    (is (= "some.path" (packageName sfd)))))

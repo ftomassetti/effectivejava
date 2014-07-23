@@ -136,6 +136,11 @@
     (let [pn (.getParentNode this)]
       (packageName pn))))
 
+(extend-protocol withPackageName
+  SingleFieldDeclaration
+  (packageName [this]
+    (packageName (.variable this))))
+
 (defprotocol Named
   (getName [this]))
 

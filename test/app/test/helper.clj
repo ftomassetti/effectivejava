@@ -16,3 +16,6 @@
   (let [cu (parseResource filename)
         cl (first (.getTypes cu))]
     cl))
+
+(defn parseTypeMember [filename]
+  (first (.getMembers (parseType filename))))

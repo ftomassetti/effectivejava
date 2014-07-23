@@ -2,4 +2,6 @@ package some.path;
 
 class ASimpleClassInAPackage {
 
+    int a;
+
 }
