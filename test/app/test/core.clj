@@ -3,19 +3,66 @@
   (:use [clojure.test])
   (:require [instaparse.core :as insta]))
 
-(defn parseClass [filename]
+(defn readResource [filename]
   (let [resourceName (str "app/test/samples/" filename ".java.txt")
-        code (slurp (clojure.java.io/resource resourceName))
-        cu (parseString code)
+        code (slurp (clojure.java.io/resource resourceName))]
+    code))
+
+(defn parseResource [filename]
+  (parseString (readResource filename)))
+
+; TODO remove this method and use parseType
+(defn parseClass [filename]
+  (let [cu (parseResource filename)
         cl (first (getClasses cu))]
     cl))
 
 (defn parseType [filename]
-  (let [resourceName (str "app/test/samples/" filename ".java.txt")
-        code (slurp (clojure.java.io/resource resourceName))
-        cu (parseString code)
+  (let [cu (parseResource filename)
         cl (first (.getTypes cu))]
     cl))
+
+; ============================================
+; Parsing
+; ============================================
+
+(deftest testParsingFileWithErrorsReturnNil
+  (is (= nil (parseResource "ClassWithErrors"))))
+
+; ============================================
+; Recognize node types
+; ============================================
+
+(deftest testIsClassPositive
+  (is (isClass? (parseType "ASimpleClass"))))
+
+(deftest testIsClassNegative_Interface
+  (is (not (isClass? (parseType "ASimpleInterface")))))
+
+(deftest testIsClassNegative_Enum
+  (is (not (isClass? (parseType "ASimpleEnum")))))
+
+(deftest testIsInterfacePositive
+  (is (isInterface? (parseType "ASimpleInterface"))))
+
+(deftest testIsInterfaceNegative_Class
+  (is (not (isInterface? (parseType "ASimpleClass")))))
+
+(deftest testIsInterfaceNegative_Enum
+  (is (not (isInterface? (parseType "ASimpleEnum")))))
+
+(deftest testIsEnumPositive
+  (is (isEnum? (parseType "ASimpleEnum"))))
+
+(deftest testIsEnumNegative_Class
+  (is (not (isEnum? (parseType "ASimpleClass")))))
+
+(deftest testIsEnumNegative_Interface
+  (is (not (isEnum? (parseType "ASimpleInterface")))))
+
+; ============================================
+; Other FIXME organize!
+; ============================================
 
 (deftest testIsPublicFieldSingletonPositive
   (let [cl (parseClass "ClassWithPublicFieldSingleton")]

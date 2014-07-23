@@ -1,0 +1,3 @@
+enum ASimpleEnum {
+  A, B, C
+}

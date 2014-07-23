@@ -1,0 +1,4 @@
+class AClassInANotCompilingCU {
+
+
+// missing close bracket
