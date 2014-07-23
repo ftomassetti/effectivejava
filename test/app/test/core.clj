@@ -72,6 +72,14 @@
   (let [t (parseType "ASimplePublicFinalClass")]
     (is (= 17 (getModifiers t)))))
 
+(deftest hasPackageLevelAccess?_Positive
+  (let [t (parseType "ASimpleClass")]
+    (is (hasPackageLevelAccess? t))))
+
+(deftest hasPackageLevelAccess?_Negative
+  (let [t (parseType "ASimplePublicFinalClass")]
+    (is (not (hasPackageLevelAccess? t)))))
+
 ; ============================================
 ; Other FIXME organize!
 ; ============================================
