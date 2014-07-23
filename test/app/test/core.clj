@@ -61,6 +61,18 @@
   (is (not (isEnum? (parseType "ASimpleInterface")))))
 
 ; ============================================
+; Modifiers
+; ============================================
+
+(deftest testGetModifiersOnAType_NoModifiers
+  (let [t (parseType "ASimpleClass")]
+    (is (= 0 (getModifiers t)))))
+
+(deftest testGetModifiersOnAType_TwoModifiers
+  (let [t (parseType "ASimplePublicFinalClass")]
+    (is (= 17 (getModifiers t)))))
+
+; ============================================
 ; Other FIXME organize!
 ; ============================================
 
