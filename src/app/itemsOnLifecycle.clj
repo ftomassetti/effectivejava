@@ -2,14 +2,31 @@
 ; ITEM 1
 ; ============================================
 
+(defn classesWithManyConstructors
+  "Print the classes which have threshold or more not private constructors"
+  [collector cus threshold]
+  (do
+    (let [rowCollector
+            (header collector
+              [ {:name "ClassQName", :len 40 :cutOn :start}
+                {:name "n", :len 3}])]
+      (doseq [cl (allClassesForCus cus)]
+        (let [nc (nNotPrivateConstructors cl)]
+          (if (>= nc threshold)
+            (row rowCollector [(getQName cl) nc])
+            nil))))))
+
 (defn printClassesWithManyConstructors
   "Print the classes which have threshold or more not private constructors"
   [cus threshold]
-  (doseq [cl (allClassesForCus cus)]
-    (let [nc (nNotPrivateConstructors cl)]
-      (if (>= nc threshold)
-        (println (getQName cl) " : " nc)
-        nil))))
+  (classesWithManyConstructors printer cus threshold))
+
+(def classesWithManyConstructorsOp
+  (operation.
+    "classesWithManyConstructors"
+    "mc"
+    classesWithManyConstructors
+    [:threshold]))
 
 ; ============================================
 ; ITEM 2

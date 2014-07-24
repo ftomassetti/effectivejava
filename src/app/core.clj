@@ -23,6 +23,7 @@
     (filter java-file? (file-seq d))))
 
 (load "javaparser")
+(load "operations")
 (load "itemsOnLifecycle")
 (load "interactive")
 (load "cli")
