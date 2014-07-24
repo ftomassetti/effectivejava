@@ -15,7 +15,7 @@
 
 (defn printParam [printer p]
   (let
-    [fmtStr (str "%-" (- (:len p) 2) "s")]
+    [fmtStr (str "%-" (- (:len p) 1) "s")]
     (print (format fmtStr (:name p)) " | ")))
 
 (defn printSeparator [printer params]
@@ -32,7 +32,7 @@
        (printSeparator this fields)
        (TableRowPrinter. fields))))
 
-(defn cutString [s cutOn]
+(defn- cutString [s cutOn]
   (cond
     (= :onStart cutOn)
       (subs s 1)
@@ -51,19 +51,19 @@
       (formatValue (cutString v cutOn) len cutOn)
     :else v))
 
-(defn printFieldValue [f v]
-  (let [formattedValue (formatValue (str v) {:len f} (or {:cutOn f} :onEnd))]
-    (print formattedValue " | ")))
+(defn fieldValueToStr [f v]
+  (let [formattedValue (formatValue (str v) (:len f) (or (:cutOn f) :onEnd))]
+    (str formattedValue " | ")))
 
-(defn printFieldValues [fields values]
-  (when (not (empty? fields))
-    (do
+(defn fieldValuesToStr [fields values]
+  (if (empty? fields) ""
       (let [f (first fields), v (first values)]
-        (printFieldValue f v))
-      (printFieldValues (rest fields) (rest values)))))
+        (str
+          (fieldValueToStr f v)
+          (fieldValuesToStr (rest fields) (rest values))))))
 
 (extend-protocol ParamCollector TableRowPrinter
   (row [this values]
     (do
-      (printFieldValues (.fields this) values)
+      (print (fieldValuesToStr (.fields this) values))
       (println ""))))

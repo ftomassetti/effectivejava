@@ -8,7 +8,7 @@
   (do
     (let [rowCollector
             (header collector
-              [ {:name "ClassQName", :len 40 :cutOn :start}
+              [ {:name "ClassQName", :len 75 :cutOn :onStart}
                 {:name "n", :len 3}])]
       (doseq [cl (allClassesForCus cus)]
         (let [nc (nNotPrivateConstructors cl)]
