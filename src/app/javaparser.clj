@@ -230,8 +230,7 @@
     (for [cuTuple cusTuples]
       (allClasses (:cu cuTuple)))))
 
-; Get tuples of [filename cu]
-(defn cusTuples [dirname]
+(defn cusTuples "Get tuples of [filename cu]" [dirname]
   (filter not-nil? (parseDirByName dirname)))
 
 (defn cus [dirname]
