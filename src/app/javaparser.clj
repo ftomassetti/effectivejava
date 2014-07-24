@@ -214,7 +214,10 @@
 (defn allClasses [cu]
   (filter isClass? (allTypes cu)))
 
-(defn getEnums [cu]
+(defn allInterfaces [cu]
+  (filter isInterface? (.getTypes cu)))
+
+(defn allEnums [cu]
   (filter isEnum? (.getTypes cu)))
 
 (defn allClassesForCus [cus]
