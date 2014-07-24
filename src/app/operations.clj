@@ -48,7 +48,7 @@
     (< (.length v) len)
       (formatValue (str v " ") len cutOn)
     (> (.length v) len)
-      (formatValue (cutString v cutOn))
+      (formatValue (cutString v cutOn) len cutOn)
     :else v))
 
 (defn printFieldValue [f v]

@@ -5,6 +5,7 @@
 
 (load "helper")
 (load "javaparser")
+(load "operations")
 
 ; ============================================
 ; Other FIXME organize!
