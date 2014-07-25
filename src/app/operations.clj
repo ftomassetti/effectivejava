@@ -1,4 +1,77 @@
-(defrecord operation [name shortcut query params])
+(defrecord Operation [name shortcut query params headers])
+
+(derive ::integer ::printable)
+
+(defmulti toString class)
+
+(defmethod toString :default [x]
+  (str x))
+
+(defmethod toString String [x]
+  x)
+
+(defmethod toString ClassOrInterfaceDeclaration [x]
+  (getQName x))
+
+(defn resultToStrings [resultRow]
+  (map toString resultRow))
+
+(defn resultsToStrings [results]
+  (map resultToStrings results))
+
+(defn columnLength [headerStr resultStrs]
+  (max
+    (.length headerStr)
+    (apply max
+      (map (fn [s] (.length s)) resultStrs))))
+
+(defn columnLengthsHelper [headersStrings resultsStrings acc]
+  (if (empty? headersStrings)
+    acc
+    (columnLengthsHelper
+      (rest headersStrings)
+      (rest resultsStrings)
+      (conj
+        acc
+        (columnLength (first headersStrings) (first resultsStrings))))))
+
+(defn columnLengths [headersStrings, resultsStrings]
+  (columnLengthsHelper headersStrings resultsStrings '()))
+
+(defn padStr [s len]
+  (if (>= (.length s) len)
+    s
+    (padStr (str s " ") len)))
+
+(defn rowStr [lengths values]
+  (if (empty? lengths)
+    ""
+    (str
+      (padStr (first values) (first lengths))
+      (rowStr (rest lengths) (rest values)))))
+
+(defn sum [v]
+  (apply + v))
+
+(defn separatorStr [lengths]
+  (let [n (sum lengths)]
+    (clojure.string/join (repeat n "-"))))
+
+(defn printTable [headers results]
+  (let [resultsStrings (resultsToStrings results),
+        headersStrings (resultToStrings headers),
+        colLengths (columnLengths headersStrings resultsStrings)]
+    (do
+      (println "COLLENGTH " colLengths)
+      (println (rowStr colLengths headersStrings))
+      (println (separatorStr colLengths))
+      (doall (for [r resultsStrings]
+        (println (rowStr colLengths r)))))))
+
+(defn printOperation [operation cus threshold]
+  (let [headers (.headers operation),
+        results ((.query operation) cus threshold)]
+    (printTable headers results)))
 
 ; =============================================
 ; Collector protocols

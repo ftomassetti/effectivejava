@@ -18,3 +18,25 @@
 
 (deftest testFieldValuesToStrWithTwoFields
   (is (= "aFantastic | 10 | " (fieldValuesToStr [{:len 10} {:len 2}] ["aFantasticValue", 10]))))
+
+(deftest testRowStr
+  (is (= "ciao   1  " (rowStr [7 3] ["ciao" "1"]))))
+
+(deftest testColumnLengthRowIsLongerThanHeader
+  (is (= 5 (columnLength "ciao" ["a" "zzzzz" "bc"] ))))
+
+(deftest testColumnLengthHeaderIsTheLongest
+  (is (= 9 (columnLength "ciaobello" ["a" "zzzzz" "bc"] ))))
+
+(deftest testToStringClassDeclaration
+  (let [t (parseType "ASimpleClass")]
+    (is (= "ASimpleClass" (toString t)))))
+
+(deftest testToStringInteger
+  (is (= "123" (toString 123))))
+
+(deftest testResultsToStrings
+  (is (= '(["row1" "1"] ["row2" "2"]) (resultsToStrings '(["row1" 1] ["row2" 2])))))
+
+(deftest testResultsToStrings
+  ([:class :numberOfConstructors]))
