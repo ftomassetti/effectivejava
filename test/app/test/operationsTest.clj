@@ -23,10 +23,10 @@
   (is (= "ciao   1  " (rowStr [7 3] ["ciao" "1"]))))
 
 (deftest testColumnLengthRowIsLongerThanHeader
-  (is (= 5 (columnLength "ciao" ["a" "zzzzz" "bc"] ))))
+  (is (= 5 (columnLength "ciao" [["a" "zzzzz" "bc"]] 1 ))))
 
 (deftest testColumnLengthHeaderIsTheLongest
-  (is (= 9 (columnLength "ciaobello" ["a" "zzzzz" "bc"] ))))
+  (is (= 9 (columnLength "ciaobello" [["a" "zzzzz" "bc"]] 1 ))))
 
 (deftest testToStringClassDeclaration
   (let [t (parseType "ASimpleClass")]
@@ -38,5 +38,5 @@
 (deftest testResultsToStrings
   (is (= '(["row1" "1"] ["row2" "2"]) (resultsToStrings '(["row1" 1] ["row2" 2])))))
 
-(deftest testResultsToStrings
-  ([:class :numberOfConstructors]))
+;(deftest testResultsToStrings
+;  ([:class :numberOfConstructors]))

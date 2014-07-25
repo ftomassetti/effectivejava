@@ -24,11 +24,11 @@
     (first l)
     (getN (rest l) (- ind 1))))
 
-(defn columnLength [headerStr resultStrs ind]
+(defn columnLength [headerStr resultsStrs ind]
   (max
     (.length headerStr)
     (apply max
-      (into [] (map (fn [row] (.length (nth row ind))) resultStrs)))))
+      (into [] (map (fn [row] (.length (nth row ind))) resultsStrs)))))
 
 (defn columnLengthsHelper [headersStrings resultsStrings acc ind]
   (if (empty? headersStrings)
