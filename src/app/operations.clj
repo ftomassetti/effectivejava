@@ -14,29 +14,35 @@
   (getQName x))
 
 (defn resultToStrings [resultRow]
-  (map toString resultRow))
+  (into [] (map toString resultRow)))
 
 (defn resultsToStrings [results]
   (map resultToStrings results))
 
-(defn columnLength [headerStr resultStrs]
+(defn getN [l ind]
+  (if (= ind 0)
+    (first l)
+    (getN (rest l) (- ind 1))))
+
+(defn columnLength [headerStr resultStrs ind]
   (max
     (.length headerStr)
     (apply max
-      (map (fn [s] (.length s)) resultStrs))))
+      (into [] (map (fn [row] (.length (nth row ind))) resultStrs)))))
 
-(defn columnLengthsHelper [headersStrings resultsStrings acc]
+(defn columnLengthsHelper [headersStrings resultsStrings acc ind]
   (if (empty? headersStrings)
     acc
     (columnLengthsHelper
       (rest headersStrings)
-      (rest resultsStrings)
+      resultsStrings
       (conj
         acc
-        (columnLength (first headersStrings) (first resultsStrings))))))
+        (columnLength (first headersStrings) resultsStrings ind))
+      (+ 1 ind))))
 
 (defn columnLengths [headersStrings, resultsStrings]
-  (columnLengthsHelper headersStrings resultsStrings '()))
+  (into [] (columnLengthsHelper headersStrings resultsStrings [] 0)))
 
 (defn padStr [s len]
   (if (>= (.length s) len)
@@ -62,7 +68,6 @@
         headersStrings (resultToStrings headers),
         colLengths (columnLengths headersStrings resultsStrings)]
     (do
-      (println "COLLENGTH " colLengths)
       (println (rowStr colLengths headersStrings))
       (println (separatorStr colLengths))
       (doall (for [r resultsStrings]
