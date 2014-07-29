@@ -176,6 +176,15 @@
       (str (getQName pn) "." (getName this)))))
 
 (extend-protocol Named
+  ConstructorDeclaration
+  (getName [this]
+    (.getName this))
+  (getQName [this]
+    (let [pn (.getParentNode this)]
+      (str (getQName pn) "." (getName this)))))
+
+
+(extend-protocol Named
   VariableDeclaratorId
   (getName [this]
     (.getName this)))
@@ -238,6 +247,11 @@
 
 (defn getConstructors [cl]
   (filter (fn [m] (instance? ConstructorDeclaration m)) (.getMembers cl)))
+
+(defn allConstructorsForCus [cus]
+  (flatten
+    (for [cl (allClassesForCus cus)]
+      (getConstructors cl))))
 
 (defn getMethods [cl]
   (filter (fn [m] (instance? MethodDeclaration m)) (.getMembers cl)))

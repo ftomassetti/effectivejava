@@ -5,18 +5,16 @@
 ; [ {:name "ClassQName", :len 75 :cutOn :onStart} {:name "n", :len 3}])]
 
 (defn classesWithManyConstructors
-  "Print the classes which have threshold or more not private constructors"
+  "Classes which have threshold or more not private constructors"
   [cus threshold]
   (filter
-    (fn [m] (>= (nth m 1) threshold))
+    (fn [v] (>= (nth v 1) threshold))
     (map
       (fn [cl] [cl (nNotPrivateConstructors cl)])
       (allClassesForCus cus))))
 
 (def classesWithManyConstructorsOp
   (Operation.
-    "classesWithManyConstructors"
-    "mc"
     classesWithManyConstructors
     [:threshold]
     [:class :numberOfConstructors]))
@@ -30,14 +28,27 @@
 ; ITEM 2
 ; ============================================
 
+(defn constructorsWithManyParameters
+  "The non private constructors which takes threshold or more parameters"
+  [cus threshold]
+  (filter
+    (fn [v] (>= (nth v 1) threshold))
+    (map
+      (fn [constructor]
+        (let [np (.size (getParameters constructor))]
+          [constructor np]))
+      (allConstructorsForCus cus))))
+
+(def constructorsWithManyParametersOp
+  (Operation.
+    constructorsWithManyParameters
+    [:threshold]
+    [:constructor :numberOfParameters]))
+
 (defn printConstructorsWithManyParameters [cus threshold]
-  "Print the not private constructors which takes threshold or more parameters"
-  (doseq [cl (allClassesForCus cus)]
-    (doseq [cs (getNotPrivateConstructors cl)]
-      (let [np (.size (getParameters cs))]
-        (if (>= np threshold)
-          (println (getQName cl) "." cs " : " np)
-          nil)))))
+  "Print the non private constructors which takes threshold or more parameters"
+  [cus threshold]
+  (printOperation constructorsWithManyParametersOp cus threshold))
 
 ; ============================================
 ; ITEM 3

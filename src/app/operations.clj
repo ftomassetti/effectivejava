@@ -1,4 +1,4 @@
-(defrecord Operation [name shortcut query params headers])
+(defrecord Operation [query params headers])
 
 (derive ::integer ::printable)
 
@@ -11,6 +11,9 @@
   x)
 
 (defmethod toString ClassOrInterfaceDeclaration [x]
+  (getQName x))
+
+(defmethod toString ConstructorDeclaration [x]
   (getQName x))
 
 (defn resultToStrings [resultRow]
@@ -28,7 +31,7 @@
   (max
     (.length headerStr)
     (apply max
-      (into [] (map (fn [row] (.length (nth row ind))) resultsStrs)))))
+      (into [0] (map (fn [row] (.length (nth row ind))) resultsStrs)))))
 
 (defn columnLengthsHelper [headersStrings resultsStrings acc ind]
   (if (empty? headersStrings)
