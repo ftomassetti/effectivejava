@@ -178,7 +178,7 @@
 (extend-protocol Named
   ConstructorDeclaration
   (getName [this]
-    (.getName this))
+    (.getDeclarationAsString this false false false))
   (getQName [this]
     (let [pn (.getParentNode this)]
       (str (getQName pn) "." (getName this)))))
