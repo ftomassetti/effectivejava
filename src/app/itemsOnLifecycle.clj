@@ -6,12 +6,12 @@
 
 (defn classesWithManyConstructors
   "Classes which have threshold or more not private constructors"
-  [cus threshold]
+  [params]
   (filter
-    (fn [v] (>= (nth v 1) threshold))
+    (fn [v] (>= (nth v 1) (:threshold params)))
     (map
       (fn [cl] [cl (nNotPrivateConstructors cl)])
-      (allClassesForCus cus))))
+      (allClassesForCus (:cus params)))))
 
 (def classesWithManyConstructorsOp
   (Operation.
@@ -30,14 +30,14 @@
 
 (defn constructorsWithManyParameters
   "The non private constructors which takes threshold or more parameters"
-  [cus threshold]
+  [params]
   (filter
-    (fn [v] (>= (nth v 1) threshold))
+    (fn [v] (>= (nth v 1) (:threshold params)))
     (map
       (fn [constructor]
         (let [np (.size (getParameters constructor))]
           [constructor np]))
-      (allConstructorsForCus cus))))
+      (allConstructorsForCus (:cus params)))))
 
 (def constructorsWithManyParametersOp
   (Operation.
@@ -101,11 +101,21 @@
       (isSingletonEnum? t)) :singletonEnum
     :else nil))
 
+(defn classesAndSingletonType
+  "The type of singleton implemented in a certain class"
+  [params]
+  (filter
+    (fn [v] (not-nil? (nth v 1)))
+    (map
+      (fn [cl] [cl (getSingletonType cl)])
+      (allClassesForCus (:cus params)))))
+
+(def classesAndSingletonTypeOp
+  (Operation.
+    classesAndSingletonType
+    []
+    [:class :singletonType]))
+
 (defn printSingletonType [cus threshold]
-  "Print the not private constructors which takes threshold or more parameters"
-  (doseq [cu cus]
-    (doseq [t (.getTypes cu)]
-      (let [st (getSingletonType t)]
-        (if (not-nil? st)
-          (println (getQName t) " : " st)
-          nil)))))
+  "Print the type of singleton implemented in a certain class"
+  (printOperation classesAndSingletonTypeOp cus threshold))

@@ -78,7 +78,7 @@
 
 (defn printOperation [operation cus threshold]
   (let [headers (.headers operation),
-        results ((.query operation) cus threshold)]
+        results ((.query operation) {:cus cus :threshold threshold})]
     (printTable headers results)))
 
 ; =============================================
