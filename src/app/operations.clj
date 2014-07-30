@@ -10,6 +10,9 @@
 (defmethod toString String [x]
   x)
 
+(defmethod toString clojure.lang.Keyword [x]
+  (name x))
+
 (defmethod toString ClassOrInterfaceDeclaration [x]
   (getQName x))
 
@@ -26,6 +29,8 @@
   (if (= ind 0)
     (first l)
     (getN (rest l) (- ind 1))))
+
+(def columnSeparator " | ")
 
 (defn columnLength [headerStr resultsStrs ind]
   (max
@@ -57,13 +62,18 @@
     ""
     (str
       (padStr (first values) (first lengths))
+      (if (not (empty? (rest lengths)))
+        columnSeparator
+        "")
       (rowStr (rest lengths) (rest values)))))
 
 (defn sum [v]
   (apply + v))
 
 (defn separatorStr [lengths]
-  (let [n (sum lengths)]
+  (let [sumLenRows (sum lengths)
+        sumLenSeparators (* (- (.length lengths) 1) (.length columnSeparator))
+        n (+ sumLenRows sumLenSeparators)]
     (clojure.string/join (repeat n "-"))))
 
 (defn printTable [headers results]
