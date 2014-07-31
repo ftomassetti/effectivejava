@@ -37,6 +37,3 @@
 
 (deftest testResultsToStrings
   (is (= '(["row1" "1"] ["row2" "2"]) (resultsToStrings '(["row1" 1] ["row2" 2])))))
-
-;(deftest testResultsToStrings
-;  ([:class :numberOfConstructors]))
