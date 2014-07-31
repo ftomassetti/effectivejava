@@ -20,7 +20,7 @@
   (is (= "aFantastic | 10 | " (fieldValuesToStr [{:len 10} {:len 2}] ["aFantasticValue", 10]))))
 
 (deftest testRowStr
-  (is (= "ciao   1  " (rowStr [7 3] ["ciao" "1"]))))
+  (is (= "ciao    | 1  " (rowStr [7 3] ["ciao" "1"]))))
 
 (deftest testColumnLengthRowIsLongerThanHeader
   (is (= 5 (columnLength "ciao" [["a" "zzzzz" "bc"]] 1 ))))
