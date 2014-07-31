@@ -4,4 +4,5 @@
                  [com.google.code.javaparser/javaparser "1.0.12-SNAPSHOT"]
                  [org.clojure/tools.cli "0.3.1"]
                  [instaparse "1.3.3"]]
+  :resource-paths ["test-resources"]
   :main app.core)
