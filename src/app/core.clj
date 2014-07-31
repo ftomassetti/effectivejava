@@ -59,7 +59,7 @@
         (and
           (:dir opts)
           (:query opts)
-          (name2query (:query opts))
+          (name2operation (:query opts))
           (nil? (:errors opts)))
         (run opts)
         (do

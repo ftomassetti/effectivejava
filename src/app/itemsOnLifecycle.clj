@@ -19,11 +19,6 @@
     [:threshold]
     [:class :numberOfConstructors]))
 
-(defn printClassesWithManyConstructors
-  "Print the classes which have threshold or more not private constructors"
-  [cus threshold]
-  (printOperation classesWithManyConstructorsOp cus threshold))
-
 ; ============================================
 ; ITEM 2
 ; ============================================
@@ -44,11 +39,6 @@
     constructorsWithManyParameters
     [:threshold]
     [:constructor :numberOfParameters]))
-
-(defn printConstructorsWithManyParameters [cus threshold]
-  "Print the non private constructors which takes threshold or more parameters"
-  [cus threshold]
-  (printOperation constructorsWithManyParametersOp cus threshold))
 
 ; ============================================
 ; ITEM 3
@@ -115,7 +105,3 @@
     classesAndSingletonType
     []
     [:class :singletonType]))
-
-(defn printSingletonType [cus threshold]
-  "Print the type of singleton implemented in a certain class"
-  (printOperation classesAndSingletonTypeOp cus threshold))

@@ -2,18 +2,18 @@
 ; CLI
 ; ============================================
 
-(defn name2query [name]
+(defn name2operation [name]
   (cond
-    (= "mc" name) printClassesWithManyConstructors
-    (= "mcp" name) printConstructorsWithManyParameters
-    (= "st" name) printSingletonType
+    (= "mc" name) classesWithManyConstructorsOp
+    (= "mcp" name) constructorsWithManyParametersOp
+    (= "st" name) classesAndSingletonTypeOp
     :else nil))
 
 (defn run [opts]
   (let [dirname (:dir opts)
         th (:threshold opts)
-        query (name2query (:query opts))
+        operation (name2operation (:query opts))
         cus (filter not-nil? (cus dirname))]
     (do
       (println "Considering" (.size cus) "Java files")
-      (query cus th))))
+      (printOperation operation cus th))))
