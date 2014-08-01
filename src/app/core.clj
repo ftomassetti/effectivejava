@@ -26,26 +26,33 @@
 (load "operations")
 (load "itemsOnLifecycle")
 (load "interactive")
+(load "linter")
 (load "cli")
+
+(defn usageError [banner opts msg]
+  (println (str "Incorrect usage: " msg))
+  (when (:errors opts)
+    (doseq [e (:errors opts)]
+      (println " * " e)))
+  (println banner)
+  (System/exit 1))
 
 ; TODO extract part of this method to cli
 (defn -main
   "What I do"
   [& args]
   (let [optsMap
-    (parse-opts args
-      [
-        ["-h" "--help" "Show help" :flag true :default false]
-        ["-i" "--interactive" "launch interactive move" :flag true :default false]
-        ["-d" "--dir DIRNAME" "REQUIRED: Directory containing the code to check"]
-        ["-q" "--query QUERYNAME" "REQUIRED: Query to perform: mc=many constructors, mcp=many constructor parameters, st=singleton type"]
-        ["-t" "--threshold VALUE" "Threshold to be used in the query" :default 0
-         :parse-fn #(Integer/parseInt %)
-         :validate [#(>= % 0) "Must be a number equal or greater to 0"]]
-      ])
+    (parse-opts args cliOpts)
     opts (:options optsMap)
     banner (:summary optsMap)]
     (do
+      (when (:errors opts)
+        (usageError banner opts ""))
+      (when (:linter opts)
+        (when (or (:interactive opts) (:query opts))
+          (usageError banner opts "Linter, interactive and query mode are self exclusive"))
+        (linter)
+        (System/exit 0))
       (when (:interactive opts)
         (do
           (interactive {})
