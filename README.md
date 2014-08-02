@@ -1,12 +1,39 @@
 effectivejava
 =============
-Run queries on your Java code to check if it meets the criteria suggested by the book Effective Java. And some others, soon.
+Effective java is a tool to examine your Java codebase. You can use it in three different ways:
+* as a Java linter. Just tells it which directory you want to examine, it will spit out a set of warnings and suggestions to improve your code
+* run queries from the command line. It could tell you which type of Singleton you are using in your codebase or how many constructors have 10 or more parameters. This modality can be easily integrated with other tools
+* run queries interactively. It permits to poke your codebase, parsing it once and running different queries to find out interesting facts about it.
 
-How to use it
-=============
+The project is named effectivajava because many queries/checks derive from reading the book Effective Java. Others will be implemented as well (feel free to suggest your favorite ones!).
+
+While reading that book I thought that yes, many principles are well known, but they are rarely applied to a large codebase. I thought that applying them in practice is much harder than it seems, and a tool like this one could help in improving constantly a codebase.
+
+Which is the easiest way to install it?
+=======================================
+
 Download the standalone jar from the releases directory. 
 No deps needed, everything is packed inside the jar.
 Feel free to rename it (effectivejava-0.1.0-SNAPSHOT-standalone.jar is a mouthful...)
+
+Linting mode: how to use it
+===========================
+
+Just run:
+
+```bash
+java -jar effectivejava-0.1.2-SNAPSHOT-standalone.jar -l -d "<myJavaProjectDir>"
+```
+
+You can expect a set of lines like this one:
+```
+org.springframework.jdbc.core.SqlInOutParameter : This class has too many constructors (7). Consider using static factory methods or the Builder pattern
+```
+
+If you run this command from the root of your codebase you can avoid the -d option.
+
+CLI mode: how to use it
+=======================
 
 Now, suppose you want to know which classes has 5 or more constructor; you can run this command:
 ```bash
@@ -21,8 +48,30 @@ japa.parser.ast.body.BaseParameter  :  5
 japa.parser.ast.body.FieldDeclaration  :  5
 ```
 
-What queries can I run
-======================
+Interactive mode: how to use it (Work in progress!)
+===================================================
+
+You can launch interactive mode with the -i option.
+
+```bash
+java -jar effectivejava-0.1.1-SNAPSHOT-standalone.jar -i
+```
+
+A typical interaction could be this one:
+
+```
+> load "."
+Loading .
+Java files loaded: 440
+> mc th 5
+Command not implemented:  :MC
+```
+
+As you can read from the last line, while the main logic for the interactive mode is there we still miss a few bits :)
+It will be corrected soon.
+
+What queries can you run
+========================
 I am just getting started so I implemented only a few queries for now:
 
 * mc=many constructors : find the classes which contain the same number of constructors as the given threshold, or more
@@ -43,7 +92,6 @@ I am reading this book and many advices seem sort of obvious in theory but I gue
 And I wanted to learn Clojure.
 And I had a free sunday.
 So...
-
 
 What else
 =========
