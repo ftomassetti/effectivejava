@@ -37,6 +37,9 @@
   (println banner)
   (System/exit 1))
 
+(defn info [opts msg]
+  (println " [info] " msg))
+
 ; TODO extract part of this method to cli
 (defn -main
   "What I do"
@@ -51,7 +54,11 @@
       (when (:linter opts)
         (when (or (:interactive opts) (:query opts))
           (usageError banner opts "Linter, interactive and query mode are self exclusive"))
-        (linter)
+        (when (not (:dir opts))
+          (info opts "Linter, no directory indicated. Using current directory")
+          (linter ".")
+          (System/exit 0))
+        (linter (:dir opts))
         (System/exit 0))
       (when (:interactive opts)
         (do
