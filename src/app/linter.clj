@@ -10,7 +10,10 @@
 (defrecord Check [operation params message])
 
 (def checks
-  [(Check. classesWithManyConstructorsOp {:threshold 4} "This class has too many constructors (#1#). Considers the Builder pattern")])
+  [(Check. classesWithManyConstructorsOp {:threshold 4}
+     "This class has too many constructors (#1#). Consider using static factory methods or the Builder pattern")
+   (Check. constructorsWithManyParametersOp {:threshold 6}
+     "This constructor has too many parameters (#1#). Consider using the Builder pattern")])
 
 (defn replaceParamsInMessage [message result]
   (clojure.string/replace message "#1#" (toString (nth result 1))))
