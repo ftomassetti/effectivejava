@@ -58,14 +58,10 @@
     (padStr (str s " ") len)))
 
 (defn rowStr [lengths values]
-  (if (empty? lengths)
-    ""
-    (str
-      (padStr (first values) (first lengths))
-      (if (not (empty? (rest lengths)))
-        columnSeparator
-        "")
-      (rowStr (rest lengths) (rest values)))))
+  (let
+    [paddedValues (map (fn [l v] (padStr v l)) lengths values)]
+    (apply str
+      (interpose columnSeparator paddedValues))))
 
 (defn sum [v]
   (apply + v))
