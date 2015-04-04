@@ -1,4 +1,4 @@
-(defproject effectivejava "0.1.2-SNAPSHOT"
+(defproject effectivejava "0.1.3-SNAPSHOT"
   :description "A Java linter and a tool for running queries on your Java codebase"
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [com.google.code.javaparser/javaparser "1.0.11"]
