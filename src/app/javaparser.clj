@@ -10,6 +10,7 @@
 (import japa.parser.ast.body.ModifierSet)
 (import japa.parser.ast.body.TypeDeclaration)
 (import japa.parser.ast.body.VariableDeclaratorId)
+(import japa.parser.ast.visitor.DumpVisitor)
 
 ; ============================================
 ; Parsing
@@ -175,10 +176,27 @@
     (let [pn (.getParentNode this)]
       (str (getQName pn) "." (getName this)))))
 
+(defn toStringWithoutComments [node]
+  (.toString node))
+
+(defn constructorDeclarationAsString [constructor]
+  (let [sb (StringBuffer. )]
+    (.append sb (.getName constructor))
+    (.append sb "(")
+    (let [firstParam (first (.getParameters constructor))
+          otherParams (rest (.getParameters constructor) )]
+      (when (not (nil? firstParam))
+        (.append sb (toStringWithoutComments (.getType firstParam))))
+      (doseq [param otherParams]
+        (.append sb ", ")
+        (.append sb (toStringWithoutComments (.getType param)))))
+    (.append sb ")")
+    (.toString sb)))
+
 (extend-protocol Named
   ConstructorDeclaration
   (getName [this]
-    (.getDeclarationAsString this false false false))
+    (constructorDeclarationAsString this))
   (getQName [this]
     (let [pn (.getParentNode this)]
       (str (getQName pn) "." (getName this)))))
