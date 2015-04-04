@@ -10,12 +10,13 @@
 (deftest testClassesWithManyConstructorOnJavaParser
   (let [res (classesWithManyConstructors {:cus javaparserCus, :threshold 5})
         pres (toPlain res)]
-    (is (= '(
-              ["japa.parser.ast.expr.ArrayCreationExpr" "5"]
-              ["japa.parser.ast.body.MethodDeclaration" "5"]
-              ["japa.parser.ast.body.BaseParameter" "5"]
-              ["japa.parser.ast.body.FieldDeclaration" "5"]
-              ) pres))))
+    (is (= #{
+             ["japa.parser.ast.body.BaseParameter" "5"]
+             ["japa.parser.ast.body.FieldDeclaration" "5"]
+             ["japa.parser.ast.body.MethodDeclaration" "5"]
+             ["japa.parser.ast.expr.ArrayCreationExpr" "5"]
+             } (into #{} pres)))))
+
 
 (deftest testConstructorsWithManyParametersOnJavaParser
   (let [res (constructorsWithManyParameters {:cus javaparserCus, :threshold 12})
