@@ -20,7 +20,9 @@
   [file]
   (try
     (JavaParser/parse file)
-    (catch Exception e nil)))
+    (catch Exception e (do
+                         (.printStackTrace e)
+                         (println "PARSING " file " : " e)))))
 
 (defn parseString [s]
   (let [reader (java.io.StringReader. s)]
@@ -199,7 +201,8 @@
 ; ============================================
 
 (defn topLevelTypes [cu]
-  (.getTypes cu))
+  (if (nil? cu) []
+  (.getTypes cu)))
 
 (defn directlyAnnidatedTypes [t]
   (filter (fn [m] (instance? TypeDeclaration m)) (.getMembers t)))
