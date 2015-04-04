@@ -80,9 +80,7 @@ I am just getting started so I implemented only a few queries for now:
 
 Dev info
 ========
-The project is written in Clojure using a java library called [JavaParser](https://github.com/matozoid/javaparser). Stricly speaking it is using [my fork]((https://github.com/ftomassetti/javaparser)) at this moment, but my chages will be soon getting merged in the main branch.
-
-When my changes will find their way in the main branch I will update project.clj and javaparser will be download from Maven automatically. For the time being, if you want to play with the code you can clone my project and compile it to your local maven repository. Look at the other MD file in this dir, there there are the commands to run to do it.
+The project is written in Clojure using a java library called [JavaParser](https://github.com/javaparser/javaparser).
 
 You will need also [Leiningen](http://leiningen.org/), the build tool for Clojure. It should download also Clojure for you.
 
