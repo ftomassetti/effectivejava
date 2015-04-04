@@ -1,0 +1,2 @@
+v 0.1.3
+* Adapted to work with JavaParser 1.0.11 instead of my fork
