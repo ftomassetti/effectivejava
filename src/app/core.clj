@@ -44,10 +44,9 @@
 (defn -main
   "What I do"
   [& args]
-  (let [optsMap
-    (parse-opts args cliOpts)
-    opts (:options optsMap)
-    banner (:summary optsMap)]
+  (let [optsMap (parse-opts args cliOpts)
+        opts (:options optsMap)
+        banner (:summary optsMap)]
     (do
       (when (:errors opts)
         (usageError banner opts ""))
