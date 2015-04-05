@@ -217,7 +217,9 @@
 ; ============================================
 
 (defn topLevelTypes [cu]
-  (.getTypes cu))
+  (if (nil? cu)
+    []
+    (.getTypes cu)))
 
 (defn directlyAnnidatedTypes [t]
   (filter (fn [m] (instance? TypeDeclaration m)) (.getMembers t)))

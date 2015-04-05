@@ -52,6 +52,10 @@
               (let [loadedCus (cus dirname)]
                 (println "Java files loaded:" (.size loadedCus))
                 (rp {:cus loadedCus}))))
+          (= command :MC)
+          (do
+            (printOperation classesWithManyConstructorsOp (:cus state) 5)
+            (rp state))
           :else (println "Command not implemented: " command))))))
 
 (defn interactive [state]
