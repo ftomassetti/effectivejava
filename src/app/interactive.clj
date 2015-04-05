@@ -39,7 +39,10 @@
               (rp state)))
           (= command :HELP)
           (do
-            (println "Help...")
+            (println "h/help                      : print this help message")
+            (println "q/quit/exit                 : close the shell")
+            (println "list                        : list classes loaded")
+            (println "mc/many-constructors th NUM : list classes with NUM or more constructors")
             (rp state))
           (= command :LOAD)
           (let [dirnameWithApex (nth (nth (first ast) 2) 1),
