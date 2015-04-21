@@ -65,7 +65,7 @@
           (System/exit 0)))
       (when (:help opts)
         (do
-          (println ("Printing help message, as asked"))
+          (println "Printing help message, as asked")
           (println banner))
         (System/exit 0))
       (if
