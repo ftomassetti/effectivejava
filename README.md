@@ -1,5 +1,8 @@
 effectivejava
 =============
+
+[![Build Status](https://travis-ci.org/ftomassetti/effectivejava.svg?branch=master)](https://travis-ci.org/ftomassetti/effectivejava)
+
 Effective java is a tool to examine your Java codebase. You can use it in three different ways:
 * as a Java linter. Just tells it which directory you want to examine, it will spit out a set of warnings and suggestions to improve your code
 * run queries from the command line. It could tell you which type of Singleton you are using in your codebase or how many constructors have 10 or more parameters. This modality can be easily integrated with other tools
@@ -94,3 +97,8 @@ So...
 What else
 =========
 Hope you enjoy this small project of mine. Feel free to open issues and ask questions!
+
+Contributors
+============
+
+Thanks to [David Ortiz](https://github.com/davidor) for fixing bugs and setting up Travis.
