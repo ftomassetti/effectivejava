@@ -40,6 +40,16 @@
 (defn info [opts msg]
   (println " [info] " msg))
 
+(defn self-exclusive-modes?
+  "Return true if opts contains self-exclusive modes"
+  [opts]
+  (let [self-exclusive-modes [:linter :interactive :query]]
+    (->> (select-keys opts self-exclusive-modes)
+         (vals)
+         (filter identity)
+         (count)
+         (< 1))))
+
 ; TODO extract part of this method to cli
 (defn -main
   "What I do"
@@ -50,9 +60,9 @@
     (do
       (when (:errors opts)
         (usageError banner opts ""))
+      (when (self-exclusive-modes? opts)
+        (usageError banner opts "Linter, interactive and query mode are self exclusive"))
       (when (:linter opts)
-        (when (or (:interactive opts) (:query opts))
-          (usageError banner opts "Linter, interactive and query mode are self exclusive"))
         (when (not (:dir opts))
           (info opts "Linter, no directory indicated. Using current directory")
           (linter ".")
