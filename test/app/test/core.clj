@@ -48,6 +48,21 @@
   (let [cl (parseType "NotSingletonEnum_NotOnlyInstance")]
     (is (not (isSingletonEnum? cl)))))
 
+(deftest testSelfExclusiveModes
+  (is (true? (self-exclusive-modes?
+               {:query 'mc :linter true :interactive true})))
+  (is (true? (self-exclusive-modes?
+               {:linter true :interactive true})))
+  (is (true? (self-exclusive-modes?
+               {:query 'mc :linter true})))
+  (is (true? (self-exclusive-modes?
+               {:query 'mc :interactive true})))
+  (is (false? (self-exclusive-modes?
+                {:linter false :interactive true})))
+  (is (false? (self-exclusive-modes? {:query 'mc})))
+  (is (false? (self-exclusive-modes? {:linter true})))
+  (is (false? (self-exclusive-modes? {:interactive true}))))
+
 ; =============================================================
 ; Command parser
 ; =============================================================
