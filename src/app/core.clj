@@ -40,7 +40,7 @@
   (println banner)
   (System/exit 1))
 
-(defn info [opts msg]
+(defn info [msg]
   (println " [info] " msg))
 
 (defn self-exclusive-modes?
