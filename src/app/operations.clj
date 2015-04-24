@@ -20,15 +20,15 @@
   (getQName x))
 
 (defn resultToStrings [resultRow]
-  (into [] (map toString resultRow)))
+  (vec (map toString resultRow)))
 
 (defn resultsToStrings [results]
   (map resultToStrings results))
 
 (defn getN [l ind]
-  (if (= ind 0)
+  (if (zero? ind)
     (first l)
-    (getN (rest l) (- ind 1))))
+    (getN (rest l) (dec ind))))
 
 (def columnSeparator " | ")
 
@@ -47,10 +47,10 @@
       (conj
         acc
         (columnLength (first headersStrings) resultsStrings ind))
-      (+ 1 ind))))
+      (inc ind))))
 
 (defn columnLengths [headersStrings, resultsStrings]
-  (into [] (columnLengthsHelper headersStrings resultsStrings [] 0)))
+  (vec (columnLengthsHelper headersStrings resultsStrings [] 0)))
 
 (defn padStr [s len]
   (if (>= (.length s) len)
@@ -60,15 +60,14 @@
 (defn rowStr [lengths values]
   (let
     [paddedValues (map (fn [l v] (padStr v l)) lengths values)]
-    (apply str
-      (interpose columnSeparator paddedValues))))
+    (clojure.string/join columnSeparator paddedValues)))
 
 (defn sum [v]
   (apply + v))
 
 (defn separatorStr [lengths]
   (let [sumLenRows (sum lengths)
-        sumLenSeparators (* (- (.length lengths) 1) (.length columnSeparator))
+        sumLenSeparators (* (dec (.length lengths)) (.length columnSeparator))
         n (+ sumLenRows sumLenSeparators)]
     (clojure.string/join (repeat n "-"))))
 
@@ -76,11 +75,10 @@
   (let [resultsStrings (resultsToStrings results),
         headersStrings (resultToStrings headers),
         colLengths (columnLengths headersStrings resultsStrings)]
-    (do
       (println (rowStr colLengths headersStrings))
       (println (separatorStr colLengths))
       (doall (for [r resultsStrings]
-        (println (rowStr colLengths r)))))))
+        (println (rowStr colLengths r))))))
 
 (defn printOperation [operation cus threshold]
   (let [headers (.headers operation),
@@ -112,7 +110,7 @@
     (subs s 1)
     (= :onEnd cutOn)
     (try
-      (subs s 0 (- (.length s) 1))
+      (subs s 0 (dec (.length s)))
       (catch Exception e (throw (Exception. "Caspita..."))))
     :else
     (throw (Exception. "cutOn should be :onStart or :onEnd"))))
@@ -145,7 +143,7 @@
 
 (defn printParam [printer p]
   (let
-    [fmtStr (str "%-" (- (:len p) 1) "s")]
+    [fmtStr (str "%-" (dec (:len p)) "s")]
     (print (format fmtStr (:name p)) " | ")))
 
 (defn printSeparator [printer params]
