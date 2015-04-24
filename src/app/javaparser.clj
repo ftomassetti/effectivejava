@@ -188,8 +188,8 @@
     (.append sb "(")
     (let [firstParam (first (.getParameters constructor))
           otherParams (rest (.getParameters constructor) )]
-      (when-not (nil? firstParam))
-        (.append sb (toStringWithoutComments (.getType firstParam)))
+      (when-not (nil? firstParam)
+        (.append sb (toStringWithoutComments (.getType firstParam))))
       (doseq [param otherParams]
         (.append sb ", ")
         (.append sb (toStringWithoutComments (.getType param)))))
