@@ -65,7 +65,7 @@
 
 (defn run-linter-mode [opts]
   (when (not (:dir opts))
-    (info opts "Linter, no directory indicated. Using current directory")
+    (info "Linter, no directory indicated. Using current directory")
     (linter ".")
     (System/exit 0))
   (linter (:dir opts))
