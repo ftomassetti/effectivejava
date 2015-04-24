@@ -10,7 +10,7 @@
 ; ============================================
 
 (deftest testParsingFileWithErrorsReturnNil
-  (is (= nil (parseResource "ClassWithErrors"))))
+  (is (nil? (parseResource "ClassWithErrors"))))
 
 ; ============================================
 ; Recognize node types
@@ -49,7 +49,7 @@
 
 (deftest testGetModifiersOnAType_NoModifiers
   (let [t (parseType "ASimpleClass")]
-    (is (= 0 (getModifiers t)))))
+    (is (zero? (getModifiers t)))))
 
 (deftest testGetModifiersOnAType_TwoModifiers
   (let [t (parseType "ASimplePublicFinalClass")]

@@ -2,10 +2,10 @@
 (def springJdbcCus (cus "test-resources/sample-codebases/spring-jdbc/"))
 
 (defn toPlain [res]
-  (into #{} (map (fn [entry]
-         (into [] (map
-                    (fn [field] (toString field))
-                    entry))) res)))
+  (set (map (fn [entry]
+     (vec (map
+            toString
+            entry))) res)))
 
 (deftest testClassesWithManyConstructorOnJavaParser
   (let [res (classesWithManyConstructors {:cus javaparserCus, :threshold 5})
