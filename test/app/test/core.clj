@@ -8,7 +8,7 @@
 
 (load "helper")
 (load "javaparser")
-(load "operationsTest")
+(load "operations")
 (load "acceptance")
 
 ; ============================================

@@ -1,4 +1,4 @@
-(ns app.test.operationsTest
+(ns app.test.operations
   (:use [app.core])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
