@@ -45,14 +45,14 @@
 ; ============================================
 
 (defn isPublicFieldSingleton? [cl]
-  (not (empty?
-         (filter
-           (fn [f]
-             (and
-               (isPublicOrHasPackageLevelAccess? f)
-               (isStatic? f)
-               (= (getName f) "INSTANCE")))
-           (getFieldsVariablesTuples cl)))))
+  (seq
+   (filter
+     (fn [f]
+       (and
+         (isPublicOrHasPackageLevelAccess? f)
+         (isStatic? f)
+         (= (getName f) "INSTANCE")))
+     (getFieldsVariablesTuples cl))))
 
 (defn isPublicMethodSingleton? [cl]
   (not (empty?
