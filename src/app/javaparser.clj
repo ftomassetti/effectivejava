@@ -1,3 +1,6 @@
+(ns app.javaparser
+  (:use [app.utils]))
+
 (import japa.parser.JavaParser)
 (import japa.parser.ast.CompilationUnit)
 (import japa.parser.ast.Node)

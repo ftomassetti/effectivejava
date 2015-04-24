@@ -1,3 +1,20 @@
+(ns app.operations
+  (:use [app.javaparser]))
+
+(import japa.parser.JavaParser)
+(import japa.parser.ast.CompilationUnit)
+(import japa.parser.ast.Node)
+(import japa.parser.ast.body.ClassOrInterfaceDeclaration)
+(import japa.parser.ast.body.EnumDeclaration)
+(import japa.parser.ast.body.EnumConstantDeclaration)
+(import japa.parser.ast.body.ConstructorDeclaration)
+(import japa.parser.ast.body.FieldDeclaration)
+(import japa.parser.ast.body.MethodDeclaration)
+(import japa.parser.ast.body.ModifierSet)
+(import japa.parser.ast.body.TypeDeclaration)
+(import japa.parser.ast.body.VariableDeclaratorId)
+(import japa.parser.ast.visitor.DumpVisitor)
+
 (defrecord Operation [query params headers])
 
 (derive ::integer ::printable)

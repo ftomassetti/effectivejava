@@ -1,5 +1,8 @@
 (ns app.test.core
   (:use [app.core])
+  (:use [app.test.helper])
+  (:use [app.itemsOnLifecycle])
+  (:use [app.interactive])
   (:use [clojure.test])
   (:require [instaparse.core :as insta]))
 

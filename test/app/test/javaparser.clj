@@ -1,6 +1,9 @@
-(ns app.test.core
+(ns app.test.javaparser
   (:use [app.core])
+  (:use [app.itemsOnLifecycle])
+  (:use [app.javaparser])
   (:use [clojure.test])
+  (:use [app.test.helper])
   (:require [instaparse.core :as insta]))
 
 (load "helper")

@@ -1,3 +1,9 @@
+(ns app.test.acceptance
+  (:use [app.javaparser])
+  (:use [app.operations])
+  (:use [app.itemsOnLifecycle])
+  (:use [clojure.test]))
+
 (def javaparserCus (cus "test-resources/sample-codebases/javaparser/"))
 (def springJdbcCus (cus "test-resources/sample-codebases/spring-jdbc/"))
 

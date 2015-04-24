@@ -1,3 +1,9 @@
+(ns app.itemsOnLifecycle
+  (:use [app.javaparser])
+  (:use [app.operations])
+  (:use [app.utils])
+  (:import [app.operations Operation]))
+
 ; ============================================
 ; ITEM 1
 ; ============================================

@@ -2,25 +2,10 @@
   (:require [clojure.java.io :as io])
   (:require [clojure.tools.cli :refer [parse-opts]])
   (:require [instaparse.core :as insta])
+  (:use [app.linter])
+  (:use [app.interactive])
+  (:use [app.cli])
   (:gen-class :main true))
-
-; ============================================
-; Misc
-; ============================================
-
-(def not-nil? (complement nil?))
-
-; ============================================
-; Files
-; ============================================
-
-(defn java-file? [f]
-  (and (.isFile f)
-    (.endsWith (.getName f) ".java")))
-
-(defn java-files [dirname]
-  (let [d (java.io.File. dirname)]
-    (filter java-file? (file-seq d))))
 
 (load "javaparser")
 (load "operations")
