@@ -263,7 +263,7 @@
   (filter not-nil? (parseDirByName dirname)))
 
 (defn cus [dirname]
-  (map (fn [cuTuple] (:cu cuTuple)) (cusTuples dirname)))
+  (map :cu (cusTuples dirname)))
 
 (defn getConstructors [cl]
   (filter (fn [m] (instance? ConstructorDeclaration m)) (.getMembers cl)))
