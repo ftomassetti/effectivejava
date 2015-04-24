@@ -64,7 +64,7 @@
     (usageError banner opts self-exclusive-modes-error)))
 
 (defn run-linter-mode [opts]
-  (when (not (:dir opts))
+  (when-not (:dir opts)
     (info "Linter, no directory indicated. Using current directory")
     (linter ".")
     (System/exit 0))
