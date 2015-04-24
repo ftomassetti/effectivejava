@@ -55,14 +55,14 @@
      (getFieldsVariablesTuples cl))))
 
 (defn isPublicMethodSingleton? [cl]
-  (not (empty?
-         (filter
-           (fn [m]
-             (and
-               (isPublicOrHasPackageLevelAccess? m)
-               (isStatic? m)
-               (= (getName m) "getInstance")))
-           (getMethods cl)))))
+  (seq
+   (filter
+     (fn [m]
+       (and
+         (isPublicOrHasPackageLevelAccess? m)
+         (isStatic? m)
+         (= (getName m) "getInstance")))
+     (getMethods cl))))
 
 (defn isSingletonEnum? [e]
   (and
