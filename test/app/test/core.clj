@@ -74,10 +74,10 @@
   (is (insta/failure? (command-parser "a not valid command"))))
 
 (deftest testParsingQ
-  (is (= [:EXIT 'q']) (command-parser "q")))
+  (is (= '([:EXIT "q"]) (command-parser "q"))))
 
 (deftest testParsingQuit
-  (is (= [:EXIT 'quit']) (command-parser "quit")))
+  (is (= '([:EXIT "quit"]) (command-parser "quit"))))
 
 (deftest testParsingExit
-  (is (= [:EXIT 'exit']) (command-parser "exit")))
+  (is (= '([:EXIT "exit"]) (command-parser "exit"))))
