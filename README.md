@@ -87,6 +87,11 @@ The project is written in Clojure using a java library called [JavaParser](https
 
 You will need also [Leiningen](http://leiningen.org/), the build tool for Clojure. It should download also Clojure for you.
 
+Dev guidelines
+==============
+
+Use [kibit](https://github.com/jonase/kibit) to verify code quality/
+
 What is the link with the book?
 ===============================
 I am reading this book and many advices seem sort of obvious in theory but I guess there are some violations lurking in the large codebase I am working with. I was curious to assess how many violations there were and I needed a way to find them out automatically.
