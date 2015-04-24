@@ -90,7 +90,7 @@ You will need also [Leiningen](http://leiningen.org/), the build tool for Clojur
 Dev guidelines
 ==============
 
-Use [kibit](https://github.com/jonase/kibit) to verify code quality/
+Use [kibit](https://github.com/jonase/kibit) and [eastwood](https://github.com/jonase/eastwood) to verify code quality.
 
 What is the link with the book?
 ===============================
