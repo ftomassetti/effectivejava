@@ -48,20 +48,20 @@
   (let [cl (parseType "NotSingletonEnum_NotOnlyInstance")]
     (is (not (isSingletonEnum? cl)))))
 
-(deftest testSelfExclusiveModes
-  (is (true? (self-exclusive-modes?
+(deftest testConflictingOptions
+  (is (true? (conflicting-options?
                {:query 'mc :linter true :interactive true})))
-  (is (true? (self-exclusive-modes?
+  (is (true? (conflicting-options?
                {:linter true :interactive true})))
-  (is (true? (self-exclusive-modes?
+  (is (true? (conflicting-options?
                {:query 'mc :linter true})))
-  (is (true? (self-exclusive-modes?
+  (is (true? (conflicting-options?
                {:query 'mc :interactive true})))
-  (is (false? (self-exclusive-modes?
+  (is (false? (conflicting-options?
                 {:linter false :interactive true})))
-  (is (false? (self-exclusive-modes? {:query 'mc})))
-  (is (false? (self-exclusive-modes? {:linter true})))
-  (is (false? (self-exclusive-modes? {:interactive true}))))
+  (is (false? (conflicting-options? {:query 'mc})))
+  (is (false? (conflicting-options? {:linter true})))
+  (is (false? (conflicting-options? {:interactive true}))))
 
 ; =============================================================
 ; Command parser

@@ -43,7 +43,7 @@
 (defn info [msg]
   (println " [info] " msg))
 
-(defn self-exclusive-modes?
+(defn conflicting-options?
   "Return true if opts contains self-exclusive modes"
   [opts]
   (let [self-exclusive-modes [:linter :interactive :query]]
@@ -60,7 +60,7 @@
 (defn treat-possible-errors [opts banner]
   (when (:errors opts)
     (usageError banner opts ""))
-  (when (self-exclusive-modes? opts)
+  (when (conflicting-options? opts)
     (usageError banner opts self-exclusive-modes-error)))
 
 (defn run-linter-mode [opts]
