@@ -25,6 +25,5 @@
         th (:threshold opts)
         operation (name2operation (:query opts))
         cus (filter not-nil? (cus dirname))]
-    (do
       (println "Considering" (.size cus) "Java files")
-      (printOperation operation cus th))))
+      (printOperation operation cus th)))
