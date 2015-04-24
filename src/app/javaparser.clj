@@ -131,7 +131,7 @@
       [p (.getPackage this)]
       (if (nil? p)
         ""
-        (.toString (.getName p))))))
+        (str (.getName p))))))
 
 (extend-protocol withPackageName
   Node
@@ -177,7 +177,7 @@
       (str (getQName pn) "." (getName this)))))
 
 (defn toStringWithoutComments [node]
-  (.toString node))
+  (str node))
 
 (defn constructorDeclarationAsString [constructor]
   (let [sb (StringBuffer. )]
@@ -191,7 +191,7 @@
         (.append sb ", ")
         (.append sb (toStringWithoutComments (.getType param)))))
     (.append sb ")")
-    (.toString sb)))
+    (str sb)))
 
 (extend-protocol Named
   ConstructorDeclaration
