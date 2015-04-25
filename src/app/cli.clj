@@ -1,3 +1,11 @@
+(ns app.cli
+  (:use [app.javaparser])
+  (:use [app.operations])
+  (:use [app.itemsOnLifecycle])
+  (:use [app.utils])
+  (:require [instaparse.core :as insta])
+  (:import [app.operations Operation]))
+
 ; ============================================
 ; CLI
 ; ============================================
@@ -25,6 +33,5 @@
         th (:threshold opts)
         operation (name2operation (:query opts))
         cus (filter not-nil? (cus dirname))]
-    (do
       (println "Considering" (.size cus) "Java files")
-      (printOperation operation cus th))))
+      (printOperation operation cus th)))

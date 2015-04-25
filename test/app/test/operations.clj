@@ -1,3 +1,12 @@
+(ns app.test.operations
+  (:use [app.core])
+  (:use [app.operations])
+  (:use [app.itemsOnLifecycle])
+  (:use [app.javaparser])
+  (:use [clojure.test])
+  (:use [app.test.helper])
+  (:require [instaparse.core :as insta]))
+
 (deftest testFormatValueNoCutOnStartNeeded
   (is (= "short     " (formatValue "short" 10 :onStart))))
 

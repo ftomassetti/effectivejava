@@ -1,11 +1,18 @@
+(ns app.test.acceptance
+  (:use [app.javaparser])
+  (:use [app.operations])
+  (:use [app.itemsOnLifecycle])
+  (:use [clojure.test]))
+
 (def javaparserCus (cus "test-resources/sample-codebases/javaparser/"))
 (def springJdbcCus (cus "test-resources/sample-codebases/spring-jdbc/"))
 
 (defn toPlain [res]
-  (map (fn [entry]
-         (into #{} (map
-                    (fn [field] (toString field))
-                    entry))) res))
+  (set (map (fn [entry]
+     (vec (map
+            toString
+            entry))) res)))
+
 
 (deftest foo
   (is (= "FOO" (.getAbsolutePath (new java.io.File "test-resources/sample-codebases/javaparser/japa/parser/ast/Node.java")))))
@@ -29,7 +36,6 @@
              ["japa.parser.ast.body.MethodDeclaration" "5"]
              ["japa.parser.ast.expr.ArrayCreationExpr" "5"]
              } pres))))
-
 
 (deftest testConstructorsWithManyParametersOnJavaParser
   (let [res (constructorsWithManyParameters {:cus javaparserCus, :threshold 12})

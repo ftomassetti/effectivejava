@@ -1,5 +1,8 @@
 effectivejava
 =============
+
+[![Build Status](https://travis-ci.org/ftomassetti/effectivejava.svg?branch=master)](https://travis-ci.org/ftomassetti/effectivejava)
+
 Effective java is a tool to examine your Java codebase. You can use it in three different ways:
 * as a Java linter. Just tells it which directory you want to examine, it will spit out a set of warnings and suggestions to improve your code
 * run queries from the command line. It could tell you which type of Singleton you are using in your codebase or how many constructors have 10 or more parameters. This modality can be easily integrated with other tools
@@ -80,11 +83,20 @@ I am just getting started so I implemented only a few queries for now:
 
 Dev info
 ========
-The project is written in Clojure using a java library called [JavaParser](https://github.com/matozoid/javaparser). Stricly speaking it is using [my fork]((https://github.com/ftomassetti/javaparser)) at this moment, but my chages will be soon getting merged in the main branch.
-
-When my changes will find their way in the main branch I will update project.clj and javaparser will be download from Maven automatically. For the time being, if you want to play with the code you can clone my project and compile it to your local maven repository. Look at the other MD file in this dir, there there are the commands to run to do it.
+The project is written in Clojure using a java library called [JavaParser](https://github.com/javaparser/javaparser).
 
 You will need also [Leiningen](http://leiningen.org/), the build tool for Clojure. It should download also Clojure for you.
+
+Dev guidelines
+==============
+
+Use [kibit](https://github.com/jonase/kibit) and [eastwood](https://github.com/jonase/eastwood) to verify code quality.
+
+When runnng eastwood exclude the check for unlimited use of namespaces:
+
+```
+lein eastwood "{:exclude-linters [:unlimited-use]}"
+```
 
 What is the link with the book?
 ===============================
@@ -96,3 +108,8 @@ So...
 What else
 =========
 Hope you enjoy this small project of mine. Feel free to open issues and ask questions!
+
+Contributors
+============
+
+Thanks to [David Ortiz](https://github.com/davidor) for fixing bugs and setting up Travis.

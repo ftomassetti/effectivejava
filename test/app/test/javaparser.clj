@@ -1,6 +1,9 @@
-(ns app.test.core
+(ns app.test.javaparser
   (:use [app.core])
+  (:use [app.itemsOnLifecycle])
+  (:use [app.javaparser])
   (:use [clojure.test])
+  (:use [app.test.helper])
   (:require [instaparse.core :as insta]))
 
 (load "helper")
@@ -10,7 +13,7 @@
 ; ============================================
 
 (deftest testParsingFileWithErrorsReturnNil
-  (is (= nil (parseResource "ClassWithErrors"))))
+  (is (nil? (parseResource "ClassWithErrors"))))
 
 ; ============================================
 ; Recognize node types
@@ -49,7 +52,7 @@
 
 (deftest testGetModifiersOnAType_NoModifiers
   (let [t (parseType "ASimpleClass")]
-    (is (= 0 (getModifiers t)))))
+    (is (zero? (getModifiers t)))))
 
 (deftest testGetModifiersOnAType_TwoModifiers
   (let [t (parseType "ASimplePublicFinalClass")]

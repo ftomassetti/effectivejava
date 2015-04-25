@@ -1,3 +1,11 @@
+(ns app.linter
+  (:use [app.javaparser])
+  (:use [app.operations])
+  (:use [app.itemsOnLifecycle])
+  (:use [app.utils])
+  (:require [instaparse.core :as insta])
+  (:import [app.operations Operation]))
+
 ; ============================================
 ; Linter
 ; ============================================

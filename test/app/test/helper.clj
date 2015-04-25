@@ -1,3 +1,7 @@
+(ns app.test.helper
+  (:use [app.javaparser])
+  (:use [clojure.test]))
+
 (defn readResource [filename]
   (let [resourceName (str "app/test/samples/" filename ".java.txt")
         code (slurp (clojure.java.io/resource resourceName))]

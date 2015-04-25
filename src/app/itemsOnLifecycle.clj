@@ -1,3 +1,9 @@
+(ns app.itemsOnLifecycle
+  (:use [app.javaparser])
+  (:use [app.operations])
+  (:use [app.utils])
+  (:import [app.operations Operation]))
+
 ; ============================================
 ; ITEM 1
 ; ============================================
@@ -45,24 +51,24 @@
 ; ============================================
 
 (defn isPublicFieldSingleton? [cl]
-  (not (empty?
-         (filter
-           (fn [f]
-             (and
-               (isPublicOrHasPackageLevelAccess? f)
-               (isStatic? f)
-               (= (getName f) "INSTANCE")))
-           (getFieldsVariablesTuples cl)))))
+  (seq
+   (filter
+     (fn [f]
+       (and
+         (isPublicOrHasPackageLevelAccess? f)
+         (isStatic? f)
+         (= (getName f) "INSTANCE")))
+     (getFieldsVariablesTuples cl))))
 
 (defn isPublicMethodSingleton? [cl]
-  (not (empty?
-         (filter
-           (fn [m]
-             (and
-               (isPublicOrHasPackageLevelAccess? m)
-               (isStatic? m)
-               (= (getName m) "getInstance")))
-           (getMethods cl)))))
+  (seq
+   (filter
+     (fn [m]
+       (and
+         (isPublicOrHasPackageLevelAccess? m)
+         (isStatic? m)
+         (= (getName m) "getInstance")))
+     (getMethods cl))))
 
 (defn isSingletonEnum? [e]
   (and

@@ -1,3 +1,6 @@
+(ns app.javaparser
+  (:use [app.utils]))
+
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
 (import com.github.javaparser.ast.Node)
@@ -10,6 +13,7 @@
 (import com.github.javaparser.ast.body.ModifierSet)
 (import com.github.javaparser.ast.body.TypeDeclaration)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
+(import com.github.javaparser.ast.visitor.DumpVisitor)
 
 ; ============================================
 ; Parsing
@@ -132,7 +136,7 @@
       [p (.getPackage this)]
       (if (nil? p)
         ""
-        (.toString (.getName p))))))
+        (str (.getName p))))))
 
 (extend-protocol withPackageName
   Node
@@ -176,6 +180,23 @@
   (getQName [this]
     (let [pn (.getParentNode this)]
       (str (getQName pn) "." (getName this)))))
+
+(defn toStringWithoutComments [node]
+  (str node))
+
+(defn constructorDeclarationAsString [constructor]
+  (let [sb (StringBuffer. )]
+    (.append sb (.getName constructor))
+    (.append sb "(")
+    (let [firstParam (first (.getParameters constructor))
+          otherParams (rest (.getParameters constructor) )]
+      (when-not (nil? firstParam)
+        (.append sb (toStringWithoutComments (.getType firstParam))))
+      (doseq [param otherParams]
+        (.append sb ", ")
+        (.append sb (toStringWithoutComments (.getType param)))))
+    (.append sb ")")
+    (str sb)))
 
 (extend-protocol Named
   ConstructorDeclaration
@@ -246,7 +267,7 @@
   (filter not-nil? (parseDirByName dirname)))
 
 (defn cus [dirname]
-  (map (fn [cuTuple] (:cu cuTuple)) (cusTuples dirname)))
+  (map :cu (cusTuples dirname)))
 
 (defn getConstructors [cl]
   (filter (fn [m] (instance? ConstructorDeclaration m)) (.getMembers cl)))

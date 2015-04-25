@@ -1,11 +1,14 @@
 (ns app.test.core
   (:use [app.core])
+  (:use [app.test.helper])
+  (:use [app.itemsOnLifecycle])
+  (:use [app.interactive])
   (:use [clojure.test])
   (:require [instaparse.core :as insta]))
 
 (load "helper")
 (load "javaparser")
-(load "operationsTest")
+(load "operations")
 (load "acceptance")
 
 ; ============================================
@@ -48,6 +51,21 @@
   (let [cl (parseType "NotSingletonEnum_NotOnlyInstance")]
     (is (not (isSingletonEnum? cl)))))
 
+(deftest testConflictingOptions
+  (is (true? (conflicting-options?
+               {:query 'mc :linter true :interactive true})))
+  (is (true? (conflicting-options?
+               {:linter true :interactive true})))
+  (is (true? (conflicting-options?
+               {:query 'mc :linter true})))
+  (is (true? (conflicting-options?
+               {:query 'mc :interactive true})))
+  (is (false? (conflicting-options?
+                {:linter false :interactive true})))
+  (is (false? (conflicting-options? {:query 'mc})))
+  (is (false? (conflicting-options? {:linter true})))
+  (is (false? (conflicting-options? {:interactive true}))))
+
 ; =============================================================
 ; Command parser
 ; =============================================================
@@ -56,10 +74,10 @@
   (is (insta/failure? (command-parser "a not valid command"))))
 
 (deftest testParsingQ
-  (is (= [:EXIT 'q']) (command-parser "q")))
+  (is (= '([:EXIT "q"]) (command-parser "q"))))
 
 (deftest testParsingQuit
-  (is (= [:EXIT 'quit']) (command-parser "quit")))
+  (is (= '([:EXIT "quit"]) (command-parser "quit"))))
 
 (deftest testParsingExit
-  (is (= [:EXIT 'exit']) (command-parser "exit")))
+  (is (= '([:EXIT "exit"]) (command-parser "exit"))))
