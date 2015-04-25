@@ -24,9 +24,7 @@
   [file]
   (try
     (JavaParser/parse file)
-    (catch Exception e (do
-                         (.printStackTrace e)
-                         (println "PARSING " file " : " e)))))
+    (catch Exception e nil)))
 
 (defn parseString [s]
   (let [reader (java.io.StringReader. s)]
