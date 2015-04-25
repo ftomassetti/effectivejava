@@ -1,7 +1,5 @@
 (ns app.core
-  (:require [clojure.java.io :as io])
   (:require [clojure.tools.cli :refer [parse-opts]])
-  (:require [instaparse.core :as insta])
   (:use [app.linter])
   (:use [app.interactive])
   (:use [app.cli])
