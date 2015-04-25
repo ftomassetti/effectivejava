@@ -90,9 +90,9 @@ You will need also [Leiningen](http://leiningen.org/), the build tool for Clojur
 Dev guidelines
 ==============
 
-Use [kibit](https://github.com/jonase/kibit) and [eastwood](https://github.com/jonase/eastwood) to verify code quality.
+Use [kibit](https://github.com/jonase/kibit) and [eastwood](https://github.com/jonase/eastwood) to verify code quality. You may want to add the to the plugins section of your `~/.lein/profiles.clj`.
 
-When runnng eastwood exclude the check for unlimited use of namespaces:
+When running eastwood exclude the check for unlimited use of namespaces:
 
 ```
 lein eastwood "{:exclude-linters [:unlimited-use]}"
