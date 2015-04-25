@@ -7,13 +7,6 @@
   (:use [app.cli])
   (:gen-class :main true))
 
-(load "javaparser")
-(load "operations")
-(load "itemsOnLifecycle")
-(load "interactive")
-(load "linter")
-(load "cli")
-
 (def self-exclusive-modes-error
   "Linter, interactive and query mode are self exclusive")
 
