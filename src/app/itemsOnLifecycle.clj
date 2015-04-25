@@ -111,3 +111,20 @@
     classesAndSingletonType
     []
     [:class :singletonType]))
+
+; ============================================
+; ITEM 4
+; ============================================
+
+(defn isUtilClass? 
+  [cl]
+  (let [ms (getMethods cl)]
+    (and 
+      (pos? (count ms))
+      (every? isStatic? ms))))
+
+(defn utilsClasses
+  "Find all Utils classes"
+  [cus]
+  (let [classes (flatten (map allClasses cus))]
+    (filter isUtilClass? classes)))
