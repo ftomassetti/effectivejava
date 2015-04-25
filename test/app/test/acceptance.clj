@@ -13,10 +13,6 @@
             toString
             entry))) res)))
 
-
-(deftest foo
-  (is (= "FOO" (.getAbsolutePath (new java.io.File "test-resources/sample-codebases/javaparser/japa/parser/ast/Node.java")))))
-
 (deftest testParseFileByNameOnAccessSpecifier
   (is (not (nil? (parseFileByName "test-resources/sample-codebases/javaparser/japa/parser/ast/Node.java")))))
 
@@ -24,7 +20,7 @@
   (is (= 1 (count (allClasses (parseFileByName "test-resources/sample-codebases/javaparser/japa/parser/ast/Node.java"))))))
 
 (deftest testAllClassesForCusOnJavaParser
-  (is (= 10 (count (allClassesForCus javaparserCus)))))
+  (is (= 106 (count (allClassesForCus javaparserCus)))))
 
 (deftest testClassesWithManyConstructorOnJavaParser
   (let [res (classesWithManyConstructors {:cus javaparserCus, :threshold 5})
@@ -41,8 +37,8 @@
   (let [res (constructorsWithManyParameters {:cus javaparserCus, :threshold 12})
         pres (toPlain res)]
     (is (= #{
-             ["japa.parser.ast.body.MethodDeclaration.MethodDeclaration(int, int, int, int, int, List<AnnotationExpr>, List<TypeParameter>, Type, String, List<Parameter>, int, List<NameExpr>, BlockStmt)" "13"]
-             ["japa.parser.ast.body.ClassOrInterfaceDeclaration.ClassOrInterfaceDeclaration(int, int, int, int, int, List<AnnotationExpr>, boolean, String, List<TypeParameter>, List<ClassOrInterfaceType>, List<ClassOrInterfaceType>, List<BodyDeclaration>)" "12"]
+             ["japa.parser.ast.body.ClassOrInterfaceDeclaration.ClassOrInterfaceDeclaration(final int beginLine, final int beginColumn, final int endLine, final int endColumn, final int modifiers, final List<AnnotationExpr> annotations, final boolean isInterface, final String name, final List<TypeParameter> typeParameters, final List<ClassOrInterfaceType> extendsList, final List<ClassOrInterfaceType> implementsList, final List<BodyDeclaration> members)" "12"] 
+             ["japa.parser.ast.body.MethodDeclaration.MethodDeclaration(final int beginLine, final int beginColumn, final int endLine, final int endColumn, final int modifiers, final List<AnnotationExpr> annotations, final List<TypeParameter> typeParameters, final Type type, final String name, final List<Parameter> parameters, final int arrayCount, final List<NameExpr> throws_, final BlockStmt block)" "13"]
              } pres))))
 
 (deftest testClassesAndSingletonTypeOnSpringJbc
