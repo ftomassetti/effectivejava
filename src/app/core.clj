@@ -18,7 +18,9 @@
   "Linter, interactive and query mode are self exclusive")
 
 (defn usageError [banner opts msg]
-  (println (str "Incorrect usage: " msg))
+  (if (clojure.string/blank? msg)
+    (println (str "Incorrect usage"))
+    (println (str "Incorrect usage: " msg)))
   (when (:errors opts)
     (doseq [e (:errors opts)]
       (println " * " e)))
@@ -73,15 +75,7 @@
       (name2operation (:query opts))
       (nil? (:errors opts)))
     (run opts)
-    ;; The following code block is very similar to the usageError function.
-    ;; Try to call that method to avoid repeating code.
-    (do
-      (println "Incorrect usage")
-      (when (:errors opts)
-        (doseq [e (:errors opts)]
-          (println " * " e)))
-      (println banner)
-      (System/exit 1))))
+    (usageError banner opts "")))
 
 (defn -main
   [& args]
