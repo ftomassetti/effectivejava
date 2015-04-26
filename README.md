@@ -77,9 +77,10 @@ What queries can you run
 ========================
 I am just getting started so I implemented only a few queries for now:
 
-* mc=many constructors : find the classes which contain the same number of constructors as the given threshold, or more
-* mcp=many constructor parameters : find the constructors which contain the same number of parameters as the given threshold, or more
-* st=singleton type: find if a type implements the singleton pattern and distinguish between the three types (public field, static factory, singleton enum)
+* _mc=many constructors_: find the classes which contain the same number of constructors as the given threshold, or more
+* _mcp=many constructor parameters_: find the constructors which contain the same number of parameters as the given threshold, or more
+* _st=singleton type_: find if a type implements the singleton pattern and distinguish between the three types (public field, static factory, singleton enum)
+* _u=utils classes_: find classes having only static methods and verify they have exactly one private constructor taking no parameters
 
 Dev info
 ========
