@@ -15,8 +15,7 @@
   (when (:errors opts)
     (doseq [e (:errors opts)]
       (println " * " e)))
-  (println banner)
-  (System/exit 1))
+  (println banner))
 
 (defn info [msg]
   (println " [info] " msg))
@@ -37,9 +36,11 @@
 
 (defn treat-possible-errors [opts banner]
   (when (:errors opts)
-    (usageError banner opts ""))
+    (usageError banner opts "")
+    (System/exit 1))
   (when (conflicting-options? opts)
-    (usageError banner opts self-exclusive-modes-error)))
+    (usageError banner opts self-exclusive-modes-error)
+    (System/exit 1)))
 
 (defn run-linter-mode [opts]
   (when-not (:dir opts)
@@ -66,7 +67,8 @@
       (name2operation (:query opts))
       (nil? (:errors opts)))
     (run opts)
-    (usageError banner opts "")))
+    (do (usageError banner opts "")
+        (System/exit 1))))
 
 (defn -main
   [& args]
