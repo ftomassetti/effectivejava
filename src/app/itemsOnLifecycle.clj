@@ -144,8 +144,8 @@
 (defn utilClassProblem
   "Return a problem found about a utils class or nil, if none can be found"
   [utilClass]
-  (if (hasOnlyOnePrivateConstructorTakingNoParams utilClass)
-    nil "The class should have only one single private constructor taking no params"))
+  (when-not (hasOnlyOnePrivateConstructorTakingNoParams utilClass)
+    "The class should have only one single private constructor taking no params"))
 
 (defn- utilsClassesQuery [params]
   (let [{cus :cus onlyIncorrect :onlyIncorrect} params
