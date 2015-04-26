@@ -21,7 +21,9 @@
   [(Check. classesWithManyConstructorsOp {:threshold 4}
      "This class has too many constructors (#1#). Consider using static factory methods or the Builder pattern")
    (Check. constructorsWithManyParametersOp {:threshold 6}
-     "This constructor has too many parameters (#1#). Consider using the Builder pattern")])
+     "This constructor has too many parameters (#1#). Consider using the Builder pattern")
+   (Check. utilsClassesOp {:onlyIncorrect true}
+     "This is a utils class and it should have exactly one private constructor taking no params")])
 
 (defn replaceParamsInMessage [message result]
   (clojure.string/replace message "#1#" (toString (nth result 1))))
@@ -32,8 +34,8 @@
 (defn executeCheck [check cus]
   (let [operation (.operation check)
         params (.params check)
-        threshold (:threshold params)
-        results ((.query operation) {:cus cus :threshold threshold})
+        queryParams (assoc params :cus cus)
+        results ((.query operation) queryParams)
         message (.message check)]
     (doseq [r results]
       (printCheckResult r message))))
