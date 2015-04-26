@@ -1,29 +1,21 @@
 (ns app.core
-  (:require [clojure.java.io :as io])
   (:require [clojure.tools.cli :refer [parse-opts]])
-  (:require [instaparse.core :as insta])
   (:use [app.linter])
   (:use [app.interactive])
   (:use [app.cli])
   (:gen-class :main true))
 
-(load "javaparser")
-(load "operations")
-(load "itemsOnLifecycle")
-(load "interactive")
-(load "linter")
-(load "cli")
-
 (def self-exclusive-modes-error
   "Linter, interactive and query mode are self exclusive")
 
 (defn usageError [banner opts msg]
-  (println (str "Incorrect usage: " msg))
+  (if (clojure.string/blank? msg)
+    (println (str "Incorrect usage"))
+    (println (str "Incorrect usage: " msg)))
   (when (:errors opts)
     (doseq [e (:errors opts)]
       (println " * " e)))
-  (println banner)
-  (System/exit 1))
+  (println banner))
 
 (defn info [msg]
   (println " [info] " msg))
@@ -44,9 +36,11 @@
 
 (defn treat-possible-errors [opts banner]
   (when (:errors opts)
-    (usageError banner opts ""))
+    (usageError banner opts "")
+    (System/exit 1))
   (when (conflicting-options? opts)
-    (usageError banner opts self-exclusive-modes-error)))
+    (usageError banner opts self-exclusive-modes-error)
+    (System/exit 1)))
 
 (defn run-linter-mode [opts]
   (when-not (:dir opts)
@@ -73,15 +67,8 @@
       (name2operation (:query opts))
       (nil? (:errors opts)))
     (run opts)
-    ;; The following code block is very similar to the usageError function.
-    ;; Try to call that method to avoid repeating code.
-    (do
-      (println "Incorrect usage")
-      (when (:errors opts)
-        (doseq [e (:errors opts)]
-          (println " * " e)))
-      (println banner)
-      (System/exit 1))))
+    (do (usageError banner opts "")
+        (System/exit 1))))
 
 (defn -main
   [& args]
