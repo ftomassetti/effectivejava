@@ -128,3 +128,37 @@
   [cus]
   (let [classes (flatten (map allClasses cus))]
     (filter isUtilClass? classes)))
+
+; there should be exactly one constructor
+; the constructor should take no params
+; the constructor should be private
+(defn hasOnlyOnePrivateConstructorTakingNoParams [clazz]
+  (let [constructors (getConstructors clazz)]
+    (if (= 1 (count constructors))
+      (let [c (first constructors)]
+        (and
+          (isPrivate? c)
+          (zero? (count (getParameters c)))))
+      false)))
+
+(defn utilClassProblem
+  "Return a problem found about a utils class or nil, if none can be found"
+  [utilClass]
+  (if (hasOnlyOnePrivateConstructorTakingNoParams utilClass)
+    nil "The class should have only one single private constructor taking no params"))
+
+(defn- utilsClassesQuery [params]
+  (let [{cus :cus onlyIncorrect :onlyIncorrect} params
+        clazzes (utilsClasses cus)
+        clazzesAndProblems (map (fn [cl] [cl (utilClassProblem cl)]) clazzes)]
+    (if onlyIncorrect
+      (filter
+        (fn [tuple] (not (nil? (nth tuple 1))))
+        clazzesAndProblems)
+      clazzesAndProblems)))
+
+; This operation can return either all the utils classes or only the utils classes with problems (depending on
+; the param :onlyIncorrect
+; Either way it produces a table with two columns: class and problem. Problem can be potentially empty.
+(def utilsClassesOp
+  (Operation. utilsClassesQuery [:onlyIncorrect] [:class :problem]))

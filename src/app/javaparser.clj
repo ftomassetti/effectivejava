@@ -66,6 +66,10 @@
   (getModifiers [this]))
 
 (extend-protocol withModifiers
+  ConstructorDeclaration
+  (getModifiers [this] (.getModifiers this)))
+
+(extend-protocol withModifiers
   TypeDeclaration
   (getModifiers [this] (.getModifiers this)))
 
