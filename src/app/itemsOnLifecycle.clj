@@ -170,7 +170,7 @@
 (defn calls-finalizers? [class]
   (->> (getMethods class)
        (map toStringWithoutComments)
-       (filter #(.contains % "finalize("))
+       (filter #(.contains % "finalize()"))
        (count)
        (pos?)))
 
