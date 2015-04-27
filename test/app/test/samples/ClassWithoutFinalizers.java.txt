@@ -1,6 +1,6 @@
 package app.test.samples;
 
-class ClassWithFinalizers {
+class ClassWithoutFinalizers {
 
     int a;
 
