@@ -1,3 +1,5 @@
+package app.test.samples;
+
 class ClassWithFinalizers {
 
     int a;

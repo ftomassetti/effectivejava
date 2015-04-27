@@ -1,5 +1,0 @@
-class ClassWithoutFinalizers {
-
-    int a;
-
-}
