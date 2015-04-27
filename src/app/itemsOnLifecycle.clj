@@ -162,3 +162,25 @@
 ; Either way it produces a table with two columns: class and problem. Problem can be potentially empty.
 (def utilsClassesOp
   (Operation. utilsClassesQuery [:onlyIncorrect] [:class :problem]))
+
+; ============================================
+; ITEM 7
+; ============================================
+
+(defn calls-finalizers? [class]
+  (->> (getMethods class)
+       (map toStringWithoutComments)
+       (filter #(.contains % "finalize("))
+       (count)
+       (pos?)))
+
+(defn classes-using-finalizers [params]
+  (let [classes (flatten (map allClasses (:cus params)))]
+    (map #(vec (list % nil))
+         (filter calls-finalizers? classes))))
+
+(def finalizersOp
+  (Operation.
+    classes-using-finalizers
+    []
+    [:class]))
