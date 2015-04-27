@@ -1,19 +1,8 @@
 (ns app.operations
   (:use [app.javaparser]))
 
-(import com.github.javaparser.JavaParser)
-(import com.github.javaparser.ast.CompilationUnit)
-(import com.github.javaparser.ast.Node)
 (import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration)
-(import com.github.javaparser.ast.body.EnumDeclaration)
-(import com.github.javaparser.ast.body.EnumConstantDeclaration)
 (import com.github.javaparser.ast.body.ConstructorDeclaration)
-(import com.github.javaparser.ast.body.FieldDeclaration)
-(import com.github.javaparser.ast.body.MethodDeclaration)
-(import com.github.javaparser.ast.body.ModifierSet)
-(import com.github.javaparser.ast.body.TypeDeclaration)
-(import com.github.javaparser.ast.body.VariableDeclaratorId)
-(import com.github.javaparser.ast.visitor.DumpVisitor)
 
 (defrecord Operation [query params headers])
 
@@ -89,8 +78,8 @@
     (clojure.string/join (repeat n "-"))))
 
 (defn printTable [headers results]
-  (let [resultsStrings (resultsToStrings results),
-        headersStrings (resultToStrings headers),
+  (let [resultsStrings (resultsToStrings results)
+        headersStrings (resultToStrings headers)
         colLengths (columnLengths headersStrings resultsStrings)]
       (println (rowStr colLengths headersStrings))
       (println (separatorStr colLengths))
@@ -98,7 +87,7 @@
         (println (rowStr colLengths r))))))
 
 (defn printOperation [operation cus threshold]
-  (let [headers (.headers operation),
+  (let [headers (.headers operation)
         results ((.query operation) {:cus cus :threshold threshold})]
     (printTable headers results)))
 
