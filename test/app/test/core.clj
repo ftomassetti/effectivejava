@@ -59,6 +59,14 @@
   (let [cl (parseType "ClassWithoutFinalizers")]
     (is (false? (calls-finalizers? cl)))))
 
+(deftest testClassWithCommentedCallToFinalize
+  (let [cl (parseType "ClassWithCommentedCallToFinalize")]
+    (is (false? (calls-finalizers? cl)))))
+
+(deftest testClassWithCallToFinalizeWithParams
+  (let [cl (parseType "ClassWithCallToFinalizeWithParams")]
+    (is (false? (calls-finalizers? cl)))))
+
 (deftest testConflictingOptions
   (is (true? (conflicting-options?
                {:query 'mc :linter true :interactive true})))
