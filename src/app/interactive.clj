@@ -52,7 +52,7 @@
             (println "mc/many-constructors th NUM : list classes with NUM or more constructors")
             (rp state))
           (= command :LOAD)
-          (let [dirnameWithApex (nth (nth (first ast) 2) 1),
+          (let [dirnameWithApex (nth (nth (first ast) 2) 1)
                 dirname (subs dirnameWithApex 1 (+ (.length dirnameWithApex) -1))]
               (println "Loading" dirname)
               (let [loadedCus (cus dirname)]

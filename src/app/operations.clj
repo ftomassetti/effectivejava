@@ -89,8 +89,8 @@
     (clojure.string/join (repeat n "-"))))
 
 (defn printTable [headers results]
-  (let [resultsStrings (resultsToStrings results),
-        headersStrings (resultToStrings headers),
+  (let [resultsStrings (resultsToStrings results)
+        headersStrings (resultToStrings headers)
         colLengths (columnLengths headersStrings resultsStrings)]
       (println (rowStr colLengths headersStrings))
       (println (separatorStr colLengths))
@@ -98,7 +98,7 @@
         (println (rowStr colLengths r))))))
 
 (defn printOperation [operation cus threshold]
-  (let [headers (.headers operation),
+  (let [headers (.headers operation)
         results ((.query operation) {:cus cus :threshold threshold})]
     (printTable headers results)))
 
