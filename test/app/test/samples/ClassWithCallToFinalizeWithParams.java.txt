@@ -1,0 +1,15 @@
+package app.test.samples;
+
+class ClassWithCallToFinalizeWithParams {
+
+    int a;
+
+    public ClassWithCallToFinalizeWithParams(int a) {
+        this.a = a;
+    }
+
+    public void someMethod() {
+        super.finalize(a);
+    }
+
+}
