@@ -1,19 +1,8 @@
 (ns app.operations
   (:use [app.javaparser]))
 
-(import com.github.javaparser.JavaParser)
-(import com.github.javaparser.ast.CompilationUnit)
-(import com.github.javaparser.ast.Node)
 (import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration)
-(import com.github.javaparser.ast.body.EnumDeclaration)
-(import com.github.javaparser.ast.body.EnumConstantDeclaration)
 (import com.github.javaparser.ast.body.ConstructorDeclaration)
-(import com.github.javaparser.ast.body.FieldDeclaration)
-(import com.github.javaparser.ast.body.MethodDeclaration)
-(import com.github.javaparser.ast.body.ModifierSet)
-(import com.github.javaparser.ast.body.TypeDeclaration)
-(import com.github.javaparser.ast.body.VariableDeclaratorId)
-(import com.github.javaparser.ast.visitor.DumpVisitor)
 
 (defrecord Operation [query params headers])
 
