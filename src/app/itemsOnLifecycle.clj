@@ -167,10 +167,15 @@
 ; ITEM 7
 ; ============================================
 
+(defn- isNilOrEmpty?
+  "JavaParser could return either nil or an empty list in certain cases"
+  [list]
+  (or (nil? list) (empty? list)))
+
 (defn calls-finalizers? [class]
   (pos? (count
           (filter #(and (= "finalize" (.getName %))
-                        (nil? (.getArgs %)))
+                        (isNilOrEmpty? (.getArgs %)))
                   (getMethodCallExprs class)))))
 
 (defn classes-using-finalizers [params]
