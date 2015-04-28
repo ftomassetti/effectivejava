@@ -1,0 +1,16 @@
+package app.test.samples;
+
+class ClassWithFinalizers {
+
+    int a;
+
+    protected void finalize() {
+        try {
+          doStuff();
+        }
+        finally {
+          super.finalize();
+        }
+    }
+
+}

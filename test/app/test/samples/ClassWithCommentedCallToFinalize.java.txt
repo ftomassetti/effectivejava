@@ -1,0 +1,11 @@
+package app.test.samples;
+
+class ClassWithCommentedCallToFinalize {
+
+    int a;
+
+    public void someMethod() {
+        //super.finalize();
+    }
+
+}
