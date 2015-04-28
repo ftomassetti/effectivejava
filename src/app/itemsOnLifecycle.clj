@@ -168,11 +168,10 @@
 ; ============================================
 
 (defn calls-finalizers? [class]
-  (->> (getMethods class)
-       (map toStringWithoutComments)
-       (filter #(.contains % "finalize()"))
-       (count)
-       (pos?)))
+  (pos? (count
+          (filter #(and (= "finalize" (.getName %))
+                        (nil? (.getArgs %)))
+                  (getMethodCallExprs class)))))
 
 (defn classes-using-finalizers [params]
   (let [classes (flatten (map allClasses (:cus params)))]

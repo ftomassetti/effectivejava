@@ -13,6 +13,7 @@
 (import com.github.javaparser.ast.body.ModifierSet)
 (import com.github.javaparser.ast.body.TypeDeclaration)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
+(import com.github.javaparser.ast.expr.MethodCallExpr)
 (import com.github.javaparser.ast.visitor.DumpVisitor)
 
 ; ============================================
@@ -305,3 +306,13 @@
     (if (nil? ps)
       (java.util.ArrayList. )
       ps)))
+
+(defn getChildrenNodes [class]
+  (tree-seq
+    #(not-empty (.getChildrenNodes %))
+    #(.getChildrenNodes %)
+    class))
+
+(defn getMethodCallExprs [class]
+  (filter #(instance? MethodCallExpr %)
+          (getChildrenNodes class)))
