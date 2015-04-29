@@ -25,7 +25,10 @@ Linting mode: how to use it
 Just run:
 
 ```bash
-java -jar effectivejava-0.1.2-SNAPSHOT-standalone.jar -l -d "<myJavaProjectDir>"
+# this generate a jar file
+lein jar
+# note that 0.1.3 is the current version it could change in the future
+java -jar effectivejava-0.1.3-SNAPSHOT-standalone.jar -l -d "<myJavaProjectDir>"
 ```
 
 You can expect a set of lines like this one:
