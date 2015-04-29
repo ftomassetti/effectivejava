@@ -64,7 +64,7 @@
     (and
       (:dir opts)
       (:query opts)
-      (name2operation (:query opts))
+      ((keyword (:query opts)) operations)
       (nil? (:errors opts)))
     (run opts)
     (do (usageError banner opts "")
