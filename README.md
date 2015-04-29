@@ -8,7 +8,7 @@ Effective java is a tool to examine your Java codebase. You can use it in three 
 * run queries from the command line. It could tell you which type of Singleton you are using in your codebase or how many constructors have 10 or more parameters. This modality can be easily integrated with other tools
 * run queries interactively. It permits to poke your codebase, parsing it once and running different queries to find out interesting facts about it.
 
-The project is named effectivajava because many queries/checks derive from reading the book Effective Java. Others will be implemented as well (feel free to suggest your favorite ones!).
+The project is named effectivejava because many queries/checks derive from reading the book Effective Java. Others will be implemented as well (feel free to suggest your favorite ones!).
 
 While reading that book I thought that yes, many principles are well known, but they are rarely applied to a large codebase. I thought that applying them in practice is much harder than it seems, and a tool like this one could help in improving constantly a codebase.
 
