@@ -203,8 +203,13 @@
 
 (extend-protocol Named
   ConstructorDeclaration
+  ; unfortunately there is a bug in JavaParser 2.0.0 and getDeclarationAsString can throw a NPE
+  ; when the list of parameters is empty, so we forced to a null list in that case
   (getName [this]
-    (.getDeclarationAsString this false false))
+    (do 
+      (when (zero? (count (.getParameters this)))
+        (.setParameters this []))
+    (.getDeclarationAsString this false false)))
   (getQName [this]
     (let [pn (.getParentNode this)]
       (str (getQName pn) "." (getName this)))))
