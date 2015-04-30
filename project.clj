@@ -5,4 +5,5 @@
                  [org.clojure/tools.cli "0.3.1"]
                  [instaparse "1.3.6"]]
   :resource-paths ["test-resources"]
+  :plugins [[lein-cljfmt "0.1.10"]]
   :main app.core)
