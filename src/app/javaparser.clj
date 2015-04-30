@@ -48,13 +48,13 @@
 
 (defn isClass? [n]
   (and
-    (instance? ClassOrInterfaceDeclaration n)
-    (not (.isInterface n))))
+   (instance? ClassOrInterfaceDeclaration n)
+   (not (.isInterface n))))
 
 (defn isInterface? [n]
   (and
-    (instance? ClassOrInterfaceDeclaration n)
-    (.isInterface n)))
+   (instance? ClassOrInterfaceDeclaration n)
+   (.isInterface n)))
 
 (defn isEnum? [n]
   (instance? EnumDeclaration n))
@@ -104,15 +104,15 @@
 
 (defn hasPackageLevelAccess? [cl]
   (not
-    (or
-      (isPublic? cl)
-      (isPrivate? cl)
-      (isProtected? cl))))
+   (or
+    (isPublic? cl)
+    (isPrivate? cl)
+    (isProtected? cl))))
 
 (defn isPublicOrHasPackageLevelAccess? [el]
   (or
-    (isPublic? el)
-    (hasPackageLevelAccess? el)))
+   (isPublic? el)
+   (hasPackageLevelAccess? el)))
 
 (defn isNotPrivate? [cl]
   (complement isPrivate?))
@@ -123,7 +123,7 @@
 
 (defrecord SingleFieldDeclaration [field variable]
   withModifiers
-    (getModifiers [this] (getModifiers field)))
+  (getModifiers [this] (getModifiers field)))
 
 ; ============================================
 ; Naming
@@ -136,7 +136,7 @@
   CompilationUnit
   (packageName [this]
     (let
-      [p (.getPackage this)]
+     [p (.getPackage this)]
       (if (nil? p)
         ""
         (str (.getName p))))))
@@ -162,8 +162,8 @@
     (.getName this))
   (getQName [this]
     (let
-      [pn (packageName this),
-       cn (getName this)]
+     [pn (packageName this),
+      cn (getName this)]
       (if (.isEmpty pn)
         cn
         (str pn "." cn)))))
@@ -188,11 +188,11 @@
   (str node))
 
 (defn constructorDeclarationAsString [constructor]
-  (let [sb (StringBuffer. )]
+  (let [sb (StringBuffer.)]
     (.append sb (.getName constructor))
     (.append sb "(")
     (let [firstParam (first (.getParameters constructor))
-          otherParams (rest (.getParameters constructor) )]
+          otherParams (rest (.getParameters constructor))]
       (when-not (nil? firstParam)
         (.append sb (toStringWithoutComments (.getType firstParam))))
       (doseq [param otherParams]
@@ -226,7 +226,7 @@
 
 (defn topLevelTypes [cu]
   (if (nil? cu) []
-  (.getTypes cu)))
+      (.getTypes cu)))
 
 (defn directlyAnnidatedTypes [t]
   (filter (fn [m] (instance? TypeDeclaration m)) (.getMembers t)))
@@ -235,17 +235,17 @@
   "Get the types annidated in the given type, recursively"
   [t]
   (flatten
-    (map
-      (fn [dat] [dat, (directlyAnnidatedTypes dat)])
-      (directlyAnnidatedTypes t))))
+   (map
+    (fn [dat] [dat, (directlyAnnidatedTypes dat)])
+    (directlyAnnidatedTypes t))))
 
 (defn allTypes
   "Get all the types in the Compilation Unit includin both top level types and annidated types"
   [cu]
   (flatten
-    (map
-      (fn [t] [t, (annidatedTypes t)])
-      (topLevelTypes cu))))
+   (map
+    (fn [t] [t, (annidatedTypes t)])
+    (topLevelTypes cu))))
 
 (defn allClasses [cu]
   (filter isClass? (allTypes cu)))
@@ -258,13 +258,13 @@
 
 (defn allClassesForCus [cus]
   (flatten
-    (for [cu cus]
-      (allClasses cu))))
+   (for [cu cus]
+     (allClasses cu))))
 
 (defn allClassesForCusTuples [cusTuples]
   (flatten
-    (for [cuTuple cusTuples]
-      (allClasses (:cu cuTuple)))))
+   (for [cuTuple cusTuples]
+     (allClasses (:cu cuTuple)))))
 
 (defn cusTuples "Get tuples of [filename cu]" [dirname]
   (filter not-nil? (parseDirByName dirname)))
@@ -277,8 +277,8 @@
 
 (defn allConstructorsForCus [cus]
   (flatten
-    (for [cl (allClassesForCus cus)]
-      (getConstructors cl))))
+   (for [cl (allClassesForCus cus)]
+     (getConstructors cl))))
 
 (defn getMethods [cl]
   (filter (fn [m] (instance? MethodDeclaration m)) (.getMembers cl)))
@@ -288,9 +288,9 @@
 
 (defn getFieldsVariablesTuples [cl]
   (flatten
-    (for [f (getFields cl)]
-      (for [v (.getVariables f)]
-        (SingleFieldDeclaration. f v)))))
+   (for [f (getFields cl)]
+     (for [v (.getVariables f)]
+       (SingleFieldDeclaration. f v)))))
 
 (defn getNotPrivateConstructors [cl]
   (filter isNotPrivate? (getConstructors cl)))
@@ -304,14 +304,14 @@
 (defn getParameters [m]
   (let [ps (.getParameters m)]
     (if (nil? ps)
-      (java.util.ArrayList. )
+      (java.util.ArrayList.)
       ps)))
 
 (defn getChildrenNodes [class]
   (tree-seq
-    #(not-empty (.getChildrenNodes %))
-    #(.getChildrenNodes %)
-    class))
+   #(not-empty (.getChildrenNodes %))
+   #(.getChildrenNodes %)
+   class))
 
 (defn getMethodCallExprs [class]
   (filter #(instance? MethodCallExpr %)

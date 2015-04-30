@@ -40,20 +40,20 @@
 
 (defn columnLength [headerStr resultsStrs ind]
   (max
-    (.length headerStr)
-    (apply max
-      (into [0] (map (fn [row] (.length (nth row ind))) resultsStrs)))))
+   (.length headerStr)
+   (apply max
+          (into [0] (map (fn [row] (.length (nth row ind))) resultsStrs)))))
 
 (defn columnLengthsHelper [headersStrings resultsStrings acc ind]
   (if (empty? headersStrings)
     acc
     (columnLengthsHelper
-      (rest headersStrings)
-      resultsStrings
-      (conj
-        acc
-        (columnLength (first headersStrings) resultsStrings ind))
-      (inc ind))))
+     (rest headersStrings)
+     resultsStrings
+     (conj
+      acc
+      (columnLength (first headersStrings) resultsStrings ind))
+     (inc ind))))
 
 (defn columnLengths [headersStrings, resultsStrings]
   (vec (columnLengthsHelper headersStrings resultsStrings [] 0)))
@@ -65,7 +65,7 @@
 
 (defn rowStr [lengths values]
   (let
-    [paddedValues (map (fn [l v] (padStr v l)) lengths values)]
+   [paddedValues (map (fn [l v] (padStr v l)) lengths values)]
     (clojure.string/join columnSeparator paddedValues)))
 
 (defn sum [v]
@@ -81,10 +81,10 @@
   (let [resultsStrings (resultsToStrings results)
         headersStrings (resultToStrings headers)
         colLengths (columnLengths headersStrings resultsStrings)]
-      (println (rowStr colLengths headersStrings))
-      (println (separatorStr colLengths))
-      (doall (for [r resultsStrings]
-        (println (rowStr colLengths r))))))
+    (println (rowStr colLengths headersStrings))
+    (println (separatorStr colLengths))
+    (doall (for [r resultsStrings]
+             (println (rowStr colLengths r))))))
 
 (defn printOperation [operation cus threshold]
   (let [headers (.headers operation)
@@ -135,10 +135,10 @@
 
 (defn fieldValuesToStr [fields values]
   (if (empty? fields) ""
-    (let [f (first fields), v (first values)]
-      (str
-        (fieldValueToStr f v)
-        (fieldValuesToStr (rest fields) (rest values))))))
+      (let [f (first fields), v (first values)]
+        (str
+         (fieldValueToStr f v)
+         (fieldValuesToStr (rest fields) (rest values))))))
 
 ; it has not state
 (defrecord TablePrinter [])
@@ -149,7 +149,7 @@
 
 (defn printParam [printer p]
   (let
-    [fmtStr (str "%-" (dec (:len p)) "s")]
+   [fmtStr (str "%-" (dec (:len p)) "s")]
     (print (format fmtStr (:name p)) " | ")))
 
 (defn printSeparator [printer params]
@@ -158,16 +158,16 @@
   (println "-"))
 
 (extend-protocol ResultCollector TablePrinter
-  (header [this fields]
-    (do
-      (doseq [p fields]
-        (printParam this p))
-       (println "")
-       (printSeparator this fields)
-       (TableRowPrinter. fields))))
+                 (header [this fields]
+                   (do
+                     (doseq [p fields]
+                       (printParam this p))
+                     (println "")
+                     (printSeparator this fields)
+                     (TableRowPrinter. fields))))
 
 (extend-protocol ParamCollector TableRowPrinter
-  (row [this values]
-    (do
-      (print (fieldValuesToStr (.fields this) values))
-      (println ""))))
+                 (row [this values]
+                   (do
+                     (print (fieldValuesToStr (.fields this) values))
+                     (println ""))))

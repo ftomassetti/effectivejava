@@ -14,16 +14,16 @@
   "Classes which have threshold or more not private constructors"
   [params]
   (filter
-    (fn [v] (>= (nth v 1) (:threshold params)))
-    (map
-      (fn [cl] [cl (nNotPrivateConstructors cl)])
-      (allClassesForCus (:cus params)))))
+   (fn [v] (>= (nth v 1) (:threshold params)))
+   (map
+    (fn [cl] [cl (nNotPrivateConstructors cl)])
+    (allClassesForCus (:cus params)))))
 
 (def classesWithManyConstructorsOp
   (Operation.
-    classesWithManyConstructors
-    [:threshold]
-    [:class :numberOfConstructors]))
+   classesWithManyConstructors
+   [:threshold]
+   [:class :numberOfConstructors]))
 
 ; ============================================
 ; ITEM 2
@@ -33,18 +33,18 @@
   "The non private constructors which takes threshold or more parameters"
   [params]
   (filter
-    (fn [v] (>= (nth v 1) (:threshold params)))
-    (map
-      (fn [constructor]
-        (let [np (.size (getParameters constructor))]
-          [constructor np]))
-      (allConstructorsForCus (:cus params)))))
+   (fn [v] (>= (nth v 1) (:threshold params)))
+   (map
+    (fn [constructor]
+      (let [np (.size (getParameters constructor))]
+        [constructor np]))
+    (allConstructorsForCus (:cus params)))))
 
 (def constructorsWithManyParametersOp
   (Operation.
-    constructorsWithManyParameters
-    [:threshold]
-    [:constructor :numberOfParameters]))
+   constructorsWithManyParameters
+   [:threshold]
+   [:constructor :numberOfParameters]))
 
 ; ============================================
 ; ITEM 3
@@ -53,64 +53,64 @@
 (defn isPublicFieldSingleton? [cl]
   (seq
    (filter
-     (fn [f]
-       (and
-         (isPublicOrHasPackageLevelAccess? f)
-         (isStatic? f)
-         (= (getName f) "INSTANCE")))
-     (getFieldsVariablesTuples cl))))
+    (fn [f]
+      (and
+       (isPublicOrHasPackageLevelAccess? f)
+       (isStatic? f)
+       (= (getName f) "INSTANCE")))
+    (getFieldsVariablesTuples cl))))
 
 (defn isPublicMethodSingleton? [cl]
   (seq
    (filter
-     (fn [m]
-       (and
-         (isPublicOrHasPackageLevelAccess? m)
-         (isStatic? m)
-         (= (getName m) "getInstance")))
-     (getMethods cl))))
+    (fn [m]
+      (and
+       (isPublicOrHasPackageLevelAccess? m)
+       (isStatic? m)
+       (= (getName m) "getInstance")))
+    (getMethods cl))))
 
 (defn isSingletonEnum? [e]
   (and
-    (=
-      1
-      (.size
-        (.getEntries e)))
-    (=
-      "INSTANCE"
-      (getName
-        (first
-          (.getEntries e))))))
+   (=
+    1
+    (.size
+     (.getEntries e)))
+   (=
+    "INSTANCE"
+    (getName
+     (first
+      (.getEntries e))))))
 
 (defn getSingletonType
   "Return the singleton type or nil: :publicField :getInstance "
   [t]
   (cond
     (and
-      (isClass? t)
-      (isPublicFieldSingleton? t)) :publicField
+     (isClass? t)
+     (isPublicFieldSingleton? t)) :publicField
     (and
-      (isClass? t)
-      (isPublicMethodSingleton? t)) :staticFactory
+     (isClass? t)
+     (isPublicMethodSingleton? t)) :staticFactory
     (and
-      (isEnum? t)
-      (isSingletonEnum? t)) :singletonEnum
+     (isEnum? t)
+     (isSingletonEnum? t)) :singletonEnum
     :else nil))
 
 (defn classesAndSingletonType
   "The type of singleton implemented in a certain class"
   [params]
   (filter
-    (fn [v] (not-nil? (nth v 1)))
-    (map
-      (fn [cl] [cl (getSingletonType cl)])
-      (allClassesForCus (:cus params)))))
+   (fn [v] (not-nil? (nth v 1)))
+   (map
+    (fn [cl] [cl (getSingletonType cl)])
+    (allClassesForCus (:cus params)))))
 
 (def classesAndSingletonTypeOp
   (Operation.
-    classesAndSingletonType
-    []
-    [:class :singletonType]))
+   classesAndSingletonType
+   []
+   [:class :singletonType]))
 
 ; ============================================
 ; ITEM 4
@@ -120,8 +120,8 @@
   [cl]
   (let [ms (getMethods cl)]
     (and 
-      (pos? (count ms))
-      (every? isStatic? ms))))
+     (pos? (count ms))
+     (every? isStatic? ms))))
 
 (defn utilsClasses
   "Find all Utils classes"
@@ -137,8 +137,8 @@
     (if (= 1 (count constructors))
       (let [c (first constructors)]
         (and
-          (isPrivate? c)
-          (zero? (count (getParameters c)))))
+         (isPrivate? c)
+         (zero? (count (getParameters c)))))
       false)))
 
 (defn utilClassProblem
@@ -153,8 +153,8 @@
         clazzesAndProblems (map (fn [cl] [cl (utilClassProblem cl)]) clazzes)]
     (if onlyIncorrect
       (filter
-        (fn [tuple] (not (nil? (nth tuple 1))))
-        clazzesAndProblems)
+       (fn [tuple] (not (nil? (nth tuple 1))))
+       clazzesAndProblems)
       clazzesAndProblems)))
 
 ; This operation can return either all the utils classes or only the utils classes with problems (depending on
@@ -174,9 +174,9 @@
 
 (defn calls-finalizers? [class]
   (pos? (count
-          (filter #(and (= "finalize" (.getName %))
-                        (isNilOrEmpty? (.getArgs %)))
-                  (getMethodCallExprs class)))))
+         (filter #(and (= "finalize" (.getName %))
+                       (isNilOrEmpty? (.getArgs %)))
+                 (getMethodCallExprs class)))))
 
 (defn classes-using-finalizers [params]
   (let [classes (flatten (map allClasses (:cus params)))]
@@ -185,6 +185,6 @@
 
 (def finalizersOp
   (Operation.
-    classes-using-finalizers
-    []
-    [:class]))
+   classes-using-finalizers
+   []
+   [:class]))

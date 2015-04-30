@@ -32,10 +32,10 @@
   (is (= "ciao    | 1  " (rowStr [7 3] ["ciao" "1"]))))
 
 (deftest testColumnLengthRowIsLongerThanHeader
-  (is (= 5 (columnLength "ciao" [["a" "zzzzz" "bc"]] 1 ))))
+  (is (= 5 (columnLength "ciao" [["a" "zzzzz" "bc"]] 1))))
 
 (deftest testColumnLengthHeaderIsTheLongest
-  (is (= 9 (columnLength "ciaobello" [["a" "zzzzz" "bc"]] 1 ))))
+  (is (= 9 (columnLength "ciaobello" [["a" "zzzzz" "bc"]] 1))))
 
 (deftest testToStringClassDeclaration
   (let [t (parseType "ASimpleClass")]

@@ -8,7 +8,7 @@
 
 (defn java-file? [f]
   (and (.isFile f)
-    (.endsWith (.getName f) ".java")))
+       (.endsWith (.getName f) ".java")))
 
 (defn java-files [dirname]
   (let [d (java.io.File. dirname)]

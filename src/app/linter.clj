@@ -19,13 +19,13 @@
 
 (def checks
   [(Check. classesWithManyConstructorsOp {:threshold 4}
-     "This class has too many constructors (#1#). Consider using static factory methods or the Builder pattern")
+           "This class has too many constructors (#1#). Consider using static factory methods or the Builder pattern")
    (Check. constructorsWithManyParametersOp {:threshold 6}
-     "This constructor has too many parameters (#1#). Consider using the Builder pattern")
+           "This constructor has too many parameters (#1#). Consider using the Builder pattern")
    (Check. utilsClassesOp {:onlyIncorrect true}
-     "This is a utils class and it should have exactly one private constructor taking no params")
+           "This is a utils class and it should have exactly one private constructor taking no params")
    (Check. finalizersOp {}
-     "This class calls finalize(). Finalizers are considered to be unpredictable and often dangerous.")])
+           "This class calls finalize(). Finalizers are considered to be unpredictable and often dangerous.")])
 
 (defn replaceParamsInMessage [message result]
   (clojure.string/replace message "#1#" (toString (nth result 1))))

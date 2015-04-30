@@ -69,15 +69,15 @@
 
 (deftest testConflictingOptions
   (is (true? (conflicting-options?
-               {:query 'mc :linter true :interactive true})))
+              {:query 'mc :linter true :interactive true})))
   (is (true? (conflicting-options?
-               {:linter true :interactive true})))
+              {:linter true :interactive true})))
   (is (true? (conflicting-options?
-               {:query 'mc :linter true})))
+              {:query 'mc :linter true})))
   (is (true? (conflicting-options?
-               {:query 'mc :interactive true})))
+              {:query 'mc :interactive true})))
   (is (false? (conflicting-options?
-                {:linter false :interactive true})))
+               {:linter false :interactive true})))
   (is (false? (conflicting-options? {:query 'mc})))
   (is (false? (conflicting-options? {:linter true})))
   (is (false? (conflicting-options? {:interactive true}))))

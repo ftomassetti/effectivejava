@@ -61,11 +61,11 @@
 
 (defn run-query-mode [opts banner]
   (if
-    (and
-      (:dir opts)
-      (:query opts)
-      ((keyword (:query opts)) operations)
-      (nil? (:errors opts)))
+   (and
+    (:dir opts)
+    (:query opts)
+    ((keyword (:query opts)) operations)
+    (nil? (:errors opts)))
     (run opts)
     (do (usageError banner opts "")
         (System/exit 1))))
