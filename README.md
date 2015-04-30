@@ -102,6 +102,11 @@ When running eastwood exclude the check for unlimited use of namespaces:
 lein eastwood "{:exclude-linters [:unlimited-use]}"
 ```
 
+To verify the code is correctly formatted [cljfmt](https://github.com/weavejester/cljfmt) is used. You can run it like this:
+```
+lein cljfmt
+```
+
 What is the link with the book?
 ===============================
 I am reading this book and many advices seem sort of obvious in theory but I guess there are some violations lurking in the large codebase I am working with. I was curious to assess how many violations there were and I needed a way to find them out automatically.
