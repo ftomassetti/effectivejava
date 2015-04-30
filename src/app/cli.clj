@@ -21,18 +21,16 @@
                 :validate [#(>= % 0) "Must be a number equal or greater to 0"]]
                ])
 
-(defn name2operation [name]
-  (cond
-    (= "mc" name) classesWithManyConstructorsOp
-    (= "mcp" name) constructorsWithManyParametersOp
-    (= "st" name) classesAndSingletonTypeOp
-    (= "u" name) utilsClassesOp
-    :else nil))
+(def operations
+  {:mc classesWithManyConstructorsOp
+   :mcp constructorsWithManyParametersOp
+   :st classesAndSingletonTypeOp
+   :u utilsClassesOp})
 
 (defn run [opts]
   (let [dirname (:dir opts)
         th (:threshold opts)
-        operation (name2operation (:query opts))
+        operation ((keyword (:query opts)) operations)
         cus (filter not-nil? (cus dirname))]
       (println "Considering" (.size cus) "Java files")
       (printOperation operation cus th)))
