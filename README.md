@@ -94,7 +94,7 @@ You will need also [Leiningen](http://leiningen.org/), the build tool for Clojur
 Dev guidelines
 ==============
 
-Use [kibit](https://github.com/jonase/kibit) and [eastwood](https://github.com/jonase/eastwood) to verify code quality. You may want to add the to the plugins section of your `~/.lein/profiles.clj`.
+To monitor code quality we use [kibit](https://github.com/jonase/kibit) and [eastwood](https://github.com/jonase/eastwood).
 
 When running eastwood exclude the check for unlimited use of namespaces:
 
@@ -106,6 +106,8 @@ To verify the code is correctly formatted [cljfmt](https://github.com/weavejeste
 ```
 lein cljfmt
 ```
+
+We use [lein-ancient](https://github.com/xsc/lein-ancient) to verify our dependencies are up-to-date.
 
 What is the link with the book?
 ===============================
