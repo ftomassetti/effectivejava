@@ -20,7 +20,8 @@
                :validate [#(>= % 0) "Must be a number equal or greater to 0"]]])
 
 (def operations
-  {:mc classesWithManyConstructorsOp
+  {:f finalizersOp
+   :mc classesWithManyConstructorsOp
    :mcp constructorsWithManyParametersOp
    :st classesAndSingletonTypeOp
    :u utilsClassesOp})
