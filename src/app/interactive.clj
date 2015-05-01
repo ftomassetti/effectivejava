@@ -35,9 +35,9 @@
         (println "Listing types currently loaded:")
         (doseq [cu (:cus state)]
           (doseq [t (.getTypes cu)]
-            (println " *" (getQName t))))
-        (println "No classes loaded. Use <load> first"))
-      (interactive state))))
+            (println " *" (getQName t)))))
+      (println "No classes loaded. Use <load> first"))
+    (interactive state)))
 
 (defn- help [state]
   (println "h/help                      : print this help message")
