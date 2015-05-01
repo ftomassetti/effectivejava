@@ -104,7 +104,10 @@ lein eastwood "{:exclude-linters [:unlimited-use]}"
 
 To verify the code is correctly formatted [cljfmt](https://github.com/weavejester/cljfmt) is used. You can run it like this:
 ```
-lein cljfmt
+# to verify possible style issues
+lein cljfmt check
+# to automatically fix them
+lein clkjfmt fix
 ```
 
 We use [lein-ancient](https://github.com/xsc/lein-ancient) to verify our dependencies are up-to-date.
