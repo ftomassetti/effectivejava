@@ -209,7 +209,7 @@
     (do 
       (when (zero? (count (.getParameters this)))
         (.setParameters this []))
-    (.getDeclarationAsString this false false)))
+      (.getDeclarationAsString this false false)))
   (getQName [this]
     (let [pn (.getParentNode this)]
       (str (getQName pn) "." (getName this)))))
