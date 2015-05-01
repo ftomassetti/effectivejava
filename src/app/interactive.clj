@@ -67,13 +67,13 @@
         (println "ERROR: " ast)
         (rp state))
       (let [command (ffirst ast)]
-        (cond
-          (= command :EXIT) (exit)
-          (= command :LIST) (list-loaded-classes state)
-          (= command :HELP) (help state)
-          (= command :LOAD) (load-classes ast)
-          (= command :MC) (mc-operation state)
-          :else (println "Command not implemented: " command))))))
+        (case command
+          :EXIT (exit)
+          :LIST (list-loaded-classes state)
+          :HELP (help state)
+          :LOAD (load-classes ast)
+          :MC (mc-operation state)
+          (println "Command not implemented: " command))))))
 
 (defn interactive [state]
   (do
