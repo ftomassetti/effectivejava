@@ -54,8 +54,8 @@
       (println "Java files loaded:" (.size loadedCus))
       (interactive {:cus loadedCus}))))
 
-(defn- mc-operation [state]
-  (printOperation classesWithManyConstructorsOp (:cus state) 5)
+(defn- mc-operation [state threshold]
+  (printOperation classesWithManyConstructorsOp (:cus state) threshold)
   (interactive state))
 
 (defn process [state input rp]
@@ -72,7 +72,8 @@
           :LIST (list-loaded-classes state)
           :HELP (help state)
           :LOAD (load-classes ast)
-          :MC (mc-operation state)
+          :MC (let [threshold (read-string (last (last (first ast))))]
+                (mc-operation state threshold))
           (println "Command not implemented: " command))))))
 
 (defn interactive [state]
