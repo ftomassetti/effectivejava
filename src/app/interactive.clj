@@ -43,6 +43,7 @@
   (println "h/help                      : print this help message")
   (println "q/quit/exit                 : close the shell")
   (println "list                        : list classes loaded")
+  (println "load DIR                    : load classes from DIR")
   (println "mc/many-constructors th NUM : list classes with NUM or more constructors")
   (interactive state))
 
