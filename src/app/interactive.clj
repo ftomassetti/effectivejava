@@ -58,14 +58,14 @@
   (printOperation classesWithManyConstructorsOp (:cus state) threshold)
   (interactive state))
 
-(defn process [state input rp]
+(defn- process [state input]
   (let
    [ast (command-parser input)]
     (if
      (insta/failure? ast)
       (do
         (println "ERROR: " ast)
-        (rp state))
+        (interactive state))
       (let [command (ffirst ast)]
         (case command
           :EXIT (exit)
@@ -80,4 +80,4 @@
   (do
     (print "> ")
     (flush)
-    (process state (read-line) interactive)))
+    (process state (read-line))))
