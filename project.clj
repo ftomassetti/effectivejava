@@ -6,4 +6,7 @@
                  [instaparse "1.3.6"]]
   :resource-paths ["test-resources"]
   :plugins [[lein-cljfmt "0.1.10"] [lein-ancient "0.6.7"] [lein-kibit "0.1.2"] [jonase/eastwood "0.2.1"]]
+  :license {:name "Apache License - v 2.0"
+            :url "http://www.apache.org/licenses/LICENSE-2.0"
+            :distribution :repo}
   :main app.core)
