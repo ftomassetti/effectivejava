@@ -15,7 +15,7 @@ While reading that book I thought that yes, many principles are well known, but 
 Which is the easiest way to install it?
 =======================================
 
-Download the standalone jar from the releases directory. 
+Download the standalone jar from the [releases page](https://github.com/ftomassetti/effectivejava/releases). 
 No deps needed, everything is packed inside the jar.
 Feel free to rename it (effectivejava-0.1.0-SNAPSHOT-standalone.jar is a mouthful...)
 
@@ -43,7 +43,7 @@ CLI mode: how to use it
 
 Now, suppose you want to know which classes has 5 or more constructor; you can run this command:
 ```bash
-java -jar effectivejava-0.1.1-SNAPSHOT-standalone.jar -q mc -d "<myJavaProjectDir>" -t 5
+java -jar effectivejava-0.1.3-SNAPSHOT-standalone.jar -q mc -d "<myJavaProjectDir>" -t 5
 ```
 You can expect a similar output:
 ```
@@ -60,7 +60,7 @@ Interactive mode: how to use it (Work in progress!)
 You can launch interactive mode with the -i option.
 
 ```bash
-java -jar effectivejava-0.1.1-SNAPSHOT-standalone.jar -i
+java -jar effectivejava-0.1.3-SNAPSHOT-standalone.jar -i
 ```
 
 A typical interaction could be this one:
