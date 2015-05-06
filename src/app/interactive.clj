@@ -43,6 +43,7 @@
   (println "h/help                      : print this help message")
   (println "q/quit/exit                 : close the shell")
   (println "list                        : list classes loaded")
+  (println "load DIR                    : load classes from DIR")
   (println "mc/many-constructors th NUM : list classes with NUM or more constructors")
   (interactive state))
 
@@ -54,29 +55,30 @@
       (println "Java files loaded:" (.size loadedCus))
       (interactive {:cus loadedCus}))))
 
-(defn- mc-operation [state]
-  (printOperation classesWithManyConstructorsOp (:cus state) 5)
+(defn- mc-operation [state threshold]
+  (printOperation classesWithManyConstructorsOp (:cus state) threshold)
   (interactive state))
 
-(defn process [state input rp]
+(defn- process [state input]
   (let
    [ast (command-parser input)]
     (if
      (insta/failure? ast)
       (do
         (println "ERROR: " ast)
-        (rp state))
+        (interactive state))
       (let [command (ffirst ast)]
         (case command
           :EXIT (exit)
           :LIST (list-loaded-classes state)
           :HELP (help state)
           :LOAD (load-classes ast)
-          :MC (mc-operation state)
+          :MC (let [threshold (read-string (last (last (first ast))))]
+                (mc-operation state threshold))
           (println "Command not implemented: " command))))))
 
 (defn interactive [state]
   (do
     (print "> ")
     (flush)
-    (process state (read-line) interactive)))
+    (process state (read-line))))
