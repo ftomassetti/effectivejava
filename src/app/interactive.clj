@@ -13,12 +13,13 @@
 (def command-parser
   (insta/parser
    (str
-    "<COMMAND> = HELP | EXIT | LOAD | LIST | MC            \n"
+    "<COMMAND> = HELP | EXIT | LOAD | LIST | MC | F        \n"
     "HELP = 'help' | 'h'                                   \n"
     "EXIT = 'exit' | 'quit' | 'q'                          \n"
     "LOAD = 'load' <WS> STR                                \n"
     "LIST = 'list'                                         \n"
     "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM   \n"
+    "F = ('f'|'finalizers')                                \n"
     "WS  = #'[\t ]+'                                       \n"
     "NUM = #'[0-9]+'                                       \n"
     "STR = #'\"[^\"]*\"'                                   \n")))
@@ -45,6 +46,7 @@
   (println "list                        : list classes loaded")
   (println "load DIR                    : load classes from DIR")
   (println "mc/many-constructors th NUM : list classes with NUM or more constructors")
+  (println "f/finalizers                : list classes that use finalizers")
   (interactive state))
 
 (defn- load-classes [ast]
@@ -57,6 +59,10 @@
 
 (defn- mc-operation [state threshold]
   (printOperation classesWithManyConstructorsOp (:cus state) threshold)
+  (interactive state))
+
+(defn- f-operation [state]
+  (printOperation finalizersOp (:cus state) nil)
   (interactive state))
 
 (defn- process [state input]
@@ -75,6 +81,7 @@
           :LOAD (load-classes ast)
           :MC (let [threshold (read-string (last (last (first ast))))]
                 (mc-operation state threshold))
+          :F (f-operation state)
           (println "Command not implemented: " command))))))
 
 (defn interactive [state]
