@@ -107,7 +107,7 @@ To verify the code is correctly formatted [cljfmt](https://github.com/weavejeste
 # to verify possible style issues
 lein cljfmt check
 # to automatically fix them
-lein clkjfmt fix
+lein cljfmt fix
 ```
 
 We use [lein-ancient](https://github.com/xsc/lein-ancient) to verify our dependencies are up-to-date.
