@@ -10,9 +10,8 @@
 ; Interactive mode
 ; ============================================
 
-(def command-parser
-  (insta/parser
-   (str
+(def commands-grammar
+  (str
     "<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F        \n"
     "HELP = 'help' | 'h'                                         \n"
     "EXIT = 'exit' | 'quit' | 'q'                                \n"
@@ -23,7 +22,10 @@
     "F = ('f'|'finalizers')                                      \n"
     "WS  = #'[\t ]+'                                             \n"
     "NUM = #'[0-9]+'                                             \n"
-    "STR = #'\"[^\"]*\"'                                         \n")))
+    "STR = #'\"[^\"]*\"'                                         \n"))
+
+(def command-parser
+  (insta/parser commands-grammar))
 
 (declare interactive)
 
