@@ -14,6 +14,7 @@
 (import com.github.javaparser.ast.body.TypeDeclaration)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
 (import com.github.javaparser.ast.expr.MethodCallExpr)
+(import com.github.javaparser.ast.expr.NameExpr)
 (import com.github.javaparser.ast.visitor.DumpVisitor)
 
 ; ============================================
@@ -312,12 +313,26 @@
       (java.util.ArrayList.)
       ps)))
 
-(defn getChildrenNodes [class]
+(defn getChildrenNodes [root]
   (tree-seq
    #(not-empty (.getChildrenNodes %))
    #(.getChildrenNodes %)
-   class))
+    root))
 
-(defn getMethodCallExprs [class]
+(defn getMethodCallExprs [root]
   (filter #(instance? MethodCallExpr %)
-          (getChildrenNodes class)))
+          (getChildrenNodes root)))
+
+(defn getNameExprs [root]
+  (filter #(instance? NameExpr %)
+    (getChildrenNodes root)))
+
+(defn getMethodDeclarations [root]
+  (filter #(instance? MethodDeclaration %)
+    (getChildrenNodes root)))
+
+(defn getNameExprFor [root name]
+  (first (filter (fn [ne] (= name (.getName ne))) (getNameExprs root))))
+
+(defn getMethodDeclaration [root name]
+  (first (filter (fn [ne] (= name (.getName ne))) (getMethodDeclarations root))))

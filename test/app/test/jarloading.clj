@@ -1,8 +1,14 @@
 (ns app.test.jarloading
   (:use [app.jarloading])
+  (:use [app.javaparser])
   (:use [clojure.test]))
 
 (def javaparser2 "test-resources/sample-jars/javaparser-core-2.0.0.jar")
+(def samplesCus (cus "test-resources/sample-codebases/samples/"))
+(def sampleClasses (flatten (map allClasses samplesCus)))
+
+(defn- sampleClass [name]
+  (first (filter (fn [c] (= name (.getName c))) sampleClasses)))
 
 (deftest testGetElementsEntriesInJar
   (is (= 137 (count (getElementsEntriesInJar javaparser2)))))
@@ -27,3 +33,9 @@
         parseBlock (.getDeclaredMethod ctJavaParser "parseBlock")]
     (is (not (.isInterface ctJavaParser)))
     (is (= "parseBlock" (.getName parseBlock)))))
+
+(deftest testSolveSymbol
+  (let [entries (getClassesEntriesInJar javaparser2)
+        aClassExtendingClassInJar (sampleClass "AClassExtendingClassInJar")
+        nameExpr (getNameExprFor aClassExtendingClassInJar "name")]
+    ))
