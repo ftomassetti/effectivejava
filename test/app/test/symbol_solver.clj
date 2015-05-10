@@ -35,3 +35,10 @@
         method1 (getMethodDeclaration aClassResolvingToLocalVar "method1")
         refI (getNameExprFor method1 "i")]
     (is (not (nil? (solveNameExpr refI))))))
+
+(deftest testTypeCalculationOnLocalVar
+  (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
+        method1 (getMethodDeclaration aClassResolvingToLocalVar "method1")
+        refI (getNameExprFor method1 "i")
+        sym (solveNameExpr refI)]
+    (is (not (nil? (getType sym))))))

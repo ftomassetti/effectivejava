@@ -4,7 +4,8 @@
   (:use [app.itemsOnLifecycle])
   (:use [app.utils])
   (:require [instaparse.core :as insta])
-  (:import [app.operations Operation]))
+  (:import [app.operations Operation]
+           [jdk.nashorn.internal.ir Symbol]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
@@ -28,6 +29,10 @@
 (import com.github.javaparser.ast.body.VariableDeclarator)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
 (import com.github.javaparser.ast.visitor.DumpVisitor)
+
+;
+; protocol scope
+;
 
 (defprotocol scope
   ; for example in a BlockStmt containing statements [a b c d e], when solving symbols in the context of c
@@ -99,8 +104,18 @@
       this
       nil)))
 
-;(defn solveSymbol [nameExpr]
-;  )
+;
+; protocol varsymbol
+;
+
+(defprotocol varsymbol
+  (getType [this]))
+
+(extend-protocol varsymbol
+  VariableDeclarator
+  (getType [this]
+    (let [variableDeclarationExpr (.getParentNode this)]
+      (.getType variableDeclarationExpr))))
 
 (defn solveNameExpr [nameExpr]
   ; TODO consider local variables
