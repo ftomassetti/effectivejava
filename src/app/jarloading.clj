@@ -29,3 +29,13 @@
   "Return a set of ClasspathElements"
   [pathToJarFile]
   (filter (fn [e] (.endsWith (.path e) ".class")) (getElementsEntriesInJar pathToJarFile)))
+
+(defn pathToTypeName [path]
+  (if (.endsWith path ".class")
+    (let [path' (.substring path 0 (- (.length path) 6))
+          path'' (clojure.string/replace path' #"/" ".")]
+      path'')
+    (throw (IllegalArgumentException. "Path not ending with .class"))))
+
+(defn findEntry [typeName classEntries]
+  )

@@ -10,4 +10,5 @@
 (deftest testGetClassesEntriesInJar
   (is (= 134 (count (getClassesEntriesInJar javaparser2)))))
 
-
+(deftest testPathToTypeName
+  (is (= "com.github.javaparser.ast.AccessSpecifier" (pathToTypeName "com/github/javaparser/ast/AccessSpecifier.class"))))
