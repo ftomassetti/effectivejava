@@ -33,9 +33,10 @@
 (defn pathToTypeName [path]
   (if (.endsWith path ".class")
     (let [path' (.substring path 0 (- (.length path) 6))
-          path'' (clojure.string/replace path' #"/" ".")]
-      path'')
+          path'' (clojure.string/replace path' #"/" ".")
+          path''' (clojure.string/replace path'' "$" ".")]
+      path''')
     (throw (IllegalArgumentException. "Path not ending with .class"))))
 
 (defn findEntry [typeName classEntries]
-  )
+  (first (filter (fn [e] (= typeName (pathToTypeName (.path e)))) classEntries)))

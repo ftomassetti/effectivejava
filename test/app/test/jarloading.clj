@@ -11,4 +11,12 @@
   (is (= 134 (count (getClassesEntriesInJar javaparser2)))))
 
 (deftest testPathToTypeName
-  (is (= "com.github.javaparser.ast.AccessSpecifier" (pathToTypeName "com/github/javaparser/ast/AccessSpecifier.class"))))
+  (is (= "com.github.javaparser.ast.AccessSpecifier" (pathToTypeName "com/github/javaparser/ast/AccessSpecifier.class")))
+  (is (= "com.github.javaparser.ASTParser.Modifier" (pathToTypeName "com/github/javaparser/ASTParser$Modifier.class"))))
+
+(deftest testFindEntry
+  (let [entries (getClassesEntriesInJar javaparser2)]
+    (is (nil? (findEntry "com.github.foo.unexisting" entries)))
+    (is (not (nil? (findEntry "com.github.javaparser.ast.AccessSpecifier" entries))))
+    ; internal class
+    (is (not (nil? (findEntry "com.github.javaparser.ASTParser.Modifier" entries))))))
