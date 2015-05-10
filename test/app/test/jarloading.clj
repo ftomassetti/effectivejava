@@ -20,3 +20,10 @@
     (is (not (nil? (findEntry "com.github.javaparser.ast.AccessSpecifier" entries))))
     ; internal class
     (is (not (nil? (findEntry "com.github.javaparser.ASTParser.Modifier" entries))))))
+
+(deftest testFindType
+  (let [entries (getClassesEntriesInJar javaparser2)
+        ctJavaParser (findType "com.github.javaparser.JavaParser" entries)
+        parseBlock (.getDeclaredMethod ctJavaParser "parseBlock")]
+    (is (not (.isInterface ctJavaParser)))
+    (is (= "parseBlock" (.getName parseBlock)))))

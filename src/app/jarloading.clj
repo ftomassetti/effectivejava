@@ -7,13 +7,15 @@
 (import java.net.URLDecoder)
 (import java.util.jar.JarEntry)
 (import java.util.jar.JarFile)
+(import javassist.ClassPool)
+(import javassist.CtClass)
 
 ; An element on the classpath (a single class, interface, enum or resource file)
-(defrecord ClasspathElement [resource path contentAsStream])
+(defrecord ClasspathElement [resource path contentAsStreamThunk])
 
 (defn- jarEntryToClasspathElement [jarFile jarEntry]
   (let [name (.getName jarEntry)
-        content (.getInputStream jarFile jarEntry)]
+        content (fn [] (.getInputStream jarFile jarEntry))]
     (ClasspathElement. jarFile name content)))
 
 (defn getElementsEntriesInJar
@@ -38,5 +40,16 @@
       path''')
     (throw (IllegalArgumentException. "Path not ending with .class"))))
 
-(defn findEntry [typeName classEntries]
+(defn findEntry
+  "return the ClasspathElement corresponding to the given name, or nil"
+  [typeName classEntries]
   (first (filter (fn [e] (= typeName (pathToTypeName (.path e)))) classEntries)))
+
+(defn findType
+  "return the CtClass corresponding to the given name, or nil"
+  [typeName classEntries]
+  (let [entry (findEntry typeName classEntries)
+        classPool (ClassPool/getDefault)]
+    (if entry
+      (.makeClass classPool ((.contentAsStreamThunk entry)))
+      nil)))
