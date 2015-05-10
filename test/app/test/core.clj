@@ -10,6 +10,7 @@
 (load "javaparser")
 (load "operations")
 (load "acceptance")
+(load "jarloading")
 
 ; ============================================
 ; Other FIXME organize!

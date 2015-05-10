@@ -11,14 +11,12 @@
 ; An element on the classpath (a single class, interface, enum or resource file)
 (defrecord ClasspathElement [resource path contentAsStream])
 
-(def myjarpath "test-resources/sample-jars/javaparser-core-2.0.0.jar")
-
 (defn- jarEntryToClasspathElement [jarFile jarEntry]
   (let [name (.getName jarEntry)
         content (.getInputStream jarFile jarEntry)]
     (ClasspathElement. jarFile name content)))
 
-(defn getElementsInJar
+(defn getElementsEntriesInJar
   "Return a set of ClasspathElements"
   [pathToJarFile]
   (let [url (URLDecoder/decode pathToJarFile "UTF-8")
@@ -26,3 +24,8 @@
         entries (enumeration-seq (.entries jarfile))
         entries' (filter (fn [e] (not (.isDirectory e))) entries )]
     (map (partial jarEntryToClasspathElement jarfile) entries')))
+
+(defn getClassesEntriesInJar
+  "Return a set of ClasspathElements"
+  [pathToJarFile]
+  (filter (fn [e] (.endsWith (.path e) ".class")) (getElementsEntriesInJar pathToJarFile)))
