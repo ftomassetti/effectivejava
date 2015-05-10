@@ -12,17 +12,18 @@
 
 (def commands-grammar
   (str
-    "<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F        \n"
-    "HELP = 'help' | 'h'                                         \n"
-    "EXIT = 'exit' | 'quit' | 'q'                                \n"
-    "LOAD = 'load' <WS> STR                                      \n"
-    "LIST = 'list'                                               \n"
-    "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM         \n"
-    "MCP = ('mcp'|'many-costructor-params') <WS> 'th' <WS> NUM   \n"
-    "F = ('f'|'finalizers')                                      \n"
-    "WS  = #'[\t ]+'                                             \n"
-    "NUM = #'[0-9]+'                                             \n"
-    "STR = #'\"[^\"]*\"'                                         \n"))
+   "<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F | ST   \n"
+   "HELP = 'help' | 'h'                                         \n"
+   "EXIT = 'exit' | 'quit' | 'q'                                \n"
+   "LOAD = 'load' <WS> STR                                      \n"
+   "LIST = 'list'                                               \n"
+   "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM         \n"
+   "MCP = ('mcp'|'many-costructor-params') <WS> 'th' <WS> NUM   \n"
+   "F = ('f'|'finalizers')                                      \n"
+   "ST = ('st'|'singletons')                                    \n"
+   "WS  = #'[\t ]+'                                             \n"
+   "NUM = #'[0-9]+'                                             \n"
+   "STR = #'\"[^\"]*\"'                                         \n"))
 
 (def command-parser
   (insta/parser commands-grammar))
@@ -51,6 +52,7 @@
   (println "mc/many-constructors th NUM        : list classes with NUM or more constructors")
   (println "mcp/many-constructor-params th NUM : list constructors with NUM or more parameters")
   (println "f/finalizers                       : list classes that use finalizers")
+  (println "st/singletons                      : list singletons")
   (interactive state))
 
 (defn- load-classes [ast]
@@ -73,6 +75,10 @@
   (printOperation finalizersOp (:cus state) nil)
   (interactive state))
 
+(defn- st-operation [state]
+  (printOperation classesAndSingletonTypeOp (:cus state) nil)
+  (interactive state))
+
 (defn- process [state input]
   (let
    [ast (command-parser input)]
@@ -92,6 +98,7 @@
           :MCP (let [threshold (read-string (last (last (first ast))))]
                  (mcp-operation state threshold))
           :F (f-operation state)
+          :ST (st-operation state)
           (println "Command not implemented: " command))))))
 
 (defn interactive [state]
