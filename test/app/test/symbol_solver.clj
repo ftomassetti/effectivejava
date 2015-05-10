@@ -15,8 +15,23 @@
   (is (= '(1 2)) (preceedingChildren [1 2 3 4 5] 3))
   (is (= '()) (preceedingChildren [1 2 3 4 5] 1)))
 
+(deftest testSolveNameInVariableDeclarator
+  (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
+        vd (first (getVariableDeclarators aClassResolvingToLocalVar ))]
+    (is (not (nil? (solveSymbol vd nil "i"))))))
+
+(deftest testSolveNameInVariableDeclarationExpr
+  (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
+        vde (first (getVariableDeclarationExprs aClassResolvingToLocalVar ))]
+    (is (not (nil? (solveSymbol vde nil "i"))))))
+
+(deftest testSolveNameInBlock
+  (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
+        bs (first (getBlockStmts aClassResolvingToLocalVar ))]
+    (is (not (nil? (solveSymbol bs nil "i"))))))
+
 (deftest testSolveNameExprRefToLocalVar
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
         method1 (getMethodDeclaration aClassResolvingToLocalVar "method1")
         refI (getNameExprFor method1 "i")]
-    ))
+    (is (not (nil? (solveNameExpr refI))))))

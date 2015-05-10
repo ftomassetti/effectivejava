@@ -22,7 +22,11 @@
 (import com.github.javaparser.ast.stmt.BlockStmt)
 (import com.github.javaparser.ast.expr.MethodCallExpr)
 (import com.github.javaparser.ast.expr.NameExpr)
+(import com.github.javaparser.ast.expr.IntegerLiteralExpr)
 (import com.github.javaparser.ast.expr.AssignExpr)
+(import com.github.javaparser.ast.expr.VariableDeclarationExpr)
+(import com.github.javaparser.ast.body.VariableDeclarator)
+(import com.github.javaparser.ast.body.VariableDeclaratorId)
 (import com.github.javaparser.ast.visitor.DumpVisitor)
 
 (defprotocol scope
@@ -32,11 +36,21 @@
 
 (extend-protocol scope
   NameExpr
-  (solveSymbol [this context nameToSolve] (solveSymbol (.getParentNode this) this nameToSolve)))
+  (solveSymbol [this context nameToSolve]
+    (if context
+      nil
+      (solveSymbol (.getParentNode this) nil nameToSolve))))
 
 (extend-protocol scope
   AssignExpr
-  (solveSymbol [this context nameToSolve] (solveSymbol (.getParentNode this) this nameToSolve)))
+  (solveSymbol [this context nameToSolve]
+    (if context
+      (or (solveSymbol (.getTarget this) this nameToSolve) (solveSymbol (.getValue this) this nameToSolve))
+      (solveSymbol (.getParentNode this) this nameToSolve))))
+
+(extend-protocol scope
+  IntegerLiteralExpr
+  (solveSymbol [this context nameToSolve] nil))
 
 (defn find-index [elmts elmt]
   (if (empty? elmts)
@@ -57,16 +71,33 @@
 (extend-protocol scope
   BlockStmt
   (solveSymbol [this context nameToSolve]
-    (let [preceedingSiblings (preceedingChildren (.getStmts this) context)
-          solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) preceedingSiblings)
+    (let [elementsToConsider (if (nil? context) (.getStmts this) (preceedingChildren (.getStmts this) context))
+          solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) elementsToConsider)
           solvedSymbols' (filter (fn [s] (not (nil? s))) solvedSymbols)]
       (first solvedSymbols'))))
 
 (extend-protocol scope
   ExpressionStmt
   (solveSymbol [this context nameToSolve]
-    (let [fromExpr (solveSymbol (.getExpression this) nil nameToSolve)]
+    (let [fromExpr (solveSymbol (.getExpression this) this nameToSolve)]
           (or fromExpr (solveSymbol (.getParentNode this) this nameToSolve)))))
+
+(extend-protocol scope
+  VariableDeclarationExpr
+  (solveSymbol [this context nameToSolve]
+    (first (filter (fn [s] (not (nil? (solveSymbol s this nameToSolve)))) (.getVars this)))))
+
+(extend-protocol scope
+  VariableDeclarator
+  (solveSymbol [this context nameToSolve]
+    (solveSymbol (.getId this) nil nameToSolve)))
+
+(extend-protocol scope
+  VariableDeclaratorId
+  (solveSymbol [this context nameToSolve]
+    (if (= nameToSolve (.getName this))
+      this
+      nil)))
 
 ;(defn solveSymbol [nameExpr]
 ;  )

@@ -16,6 +16,10 @@
 (import com.github.javaparser.ast.expr.MethodCallExpr)
 (import com.github.javaparser.ast.expr.NameExpr)
 (import com.github.javaparser.ast.visitor.DumpVisitor)
+(import com.github.javaparser.ast.stmt.BlockStmt)
+(import com.github.javaparser.ast.expr.VariableDeclarationExpr)
+(import com.github.javaparser.ast.body.VariableDeclarator)
+(import com.github.javaparser.ast.body.VariableDeclaratorId)
 
 ; ============================================
 ; Parsing
@@ -331,8 +335,20 @@
   (filter #(instance? MethodDeclaration %)
     (getChildrenNodes root)))
 
+(defn getBlockStmts [root]
+  (filter #(instance? BlockStmt %)
+    (getChildrenNodes root)))
+
 (defn getNameExprFor [root name]
   (first (filter (fn [ne] (= name (.getName ne))) (getNameExprs root))))
 
 (defn getMethodDeclaration [root name]
   (first (filter (fn [ne] (= name (.getName ne))) (getMethodDeclarations root))))
+
+(defn getVariableDeclarationExprs [root]
+  (filter #(instance? VariableDeclarationExpr %)
+    (getChildrenNodes root)))
+
+(defn getVariableDeclarators [root]
+  (filter #(instance? VariableDeclarator %)
+    (getChildrenNodes root)))
