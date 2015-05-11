@@ -340,6 +340,7 @@
           (getChildrenNodes root)))
 
 (defn getNameExprFor [root name]
+  {:pre [root name]}
   (first (filter (fn [ne] (= name (.getName ne))) (getNameExprs root))))
 
 (defn getMethodDeclaration [root name]

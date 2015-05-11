@@ -1,4 +1,4 @@
-(ns app.test.symbol_solver
+(ns app.test.symbol_solver_test
   (:use [app.jarloading])
   (:use [app.javaparser])
   (:use [app.symbol_solver])
@@ -43,6 +43,7 @@
         refI (getNameExprFor method1 "i")
         sym (solveNameExpr refI)]
     (is (not (nil? (getType sym))))
+    (is (localVarRef? sym))
     (is (primitive? (getType sym)))
     (is (= "int" (typeName (getType sym))))))
 
@@ -52,6 +53,7 @@
         refI (getNameExprFor method2 "i")
         sym (solveNameExpr refI)]
     (is (not (nil? (getType sym))))
+    (is (localVarRef? sym))
     (is (primitive? (getType sym)))
     (is (= "long" (typeName (getType sym))))))
 
@@ -61,6 +63,7 @@
         refI (getNameExprFor method1 "i")
         sym (solveNameExpr refI)]
     (is (not (nil? (getType sym))))
+    (is (localVarRef? sym))
     (is (not (primitive? (getType sym))))
     (is (= "A" (typeName (getType sym))))))
 
@@ -70,5 +73,30 @@
         refI (getNameExprFor method2 "i")
         sym (solveNameExpr refI)]
     (is (not (nil? (getType sym))))
+    (is (localVarRef? sym))
     (is (not (primitive? (getType sym))))
     (is (= "B" (typeName (getType sym))))))
+
+(deftest testTypeCalculationOnReferencesToDeclaredField
+  (let [aClass (sampleClass "ReferencesToField")
+        method (getMethodDeclaration aClass "method1")
+        refI (getNameExprFor method "i")
+        sym (solveNameExpr refI)]
+    (is (not (nil? sym)))
+    (print "SYM IS " sym)
+    (is (not (nil? (getType sym))))
+    (is (fieldRef? sym))
+    (is (primitive? (getType sym)))
+    (is (= "int" (typeName (getType sym))))))
+
+(deftest testTypeCalculationOnReferencesToInheritedField
+  (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
+        method (getMethodDeclaration aClass "method2")
+        refI (getNameExprFor method "i")
+        sym (solveNameExpr refI)]
+    (is (not (nil? sym)))
+    (print "SYM IS " sym)
+    (is (not (nil? (getType sym))))
+    (is (fieldRef? sym))
+    (is (primitive? (getType sym)))
+    (is (= "int" (typeName (getType sym))))))

@@ -103,17 +103,21 @@
       this)))
 
 ;
-; protocol varsymbol
+; protocol symbolref
 ;
 
-(defprotocol varsymbol
-  (getType [this]))
+(defprotocol symbolref
+  (getType [this])
+  (localVarRef? [this])
+  (fieldRef? [this]))
 
-(extend-protocol varsymbol
+(extend-protocol symbolref
   VariableDeclarator
   (getType [this]
     (let [variableDeclarationExpr (.getParentNode this)]
-      (.getType variableDeclarationExpr))))
+      (or (.getType variableDeclarationExpr) (throw (RuntimeException. "No expr")))))
+  (localVarRef? [this] true)
+  (fieldRef? [this] false))
 
 ;
 ; protocol type
@@ -133,7 +137,10 @@
 (extend-protocol typeref
   com.github.javaparser.ast.type.ReferenceType
   (primitive? [this] false)
-  (typeName [this] (typeName (.getType this))))
+  (typeName [this]
+    (when (nil? (.getType this))
+      (throw (IllegalStateException. "No getType for the ReferenceType")))
+    (typeName (.getType this))))
 
 (extend-protocol typeref
   com.github.javaparser.ast.type.ClassOrInterfaceType
