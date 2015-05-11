@@ -12,6 +12,7 @@
 (load "acceptance")
 (load "jarloading")
 (load "symbol_solver_test")
+(load "symbol_solver/type_solver_test")
 
 ; ============================================
 ; Other FIXME organize!

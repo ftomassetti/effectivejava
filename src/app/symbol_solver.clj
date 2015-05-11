@@ -40,6 +40,8 @@
 (defprotocol fieldDecl
   (fieldName [this]))
 
+(def ^:dynamic typeSolver nil)
+
 ;
 ; protocol scope
 ;

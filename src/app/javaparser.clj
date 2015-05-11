@@ -137,6 +137,9 @@
 (defprotocol withPackageName
   (packageName [this]))
 
+(defn isInDefaultPackage? [this]
+  (= "" (packageName this)))
+
 (extend-protocol withPackageName
   CompilationUnit
   (packageName [this]

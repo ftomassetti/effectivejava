@@ -89,17 +89,17 @@
     (is (primitive? (getType sym)))
     (is (= "int" (typeName (getType sym))))))
 
-(deftest testInehritedFieldResolutionFromClass
-  ; we should define a classSolver looking in the sampleClasses
-  (binding [classSolver (classSolverOnList sampleClasses)]
-    (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
-          method (getMethodDeclaration aClass "method2")
-          sym (solveSymbol aClass nil "i")]
-      (is (not (nil? sym)))
-      (is (not (nil? (getType sym))))
-      (is (fieldRef? sym))
-      (is (primitive? (getType sym)))
-      (is (= "int" (typeName (getType sym)))))))
+;(deftest testInehritedFieldResolutionFromClass
+;  ; we should define a classSolver looking in the sampleClasses
+;  (binding [typeSolver (classSolverOnList sampleClasses)]
+;    (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
+;          method (getMethodDeclaration aClass "method2")
+;          sym (solveSymbol aClass nil "i")]
+;      (is (not (nil? sym)))
+;      (is (not (nil? (getType sym))))
+;      (is (fieldRef? sym))
+;      (is (primitive? (getType sym)))
+;      (is (= "int" (typeName (getType sym)))))))
 
 ;(deftest testTypeCalculationOnReferencesToDeclaredField
 ;  (let [aClass (sampleClass "ReferencesToField")
