@@ -24,7 +24,7 @@
   (let [url (URLDecoder/decode pathToJarFile "UTF-8")
         jarfile (new JarFile url)
         entries (enumeration-seq (.entries jarfile))
-        entries' (filter (fn [e] (not (.isDirectory e))) entries )]
+        entries' (filter (fn [e] (not (.isDirectory e))) entries)]
     (map (partial jarEntryToClasspathElement jarfile) entries')))
 
 (defn getClassesEntriesInJar

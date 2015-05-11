@@ -321,7 +321,7 @@
   (tree-seq
    #(not-empty (.getChildrenNodes %))
    #(.getChildrenNodes %)
-    root))
+   root))
 
 (defn getMethodCallExprs [root]
   (filter #(instance? MethodCallExpr %)
@@ -329,15 +329,15 @@
 
 (defn getNameExprs [root]
   (filter #(instance? NameExpr %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getMethodDeclarations [root]
   (filter #(instance? MethodDeclaration %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getBlockStmts [root]
   (filter #(instance? BlockStmt %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getNameExprFor [root name]
   (first (filter (fn [ne] (= name (.getName ne))) (getNameExprs root))))
@@ -347,8 +347,8 @@
 
 (defn getVariableDeclarationExprs [root]
   (filter #(instance? VariableDeclarationExpr %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getVariableDeclarators [root]
   (filter #(instance? VariableDeclarator %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))

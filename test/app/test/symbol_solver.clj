@@ -17,17 +17,17 @@
 
 (deftest testSolveNameInVariableDeclarator
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
-        vd (first (getVariableDeclarators aClassResolvingToLocalVar ))]
+        vd (first (getVariableDeclarators aClassResolvingToLocalVar))]
     (is (not (nil? (solveSymbol vd nil "i"))))))
 
 (deftest testSolveNameInVariableDeclarationExpr
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
-        vde (first (getVariableDeclarationExprs aClassResolvingToLocalVar ))]
+        vde (first (getVariableDeclarationExprs aClassResolvingToLocalVar))]
     (is (not (nil? (solveSymbol vde nil "i"))))))
 
 (deftest testSolveNameInBlock
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
-        bs (first (getBlockStmts aClassResolvingToLocalVar ))]
+        bs (first (getBlockStmts aClassResolvingToLocalVar))]
     (is (not (nil? (solveSymbol bs nil "i"))))))
 
 (deftest testSolveNameExprRefToLocalVar

@@ -84,7 +84,7 @@
   ExpressionStmt
   (solveSymbol [this context nameToSolve]
     (let [fromExpr (solveSymbol (.getExpression this) this nameToSolve)]
-          (or fromExpr (solveSymbol (.getParentNode this) this nameToSolve)))))
+      (or fromExpr (solveSymbol (.getParentNode this) this nameToSolve)))))
 
 (extend-protocol scope
   VariableDeclarationExpr

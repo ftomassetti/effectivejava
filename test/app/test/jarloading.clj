@@ -37,5 +37,4 @@
 (deftest testSolveSymbol
   (let [entries (getClassesEntriesInJar javaparser2)
         aClassExtendingClassInJar (sampleClass "AClassExtendingClassInJar")
-        nameExpr (getNameExprFor aClassExtendingClassInJar "name")]
-    ))
+        nameExpr (getNameExprFor aClassExtendingClassInJar "name")]))
