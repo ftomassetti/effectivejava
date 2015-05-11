@@ -41,8 +41,7 @@
 (extend-protocol scope
   NameExpr
   (solveSymbol [this context nameToSolve]
-    (if context
-      nil
+    (when-not context
       (solveSymbol (.getParentNode this) nil nameToSolve))))
 
 (extend-protocol scope
@@ -64,7 +63,7 @@
       (let [rest (find-index (rest elmts) elmt)]
         (if (= -1 rest)
           -1
-          (+ 1 rest))))))
+          (inc rest))))))
 
 (defn preceedingChildren [children child]
   (let [i (find-index children child)]
@@ -77,7 +76,7 @@
   (solveSymbol [this context nameToSolve]
     (let [elementsToConsider (if (nil? context) (.getStmts this) (preceedingChildren (.getStmts this) context))
           solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) elementsToConsider)
-          solvedSymbols' (filter (fn [s] (not (nil? s))) solvedSymbols)]
+          solvedSymbols' (remove nil? solvedSymbols)]
       (first solvedSymbols'))))
 
 (extend-protocol scope
@@ -99,9 +98,8 @@
 (extend-protocol scope
   VariableDeclaratorId
   (solveSymbol [this context nameToSolve]
-    (if (= nameToSolve (.getName this))
-      this
-      nil)))
+    (when (= nameToSolve (.getName this))
+      this)))
 
 ;
 ; protocol varsymbol

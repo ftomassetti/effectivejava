@@ -50,6 +50,5 @@
   [typeName classEntries]
   (let [entry (findEntry typeName classEntries)
         classPool (ClassPool/getDefault)]
-    (if entry
-      (.makeClass classPool ((.contentAsStreamThunk entry)))
-      nil)))
+    (when entry
+      (.makeClass classPool ((.contentAsStreamThunk entry))))))
