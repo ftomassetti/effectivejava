@@ -4,8 +4,7 @@
   (:use [app.itemsOnLifecycle])
   (:use [app.utils])
   (:require [instaparse.core :as insta])
-  (:import [app.operations Operation]
-           [jdk.nashorn.internal.ir Symbol]))
+  (:import [app.operations Operation]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
