@@ -8,6 +8,9 @@
 
 ; A TypeSolver is a function which, given a name, return a TypeRef or nil (if not found)
 
+; This is intended to be the global typeSolver, so the typeSolver to resolve absolute names
+(def ^:dynamic typeSolver (fn [nameToSolve] (throw (IllegalStateException. "TypeSolver not set"))))
+
 (defn typeSolverOnList
   "Given a list of com.github.javaparser.ast.body.TypeDeclaration it returns a TypeSolver looking among them"
   [typeDeclarations]

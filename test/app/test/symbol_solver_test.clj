@@ -3,6 +3,9 @@
   (:use [app.javaparser])
   (:use [app.symbol_solver])
   (:use [app.symbol_solver.type_solver])
+  (:use [app.symbol_solver.scope])
+  (:use [app.symbol_solver.protocols])
+  (:use [app.utils])
   (:use [clojure.test]))
 
 (def samplesCus (cus "test-resources/sample-codebases/samples/"))
