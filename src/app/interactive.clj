@@ -57,10 +57,10 @@
 
 (defn- load-classes [ast]
   (let [dirnameWithApex (nth (nth (first ast) 2) 1)
-        dirname (subs dirnameWithApex 1 (+ (.length dirnameWithApex) -1))]
+        dirname (subs dirnameWithApex 1 (dec (count dirnameWithApex)))]
     (println "Loading" dirname)
     (let [loadedCus (cus dirname)]
-      (println "Java files loaded:" (.size loadedCus))
+      (println "Java files loaded:" (count loadedCus))
       (interactive {:cus loadedCus}))))
 
 (defn- mc-operation [state threshold]
