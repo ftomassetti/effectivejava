@@ -79,8 +79,8 @@
         (let [superclass (first (.getExtends this))
               superclassName (.getName superclass)
               superclassDecl (solveClass this this superclassName)]
-          (if (not (superclassDecl))
-            (throw (RuntimeException. "Superclass not solved"))
+          (if (nil? superclassDecl)
+            (throw (RuntimeException. (str "Superclass not solved: " superclassName)))
             (let [inheritedFields (allFields superclassDecl)
               solvedSymbols'' (filter (fn [f] (= nameToSolve (fieldName f))) inheritedFields)]
               (first solvedSymbols''))))

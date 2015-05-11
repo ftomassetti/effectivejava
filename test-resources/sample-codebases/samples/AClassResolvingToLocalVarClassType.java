@@ -1,16 +1,22 @@
-package sample
+class AClassResolvingToLocalVarClassType  {
+	
+	class A {
+		
+	}
+	
+	class B {
 
-class AClassResolvingToLocalVar  {
+	}
 
 	public void method1(){
-		int i;
+		A i;
 		i = 2;
 	}
 
 	public void method2(){
-		int i;
+		A i;
 		if (true){
-			long i;
+			B i;
 			i = 2;
 		}
 	}	

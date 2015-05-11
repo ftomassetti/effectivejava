@@ -1,26 +1,18 @@
-package sample
-
-class AClassResolvingToLocalVarClassType  {
+class ReferencesToField  {
 	
-	class A {
-		
-	}
-	
-	class B {
-
-	}
+	int i;
 
 	public void method1(){
-		A i;
 		i = 2;
 	}
 
+}
+
+private class ReferencesToFieldExtendingClass extends ReferencesToField {
+
 	public void method2(){
-		A i;
-		if (true){
-			B i;
-			i = 2;
-		}
-	}	
+		i = 2;
+	}
 
 }
+
