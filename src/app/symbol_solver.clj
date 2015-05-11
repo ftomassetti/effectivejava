@@ -28,6 +28,7 @@
 (import com.github.javaparser.ast.body.VariableDeclarator)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
 (import com.github.javaparser.ast.visitor.DumpVisitor)
+(import com.github.javaparser.ast.type.PrimitiveType)
 
 ;
 ; protocol scope
@@ -113,6 +114,22 @@
   (getType [this]
     (let [variableDeclarationExpr (.getParentNode this)]
       (.getType variableDeclarationExpr))))
+
+;
+; protocol type
+;
+
+(defprotocol typeref
+  (array? [this])
+  (primitive? [this])
+  (typeName [this])
+  (baseType [this]))
+
+(extend-protocol typeref
+  com.github.javaparser.ast.type.PrimitiveType
+  (primitive? [this] true)
+  (typeName [this] (.toLowerCase (.name (.getType this)))))
+
 
 (defn solveNameExpr [nameExpr]
   ; TODO consider local variables
