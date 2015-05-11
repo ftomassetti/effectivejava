@@ -2,6 +2,7 @@
   (:use [app.javaparser])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
+  (:use [app.jarloading])
   (:use [app.utils])
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation]))
@@ -19,3 +20,11 @@
       (filter
         (fn [td] (= nameToSolve (getQName td)))
         (remove isInDefaultPackage? typeDeclarations)))))
+
+; TODO not solve the classes in default package
+(defn typeSolverOnJar
+  "Given the path to a Jar it returns a TypeSolver looking into it"
+  [jarPath]
+  (let [entries (getClassesEntriesInJar jarPath)]
+    (fn [nameToSolve]
+      (findType nameToSolve entries))))

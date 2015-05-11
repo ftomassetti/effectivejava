@@ -358,6 +358,10 @@
   (filter #(instance? VariableDeclarator %)
           (getChildrenNodes root)))
 
+(defn getImports [root]
+  (filter #(instance? com.github.javaparser.ast.ImportDeclaration %)
+    (getChildrenNodes root)))
+
 ; ============================================
 ; Misc
 ; ============================================

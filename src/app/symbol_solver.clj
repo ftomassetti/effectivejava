@@ -100,10 +100,13 @@
   (primitive? [this] false)
   (typeName [this] (.getName this)))
 
-
 (defn solveNameExpr [nameExpr]
   ; TODO consider local variables
   ; TODO consider fields
   ; TODO consider inherited fields
   (let [name (.getName nameExpr)]
     (solveSymbol nameExpr nil name)))
+
+(defn solveImportStmt [importStmt]
+  (let [name (.getName (.getName importStmt))]
+    (solveClass (getCu importStmt) nil name)))

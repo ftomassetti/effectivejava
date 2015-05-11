@@ -8,6 +8,7 @@
   (:use [app.utils])
   (:use [clojure.test]))
 
+(def javaparser2 "test-resources/sample-jars/javaparser-core-2.0.0.jar")
 (def samplesCus (cus "test-resources/sample-codebases/samples/"))
 (def sampleClasses (flatten (map allTypes samplesCus)))
 
@@ -153,3 +154,15 @@
     (is (fieldRef? sym))
     (is (primitive? (getType sym)))
     (is (= "int" (typeName (getType sym))))))
+
+(deftest testSolveImportStmtFromJar
+  (binding [typeSolver (typeSolverOnJar javaparser2)]
+    (let [aClass (sampleClass "AClassExtendingClassInJar")
+         _ (assert aClass)
+         importStmt (first (getImports (getCu aClass)))
+         _ (assert importStmt)
+         importedType (solveImportStmt importStmt)]
+      (is importedType))))
+
+;(deftest testSolveClassImportedFromJar
+;  )
