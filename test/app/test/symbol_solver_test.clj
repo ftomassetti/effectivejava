@@ -140,14 +140,13 @@
     (is (primitive? (getType sym)))
     (is (= "int" (typeName (getType sym))))))
 
-;(deftest testTypeCalculationOnReferencesToInheritedField
-;  (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
-;        method (getMethodDeclaration aClass "method2")
-;        refI (getNameExprFor method "i")
-;        sym (solveNameExpr refI)]
-;    (is (not (nil? sym)))
-;    (print "SYM IS " sym)
-;    (is (not (nil? (getType sym))))
-;    (is (fieldRef? sym))
-;    (is (primitive? (getType sym)))
-;    (is (= "int" (typeName (getType sym))))))
+(deftest testTypeCalculationOnReferencesToInheritedField
+  (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
+        method (getMethodDeclaration aClass "method2")
+        refI (getNameExprFor method "i")
+        sym (solveNameExpr refI)]
+    (is (not (nil? sym)))
+    (is (not (nil? (getType sym))))
+    (is (fieldRef? sym))
+    (is (primitive? (getType sym)))
+    (is (= "int" (typeName (getType sym))))))
