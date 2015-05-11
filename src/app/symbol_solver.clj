@@ -30,6 +30,16 @@
 (import com.github.javaparser.ast.visitor.DumpVisitor)
 (import com.github.javaparser.ast.type.PrimitiveType)
 
+(defprotocol typeref
+  (array? [this])
+  (primitive? [this])
+  (typeName [this])
+  (baseType [this])
+  (allFields [this]))
+
+(defprotocol fieldDecl
+  (fieldName [this]))
+
 ;
 ; protocol scope
 ;
@@ -37,16 +47,46 @@
 (defprotocol scope
   ; for example in a BlockStmt containing statements [a b c d e], when solving symbols in the context of c
   ; it will contains only statements preceeding it [a b]
-  (solveSymbol [this context nameToSolve]))
+  (solveSymbol [this context nameToSolve])
+  (solveClass [this context nameToSolve]))
+
+(defn getCu [node]
+  (if (instance? com.github.javaparser.ast.CompilationUnit node)
+    node 
+    (let [pn (.getParentNode node)]
+      (if pn
+        (getCu pn)
+        (throw (IllegalStateException. "The root is not a CU"))))))
+
+(defn getClassPackage [classDecl]
+  (let [cu (getCu classDecl)]
+    (.getPackage cu)))
+
+(defn solveClassInPackage [pakage nameToSolve])
+
+(defn- solveAmongDeclaredFields [this nameToSolve]
+  (let [members (.getMembers this)
+        declaredFields (filter (partial instance? com.github.javaparser.ast.body.FieldDeclaration) members)
+        solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) declaredFields)
+        solvedSymbols' (remove nil? solvedSymbols)]
+    (first solvedSymbols')))
 
 (extend-protocol scope
   com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
   (solveSymbol [this context nameToSolve]
-    (let [members (.getMembers this)
-          declaredFields (filter (partial instance? com.github.javaparser.ast.body.FieldDeclaration) members)
-          solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) declaredFields)
-          solvedSymbols' (remove nil? solvedSymbols)]
-      (first solvedSymbols'))))
+    (let [amongDeclaredFields (solveAmongDeclaredFields this nameToSolve)]
+      (if (and (nil? amongDeclaredFields) (not (.isInterface this)) (not (empty? (.getExtends this))))
+        (let [superclass (first (.getExtends this))
+              superclassName (.getName superclass)
+              superclassDecl (solveClass this this superclassName)]
+          (if (not (superclassDecl))
+            (throw (RuntimeException. "Superclass not solved"))
+            (let [inheritedFields (allFields superclassDecl)
+              solvedSymbols'' (filter (fn [f] (= nameToSolve (fieldName f))) inheritedFields)]
+              (first solvedSymbols''))))
+        amongDeclaredFields)))
+  (solveClass [this context nameToSolve]
+    (solveClassInPackage (getClassPackage this) nameToSolve)))
 
 (extend-protocol scope
   com.github.javaparser.ast.body.FieldDeclaration
@@ -147,12 +187,6 @@
 ;
 ; protocol type
 ;
-
-(defprotocol typeref
-  (array? [this])
-  (primitive? [this])
-  (typeName [this])
-  (baseType [this]))
 
 (extend-protocol typeref
   com.github.javaparser.ast.type.PrimitiveType

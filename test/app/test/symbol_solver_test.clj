@@ -77,6 +77,28 @@
     (is (not (primitive? (getType sym))))
     (is (= "B" (typeName (getType sym))))))
 
+(deftest testDeclaredFieldResolutionFromClass
+  (let [aClass (sampleClass "ReferencesToField")
+        _ (assert aClass)
+        method (getMethodDeclaration aClass "method1")
+        _ (assert method)
+        sym (solveSymbol aClass nil "i")]
+    (is (not (nil? sym)))
+    (is (not (nil? (getType sym))))
+    (is (fieldRef? sym))
+    (is (primitive? (getType sym)))
+    (is (= "int" (typeName (getType sym))))))
+
+(deftest testInehritedFieldResolutionFromClass
+  (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
+        method (getMethodDeclaration aClass "method2")
+        sym (solveSymbol aClass nil "i")]
+    (is (not (nil? sym)))
+    (is (not (nil? (getType sym))))
+    (is (fieldRef? sym))
+    (is (primitive? (getType sym)))
+    (is (= "int" (typeName (getType sym))))))
+
 ;(deftest testTypeCalculationOnReferencesToDeclaredField
 ;  (let [aClass (sampleClass "ReferencesToField")
 ;        method (getMethodDeclaration aClass "method1")
@@ -88,16 +110,6 @@
 ;    (is (fieldRef? sym))
 ;    (is (primitive? (getType sym)))
 ;    (is (= "int" (typeName (getType sym))))))
-
-(deftest testDeclaredFieldResolutionFromClass
-  (let [aClass (sampleClass "ReferencesToField")
-        method (getMethodDeclaration aClass "method1")
-        sym (solveSymbol aClass nil "i")]
-    (is (not (nil? sym)))
-    (is (not (nil? (getType sym))))
-    (is (fieldRef? sym))
-    (is (primitive? (getType sym)))
-    (is (= "int" (typeName (getType sym))))))
 
 ;(deftest testTypeCalculationOnReferencesToInheritedField
 ;  (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
