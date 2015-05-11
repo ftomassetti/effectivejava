@@ -213,3 +213,7 @@
   ; TODO consider inherited fields
   (let [name (.getName nameExpr)]
     (solveSymbol nameExpr nil name)))
+
+(defn classSolverOnList 
+  "Should get a list of classes and returning a function that given a className should return a typeref or nil"
+  [classes])
