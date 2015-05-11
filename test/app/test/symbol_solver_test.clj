@@ -81,8 +81,6 @@
 (deftest testDeclaredFieldResolutionFromClass
   (let [aClass (sampleClass "ReferencesToField")
         _ (assert aClass)
-        method (getMethodDeclaration aClass "method1")
-        _ (assert method)
         sym (solveSymbol aClass nil "i")]
     (is (not (nil? sym)))
     (is (not (nil? (getType sym))))
@@ -90,29 +88,57 @@
     (is (primitive? (getType sym)))
     (is (= "int" (typeName (getType sym))))))
 
-(deftest testInehritedFieldResolutionFromClass
+(deftest testDeclaredFieldResolutionFromMethod
+  (let [aClass (sampleClass "ReferencesToField")
+        _ (assert aClass)
+        method (getMethodDeclaration aClass "method1")
+        _ (assert method)
+        sym (solveSymbol method nil "i")]
+    (is (not (nil? sym)))
+    (is (not (nil? (getType sym))))
+    (is (fieldRef? sym))
+    (is (primitive? (getType sym)))
+    (is (= "int" (typeName (getType sym))))))
+
+(deftest testDeclaredFieldResolutionFromRef
+  (let [aClass (sampleClass "ReferencesToField")
+        _ (assert aClass)
+        method (getMethodDeclaration aClass "method1")
+        _ (assert method)
+        refI (getNameExprFor method "i")
+        _ (assert refI)
+        sym (solveSymbol refI nil "i")]
+    (is sym)
+    (is (not (nil? (getType sym))))
+    (is (fieldRef? sym))
+    (is (primitive? (getType sym)))
+    (is (= "int" (typeName (getType sym))))))
+
+(deftest testInheritedFieldResolutionFromClass
   ; we should define a classSolver looking in the sampleClasses
   (binding [typeSolver (typeSolverOnList sampleClasses)]
     (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
           method (getMethodDeclaration aClass "method2")
           sym (solveSymbol aClass nil "i")]
-      (is (not (nil? sym)))
-      (is (not (nil? (getType sym))))
+      (is sym)
+      (is (getType sym))
       (is (fieldRef? sym))
       (is (primitive? (getType sym)))
       (is (= "int" (typeName (getType sym)))))))
 
-;(deftest testTypeCalculationOnReferencesToDeclaredField
-;  (let [aClass (sampleClass "ReferencesToField")
-;        method (getMethodDeclaration aClass "method1")
-;        refI (getNameExprFor method "i")
-;        sym (solveNameExpr refI)]
-;    (is (not (nil? sym)))
-;    (print "SYM IS " sym)
-;    (is (not (nil? (getType sym))))
-;    (is (fieldRef? sym))
-;    (is (primitive? (getType sym)))
-;    (is (= "int" (typeName (getType sym))))))
+(deftest testTypeCalculationOnReferencesToDeclaredField
+  (let [aClass (sampleClass "ReferencesToField")
+        _ (assert aClass)
+        method (getMethodDeclaration aClass "method1")
+        _ (assert method)
+        refI (getNameExprFor method "i")
+        _ (assert refI)
+        sym (solveNameExpr refI)]
+    (is sym)
+    (is (not (nil? (getType sym))))
+    (is (fieldRef? sym))
+    (is (primitive? (getType sym)))
+    (is (= "int" (typeName (getType sym))))))
 
 ;(deftest testTypeCalculationOnReferencesToInheritedField
 ;  (let [aClass (sampleClass "ReferencesToFieldExtendingClass")

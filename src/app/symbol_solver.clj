@@ -116,6 +116,11 @@
     (solveClass (getCu this) nil nameToSolve)))
 
 (extend-protocol scope
+  com.github.javaparser.ast.body.MethodDeclaration
+  (solveSymbol [this context nameToSolve]
+    (solveSymbol (.getParentNode this) nil nameToSolve)))
+
+(extend-protocol scope
   com.github.javaparser.ast.CompilationUnit
   ; TODO consider imports
   (solveClass [this context nameToSolve]
@@ -170,7 +175,7 @@
     (let [elementsToConsider (if (nil? context) (.getStmts this) (preceedingChildren (.getStmts this) context))
           solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) elementsToConsider)
           solvedSymbols' (remove nil? solvedSymbols)]
-      (first solvedSymbols'))))
+      (or (first solvedSymbols') (solveSymbol (.getParentNode this) this nameToSolve)))))
 
 (extend-protocol scope
   ExpressionStmt
