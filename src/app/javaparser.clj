@@ -343,6 +343,7 @@
   (first (filter (fn [ne] (= name (.getName ne))) (getNameExprs root))))
 
 (defn getMethodDeclaration [root name]
+  {:pre  [root]}
   (first (filter (fn [ne] (= name (.getName ne))) (getMethodDeclarations root))))
 
 (defn getVariableDeclarationExprs [root]

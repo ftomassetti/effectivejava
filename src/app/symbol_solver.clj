@@ -130,6 +130,16 @@
   (primitive? [this] true)
   (typeName [this] (.toLowerCase (.name (.getType this)))))
 
+(extend-protocol typeref
+  com.github.javaparser.ast.type.ReferenceType
+  (primitive? [this] false)
+  (typeName [this] (typeName (.getType this))))
+
+(extend-protocol typeref
+  com.github.javaparser.ast.type.ClassOrInterfaceType
+  (primitive? [this] false)
+  (typeName [this] (.getName this)))
+
 
 (defn solveNameExpr [nameExpr]
   ; TODO consider local variables

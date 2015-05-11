@@ -8,6 +8,7 @@
 (def sampleClasses (flatten (map allClasses samplesCus)))
 
 (defn- sampleClass [name]
+  {:post [%]}
   (first (filter (fn [c] (= name (.getName c))) sampleClasses)))
 
 (deftest testPreceedingChildren
@@ -36,7 +37,7 @@
         refI (getNameExprFor method1 "i")]
     (is (not (nil? (solveNameExpr refI))))))
 
-(deftest testTypeCalculationOnLocalVar1
+(deftest testTypeCalculationOnLocalVarPrimitiveType1
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
         method1 (getMethodDeclaration aClassResolvingToLocalVar "method1")
         refI (getNameExprFor method1 "i")
@@ -45,7 +46,7 @@
     (is (primitive? (getType sym)))
     (is (= "int" (typeName (getType sym))))))
 
-(deftest testTypeCalculationOnLocalVar2
+(deftest testTypeCalculationOnLocalVarPrimitiveType2
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
         method2 (getMethodDeclaration aClassResolvingToLocalVar "method2")
         refI (getNameExprFor method2 "i")
@@ -53,3 +54,21 @@
     (is (not (nil? (getType sym))))
     (is (primitive? (getType sym)))
     (is (= "long" (typeName (getType sym))))))
+
+(deftest testTypeCalculationOnLocalVarClassType1
+  (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVarClassType")
+        method1 (getMethodDeclaration aClassResolvingToLocalVar "method1")
+        refI (getNameExprFor method1 "i")
+        sym (solveNameExpr refI)]
+    (is (not (nil? (getType sym))))
+    (is (not (primitive? (getType sym))))
+    (is (= "A" (typeName (getType sym))))))
+
+(deftest testTypeCalculationOnLocalVarClassType2
+  (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVarClassType")
+        method2 (getMethodDeclaration aClassResolvingToLocalVar "method2")
+        refI (getNameExprFor method2 "i")
+        sym (solveNameExpr refI)]
+    (is (not (nil? (getType sym))))
+    (is (not (primitive? (getType sym))))
+    (is (= "B" (typeName (getType sym))))))
