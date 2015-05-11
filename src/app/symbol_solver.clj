@@ -40,6 +40,23 @@
   (solveSymbol [this context nameToSolve]))
 
 (extend-protocol scope
+  com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
+  (solveSymbol [this context nameToSolve]
+    (let [members (.getMembers this)
+          declaredFields (filter (partial instance? com.github.javaparser.ast.body.FieldDeclaration) members)
+          solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) declaredFields)
+          solvedSymbols' (remove nil? solvedSymbols)]
+      (first solvedSymbols'))))
+
+(extend-protocol scope
+  com.github.javaparser.ast.body.FieldDeclaration
+  (solveSymbol [this context nameToSolve]
+    (let [variables (.getVariables this)
+          solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) variables)
+          solvedSymbols' (remove nil? solvedSymbols)]
+      (first solvedSymbols'))))
+
+(extend-protocol scope
   NameExpr
   (solveSymbol [this context nameToSolve]
     (when-not context
@@ -116,8 +133,16 @@
   (getType [this]
     (let [variableDeclarationExpr (.getParentNode this)]
       (or (.getType variableDeclarationExpr) (throw (RuntimeException. "No expr")))))
-  (localVarRef? [this] true)
-  (fieldRef? [this] false))
+  (localVarRef? [this] (not (fieldRef? this)))
+  (fieldRef? [this] (instance? FieldDeclaration (.getParentNode this))))
+
+(extend-protocol symbolref
+  VariableDeclaratorId
+  ; the parent should be a VariableDeclarator
+  (getType [this]
+    (getType (.getParentNode this)))
+  (localVarRef? [this] (localVarRef? (.getParentNode this)))
+  (fieldRef? [this] (fieldRef? (.getParentNode this))))
 
 ;
 ; protocol type
