@@ -79,6 +79,10 @@
   (printOperation classesAndSingletonTypeOp (:cus state) nil)
   (interactive state))
 
+(defn- command-not-implemented [command state]
+  (println "Command not implemented: " command)
+  (interactive state))
+
 (defn- process [state input]
   (let
    [ast (command-parser input)]
@@ -99,7 +103,7 @@
                  (mcp-operation state threshold))
           :F (f-operation state)
           :ST (st-operation state)
-          (println "Command not implemented: " command))))))
+          (command-not-implemented command state))))))
 
 (defn interactive [state]
   (do
