@@ -2,10 +2,11 @@
   (:use [app.jarloading])
   (:use [app.javaparser])
   (:use [app.symbol_solver])
+  (:use [app.symbol_solver.type_solver])
   (:use [clojure.test]))
 
 (def samplesCus (cus "test-resources/sample-codebases/samples/"))
-(def sampleClasses (flatten (map allClasses samplesCus)))
+(def sampleClasses (flatten (map allTypes samplesCus)))
 
 (defn- sampleClass [name]
   {:post [%]}
@@ -89,17 +90,17 @@
     (is (primitive? (getType sym)))
     (is (= "int" (typeName (getType sym))))))
 
-;(deftest testInehritedFieldResolutionFromClass
-;  ; we should define a classSolver looking in the sampleClasses
-;  (binding [typeSolver (classSolverOnList sampleClasses)]
-;    (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
-;          method (getMethodDeclaration aClass "method2")
-;          sym (solveSymbol aClass nil "i")]
-;      (is (not (nil? sym)))
-;      (is (not (nil? (getType sym))))
-;      (is (fieldRef? sym))
-;      (is (primitive? (getType sym)))
-;      (is (= "int" (typeName (getType sym)))))))
+(deftest testInehritedFieldResolutionFromClass
+  ; we should define a classSolver looking in the sampleClasses
+  (binding [typeSolver (typeSolverOnList sampleClasses)]
+    (let [aClass (sampleClass "ReferencesToFieldExtendingClass")
+          method (getMethodDeclaration aClass "method2")
+          sym (solveSymbol aClass nil "i")]
+      (is (not (nil? sym)))
+      (is (not (nil? (getType sym))))
+      (is (fieldRef? sym))
+      (is (primitive? (getType sym)))
+      (is (= "int" (typeName (getType sym)))))))
 
 ;(deftest testTypeCalculationOnReferencesToDeclaredField
 ;  (let [aClass (sampleClass "ReferencesToField")

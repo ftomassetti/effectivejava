@@ -34,13 +34,35 @@
   (array? [this])
   (primitive? [this])
   (typeName [this])
-  (baseType [this])
+  (baseType [this]))
+
+(defprotocol typedef
   (allFields [this]))
 
 (defprotocol fieldDecl
   (fieldName [this]))
 
-(def ^:dynamic typeSolver nil)
+(def ^:dynamic typeSolver (fn [nameToSolve] (throw (IllegalStateException. "TypeSolver not set"))))
+
+;
+; protocol typedef
+;
+
+(extend-protocol typedef
+  com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
+  (allFields [this]
+    (let [fields (filter (partial instance? com.github.javaparser.ast.body.FieldDeclaration) (.getMembers this))
+          varFields (map (fn [f] (seq (.getVariables f))) fields)]
+      (flatten varFields))))
+
+;
+; protocol fieldDecl
+;
+
+(extend-protocol fieldDecl
+  com.github.javaparser.ast.body.VariableDeclarator
+  (fieldName [this]
+    (.getName (.getId this))))
 
 ;
 ; protocol scope
@@ -64,7 +86,10 @@
   (let [cu (getCu classDecl)]
     (.getPackage cu)))
 
-(defn solveClassInPackage [pakage nameToSolve])
+(defn solveClassInPackage [pakage nameToSolve]
+  {:pre [typeSolver]}
+  ; TODO first look into the package
+  (typeSolver nameToSolve))
 
 (defn- solveAmongDeclaredFields [this nameToSolve]
   (let [members (.getMembers this)
@@ -88,7 +113,15 @@
               (first solvedSymbols''))))
         amongDeclaredFields)))
   (solveClass [this context nameToSolve]
-    (solveClassInPackage (getClassPackage this) nameToSolve)))
+    (solveClass (getCu this) nil nameToSolve)))
+
+(extend-protocol scope
+  com.github.javaparser.ast.CompilationUnit
+  ; TODO consider imports
+  (solveClass [this context nameToSolve]
+    (let [typesInCu (topLevelTypes this)
+          compatibleTypes (filter (fn [t] (= nameToSolve (getName t))) typesInCu)]
+      (or (first compatibleTypes) (solveClassInPackage (getClassPackage this) nameToSolve)))))
 
 (extend-protocol scope
   com.github.javaparser.ast.body.FieldDeclaration
@@ -187,7 +220,7 @@
   (fieldRef? [this] (fieldRef? (.getParentNode this))))
 
 ;
-; protocol type
+; protocol typeref
 ;
 
 (extend-protocol typeref
@@ -215,7 +248,3 @@
   ; TODO consider inherited fields
   (let [name (.getName nameExpr)]
     (solveSymbol nameExpr nil name)))
-
-(defn classSolverOnList 
-  "Should get a list of classes and returning a function that given a className should return a typeref or nil"
-  [classes])
