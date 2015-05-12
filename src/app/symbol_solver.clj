@@ -108,5 +108,5 @@
     (solveSymbol nameExpr nil name)))
 
 (defn solveImportStmt [importStmt]
-  (let [name (.getName (.getName importStmt))]
+  (let [name (importQName importStmt)]
     (solveClass (getCu importStmt) nil name)))

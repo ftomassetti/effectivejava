@@ -127,10 +127,29 @@
   (solveSymbol [this context nameToSolve]
     (solveSymbol (.getParentNode this) nil nameToSolve)))
 
+(defn qNameToSimpleName [qualifiedName]
+  (last (clojure.string/split qualifiedName #"\.")))
+
+(defn importQName [importDecl]
+  (str (.getName importDecl)))
+
+(defn isImportMatchingSimpleName? [simpleName importDecl]
+  (= simpleName (qNameToSimpleName (importQName importDecl))))
+
+(defn solveImportedClass 
+  "Try to solve the classname by looking among the imported classes"
+  [cu nameToSolve]
+  (let [imports (.getImports cu)
+        relevantImports (filter (partial isImportMatchingSimpleName? nameToSolve) imports)
+        correspondingClasses (map typeSolver relevantImports)]
+    (first correspondingClasses)))
+      
 (extend-protocol scope
   com.github.javaparser.ast.CompilationUnit
   ; TODO consider imports
   (solveClass [this context nameToSolve]
     (let [typesInCu (topLevelTypes this)
           compatibleTypes (filter (fn [t] (= nameToSolve (getName t))) typesInCu)]
-      (or (first compatibleTypes) (solveClassInPackage (getClassPackage this) nameToSolve)))))
+      (or (first compatibleTypes) 
+        (solveImportedClass this nameToSolve)
+        (solveClassInPackage (getClassPackage this) nameToSolve)))))
