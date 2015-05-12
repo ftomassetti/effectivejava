@@ -85,3 +85,31 @@
     (is (= false (:help (:options res))))
     (is (= "FOO" (:dir (:options res))))
     (is (= nil (:errors res)))))
+
+(deftest cli-opts-threshold-not-a-number
+  (let [args ["-t" "2a"]
+        res (parse-opts args cliOpts)]
+    (is (= [] (:arguments res)))
+    (is (= false (:linter (:options res))))
+    (is (= false (:interactive (:options res))))
+    (is (= false (:help (:options res))))
+    (is (:errors res))))
+
+(deftest cli-opts-threshold-negative
+  (let [args ["-t" "-2"]
+        res (parse-opts args cliOpts)]
+    (is (= [] (:arguments res)))
+    (is (= false (:linter (:options res))))
+    (is (= false (:interactive (:options res))))
+    (is (= false (:help (:options res))))
+    (is (:errors res))))
+
+(deftest cli-opts-threshold-positive
+  (let [args ["-t" "2"]
+        res (parse-opts args cliOpts)]
+    (is (= [] (:arguments res)))
+    (is (= false (:linter (:options res))))
+    (is (= false (:interactive (:options res))))
+    (is (= false (:help (:options res))))
+    (is (= 2 (:threshold (:options res))))
+    (is (= nil (:errors res)))))
