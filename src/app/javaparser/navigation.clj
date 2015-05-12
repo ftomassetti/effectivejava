@@ -24,6 +24,7 @@
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
 
 (defn topLevelTypes [cu]
+  "List of toplevel types: classes, interfaces and enums not contained in other types"
   (if (nil? cu) []
       (.getTypes cu)))
 
