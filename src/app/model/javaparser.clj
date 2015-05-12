@@ -78,67 +78,74 @@
 ; Modifiers
 ; ============================================
 
-(defprotocol withModifiers
-  (getModifiers [this]))
-
-(extend-protocol withModifiers
-  ConstructorDeclaration
-  (getModifiers [this] (.getModifiers this)))
-
-(extend-protocol withModifiers
+(extend-protocol WithModifiers
   TypeDeclaration
-  (getModifiers [this] (.getModifiers this)))
+  (isPrivate? [this]
+    (ModifierSet/isPrivate (.getModifiers this)))
+  (isPublic? [this]
+    (ModifierSet/isPublic (.getModifiers this)))
+  (isProtected? [this]
+    (ModifierSet/isProtected (.getModifiers this)))
+  (isStatic? [this]
+    (ModifierSet/isStatic (.getModifiers this)))
+  (isFinal? [this]
+    (ModifierSet/isFinal (.getModifiers this))))
 
-(extend-protocol withModifiers
+(extend-protocol WithModifiers
+  ConstructorDeclaration
+  (isPrivate? [this]
+    (ModifierSet/isPrivate (.getModifiers this)))
+  (isPublic? [this]
+    (ModifierSet/isPublic (.getModifiers this)))
+  (isProtected? [this]
+    (ModifierSet/isProtected (.getModifiers this)))
+  (isStatic? [this]
+    (ModifierSet/isStatic (.getModifiers this)))
+  (isFinal? [this]
+    (ModifierSet/isFinal (.getModifiers this))))
+
+(extend-protocol WithModifiers
   MethodDeclaration
-  (getModifiers [this] (.getModifiers this)))
+  (isPrivate? [this]
+    (ModifierSet/isPrivate (.getModifiers this)))
+  (isPublic? [this]
+    (ModifierSet/isPublic (.getModifiers this)))
+  (isProtected? [this]
+    (ModifierSet/isProtected (.getModifiers this)))
+  (isStatic? [this]
+    (ModifierSet/isStatic (.getModifiers this)))
+  (isFinal? [this]
+    (ModifierSet/isFinal (.getModifiers this))))
 
-(extend-protocol withModifiers
+(extend-protocol WithModifiers
   FieldDeclaration
-  (getModifiers [this] (.getModifiers this)))
-
-(defn isPrivate? [cl]
-  (let [ms (getModifiers cl)]
-    (ModifierSet/isPrivate ms)))
-
-(defn isPublic? [cl]
-  (let [ms (getModifiers cl)]
-    (ModifierSet/isPublic ms)))
-
-(defn isProtected? [cl]
-  (let [ms (getModifiers cl)]
-    (ModifierSet/isProtected ms)))
-
-(defn isStatic? [cl]
-  (let [ms (getModifiers cl)]
-    (ModifierSet/isStatic ms)))
-
-(defn isFinal? [cl]
-  (let [ms (getModifiers cl)]
-    (ModifierSet/isFinal ms)))
-
-(defn hasPackageLevelAccess? [cl]
-  (not
-   (or
-    (isPublic? cl)
-    (isPrivate? cl)
-    (isProtected? cl))))
-
-(defn isPublicOrHasPackageLevelAccess? [el]
-  (or
-   (isPublic? el)
-   (hasPackageLevelAccess? el)))
-
-(defn isNotPrivate? [cl]
-  (complement isPrivate?))
+  (isPrivate? [this]
+    (ModifierSet/isPrivate (.getModifiers this)))
+  (isPublic? [this]
+    (ModifierSet/isPublic (.getModifiers this)))
+  (isProtected? [this]
+    (ModifierSet/isProtected (.getModifiers this)))
+  (isStatic? [this]
+    (ModifierSet/isStatic (.getModifiers this)))
+  (isFinal? [this]
+    (ModifierSet/isFinal (.getModifiers this))))
 
 ; ============================================
 ; Abstractions
 ; ============================================
 
 (defrecord SingleFieldDeclaration [field variable]
-  withModifiers
-  (getModifiers [this] (getModifiers field)))
+  WithModifiers
+  (isPrivate? [this]
+    (isPrivate? field))
+  (isPublic? [this]
+    (isPublic? field))
+  (isProtected? [this]
+    (isProtected? field))
+  (isStatic? [this]
+    (isStatic? field))
+  (isFinal? [this]
+    (isFinal? field)))
 
 ; ============================================
 ; Naming
