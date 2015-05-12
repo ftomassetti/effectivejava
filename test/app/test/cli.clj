@@ -1,9 +1,11 @@
 (ns app.test.cli
   (:require [clojure.tools.cli :refer [parse-opts]])
+  (:use [conjure.core])
   (:use [app.cli])
   (:use [app.core])
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
+  (:use [app.itemsOnLifecycle])
   (:use [app.javaparser.navigation])
   (:use [app.operations])
   (:use [clojure.test]))
@@ -113,3 +115,22 @@
     (is (= false (:help (:options res))))
     (is (= 2 (:threshold (:options res))))
     (is (= nil (:errors res)))))
+
+;(defn run [opts]
+;  (let [dirname (:dir opts)
+;        th (:threshold opts)
+;        operation ((keyword (:query opts)) operations)
+;        cus (filter not-nil? (cus dirname))]
+;    (println "Considering" (.size cus) "Java files")
+;    (printOperation operation cus th)))
+
+(deftest run-invoke-the-right-stuff
+  (let [opts {:dir "mydir", :threshold 43, :query :mcp}]
+    (stubbing [cus '(:cu1 :cu2 :cu3)]
+      (mocking [println printOperation]
+        (run opts)
+        (verify-call-times-for println 1)
+        (verify-call-times-for printOperation 1)
+        (verify-first-call-args-for println "Considering" 3 "Java files")
+        (verify-first-call-args-for printOperation constructorsWithManyParametersOp '(:cu1 :cu2 :cu3) 43)))))
+
