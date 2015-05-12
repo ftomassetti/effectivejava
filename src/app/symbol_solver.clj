@@ -37,7 +37,7 @@
 ; protocol typedef
 ;
 
-(extend-protocol TypeDef
+(extend-protocol TypeDecl
   com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
   (allFields [this]
     (let [fields (filter (partial instance? com.github.javaparser.ast.body.FieldDeclaration) (.getMembers this))

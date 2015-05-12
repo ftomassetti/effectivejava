@@ -8,13 +8,16 @@
   (:import [app.operations Operation]))
 
 (defprotocol TypeRef
+  "Reference to a type"
   (array? [this])
   (primitive? [this])
   (typeName [this])
   (baseType [this]))
 
-(defprotocol TypeDef
+(defprotocol TypeDecl
+  "Defiinition of a type (a Class, an Interface or an Enum)"
   (allFields [this]))
 
 (defprotocol FieldDecl
+  "Definition of Class, Enum or Interface Field. In the case of interface the field can only be static"
   (fieldName [this]))
