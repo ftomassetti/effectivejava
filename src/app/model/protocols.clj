@@ -28,9 +28,19 @@
   "Definition of Class, Enum or Interface Field. In the case of interface the field can only be static"
   (fieldName [this]))
 
+; ============================================
+; Naming
+; ============================================
+
+(defprotocol WithPackageName
+  (packageName [this]))
+
 (defprotocol Named
   (getName [this])
   (getQName [this]))
+
+(defn isInDefaultPackage? [this]
+  (= "" (packageName this)))
 
 ; ============================================
 ; Modifiers

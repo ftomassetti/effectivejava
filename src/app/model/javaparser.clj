@@ -151,13 +151,7 @@
 ; Naming
 ; ============================================
 
-(defprotocol withPackageName
-  (packageName [this]))
-
-(defn isInDefaultPackage? [this]
-  (= "" (packageName this)))
-
-(extend-protocol withPackageName
+(extend-protocol WithPackageName
   CompilationUnit
   (packageName [this]
     (let
@@ -166,13 +160,13 @@
         ""
         (str (.getName p))))))
 
-(extend-protocol withPackageName
+(extend-protocol WithPackageName
   Node
   (packageName [this]
     (let [pn (.getParentNode this)]
       (packageName pn))))
 
-(extend-protocol withPackageName
+(extend-protocol WithPackageName
   SingleFieldDeclaration
   (packageName [this]
     (packageName (.variable this))))
