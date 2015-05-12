@@ -51,6 +51,57 @@
       (flatten varFields))))
 
 ; ============================================
+; TypeRef
+; ============================================
+
+(extend-protocol TypeRef
+  com.github.javaparser.ast.type.PrimitiveType
+  (primitive? [this] true)
+  (typeName [this] (.toLowerCase (.name (.getType this)))))
+
+(extend-protocol TypeRef
+  com.github.javaparser.ast.type.ReferenceType
+  (primitive? [this] false)
+  (typeName [this]
+    (when (nil? (.getType this))
+      (throw (IllegalStateException. "No getType for the ReferenceType")))
+    (typeName (.getType this))))
+
+(extend-protocol TypeRef
+  com.github.javaparser.ast.type.ClassOrInterfaceType
+  (primitive? [this] false)
+  (typeName [this] (.getName this)))
+
+; ============================================
+; FieldDecl
+; ============================================
+
+(extend-protocol FieldDecl
+  com.github.javaparser.ast.body.VariableDeclarator
+  (fieldName [this]
+    (.getName (.getId this))))
+
+; ============================================
+; SymbolRef
+; ============================================
+
+(extend-protocol SymbolRef
+  VariableDeclarator
+  (getType [this]
+    (let [variableDeclarationExpr (.getParentNode this)]
+      (or (.getType variableDeclarationExpr) (throw (RuntimeException. "No expr")))))
+  (localVarRef? [this] (not (fieldRef? this)))
+  (fieldRef? [this] (instance? FieldDeclaration (.getParentNode this))))
+
+(extend-protocol SymbolRef
+  VariableDeclaratorId
+  ; the parent should be a VariableDeclarator
+  (getType [this]
+    (getType (.getParentNode this)))
+  (localVarRef? [this] (localVarRef? (.getParentNode this)))
+  (fieldRef? [this] (fieldRef? (.getParentNode this))))
+
+; ============================================
 ; Modifiers
 ; ============================================
 

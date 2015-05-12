@@ -3,7 +3,7 @@
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
   (:use [app.javaparser.navigation])
-  (:use [app.symbol_solver])
+  (:use [app.symbol_solver.funcs])
   (:use [app.symbol_solver.type_solver])
   (:use [app.symbol_solver.scope])
   (:use [app.utils])

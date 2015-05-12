@@ -24,6 +24,11 @@
   (isInterface? [this])
   (allFields [this]))
 
+(defprotocol SymbolRef
+  (getType [this])
+  (localVarRef? [this])
+  (fieldRef? [this]))
+
 (defprotocol FieldDecl
   "Definition of Class, Enum or Interface Field. In the case of interface the field can only be static"
   (fieldName [this]))

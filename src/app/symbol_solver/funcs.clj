@@ -1,4 +1,4 @@
-(ns app.symbol_solver
+(ns app.symbol_solver.funcs
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
   (:use [app.javaparser.navigation])
@@ -33,62 +33,6 @@
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
 (import com.github.javaparser.ast.visitor.DumpVisitor)
 (import com.github.javaparser.ast.type.PrimitiveType)
-
-;
-; protocol FieldDecl
-;
-
-(extend-protocol FieldDecl
-  com.github.javaparser.ast.body.VariableDeclarator
-  (fieldName [this]
-    (.getName (.getId this))))
-
-;
-; protocol symbolref
-;
-
-(defprotocol symbolref
-  (getType [this])
-  (localVarRef? [this])
-  (fieldRef? [this]))
-
-(extend-protocol symbolref
-  VariableDeclarator
-  (getType [this]
-    (let [variableDeclarationExpr (.getParentNode this)]
-      (or (.getType variableDeclarationExpr) (throw (RuntimeException. "No expr")))))
-  (localVarRef? [this] (not (fieldRef? this)))
-  (fieldRef? [this] (instance? FieldDeclaration (.getParentNode this))))
-
-(extend-protocol symbolref
-  VariableDeclaratorId
-  ; the parent should be a VariableDeclarator
-  (getType [this]
-    (getType (.getParentNode this)))
-  (localVarRef? [this] (localVarRef? (.getParentNode this)))
-  (fieldRef? [this] (fieldRef? (.getParentNode this))))
-
-;
-; protocol typeref
-;
-
-(extend-protocol TypeRef
-  com.github.javaparser.ast.type.PrimitiveType
-  (primitive? [this] true)
-  (typeName [this] (.toLowerCase (.name (.getType this)))))
-
-(extend-protocol TypeRef
-  com.github.javaparser.ast.type.ReferenceType
-  (primitive? [this] false)
-  (typeName [this]
-    (when (nil? (.getType this))
-      (throw (IllegalStateException. "No getType for the ReferenceType")))
-    (typeName (.getType this))))
-
-(extend-protocol TypeRef
-  com.github.javaparser.ast.type.ClassOrInterfaceType
-  (primitive? [this] false)
-  (typeName [this] (.getName this)))
 
 (defn solveNameExpr [nameExpr]
   ; TODO consider local variables
