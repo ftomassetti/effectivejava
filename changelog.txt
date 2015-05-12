@@ -6,3 +6,5 @@ v 0.1.3
 
 v 0.2.0
 * added finalizers and mcp operations to interactive mode
+* introduced initial code for symbol resolution
+* fixed several bugs
