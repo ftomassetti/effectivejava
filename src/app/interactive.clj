@@ -109,4 +109,7 @@
   (do
     (print "> ")
     (flush)
-    (process state (read-line))))
+    (let [user-input (read-line)]
+      (if (empty? user-input)
+        (interactive state)
+        (process state user-input)))))
