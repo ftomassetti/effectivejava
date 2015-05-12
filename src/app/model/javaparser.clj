@@ -1,6 +1,7 @@
 (ns app.model.javaparser
   (:use [app.utils])
-  (:use [app.model.protocols]))
+  (:use [app.model.protocols])
+  (:use [app.javaparser.parsing]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
@@ -21,32 +22,6 @@
 (import com.github.javaparser.ast.expr.VariableDeclarationExpr)
 (import com.github.javaparser.ast.body.VariableDeclarator)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
-
-; ============================================
-; Parsing
-; ============================================
-
-(defn parseFile
-  "Parse a file, and return nil if the file cannot be loaded"
-  [file]
-  (try
-    (JavaParser/parse file)
-    (catch Exception e nil)))
-
-(defn parseString [s]
-  (let [reader (java.io.StringReader. s)]
-    (try
-      (JavaParser/parse reader false)
-      (catch Exception e nil))))
-
-(defn parseFileByName [filename]
-  (parseFile (new java.io.File filename)))
-
-(defn parseFiles [files]
-  (map (fn [f] {:file f :cu (parseFile f)}) files))
-
-(defn parseDirByName [dirname]
-  (parseFiles (java-files dirname)))
 
 ; ============================================
 ; Recognize node types
@@ -228,7 +203,6 @@
   (getQName [this]
     (let [pn (.getParentNode this)]
       (str (getQName pn) "." (getName this)))))
-
 
 (extend-protocol Named
   VariableDeclaratorId

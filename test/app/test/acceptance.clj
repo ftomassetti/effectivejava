@@ -2,6 +2,7 @@
   (:use [app.model.javaparser])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
+  (:use [app.javaparser.parsing])
   (:use [clojure.test]))
 
 (def javaparserCus (cus "test-resources/sample-codebases/javaparser/"))
