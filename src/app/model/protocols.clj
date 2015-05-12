@@ -7,14 +7,14 @@
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation]))
 
-(defprotocol typeref
+(defprotocol TypeRef
   (array? [this])
   (primitive? [this])
   (typeName [this])
   (baseType [this]))
 
-(defprotocol typedef
+(defprotocol TypeDef
   (allFields [this]))
 
-(defprotocol fieldDecl
+(defprotocol FieldDecl
   (fieldName [this]))

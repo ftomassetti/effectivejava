@@ -19,7 +19,7 @@
 ; protocol fieldDecl
 ;
 
-(extend-protocol fieldDecl
+(extend-protocol FieldDecl
   javassist.CtField
   (fieldName [this]
     (.getName this)))

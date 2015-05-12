@@ -37,7 +37,7 @@
 ; protocol typedef
 ;
 
-(extend-protocol typedef
+(extend-protocol TypeDef
   com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
   (allFields [this]
     (let [fields (filter (partial instance? com.github.javaparser.ast.body.FieldDeclaration) (.getMembers this))
@@ -45,10 +45,10 @@
       (flatten varFields))))
 
 ;
-; protocol fieldDecl
+; protocol FieldDecl
 ;
 
-(extend-protocol fieldDecl
+(extend-protocol FieldDecl
   com.github.javaparser.ast.body.VariableDeclarator
   (fieldName [this]
     (.getName (.getId this))))
@@ -82,12 +82,12 @@
 ; protocol typeref
 ;
 
-(extend-protocol typeref
+(extend-protocol TypeRef
   com.github.javaparser.ast.type.PrimitiveType
   (primitive? [this] true)
   (typeName [this] (.toLowerCase (.name (.getType this)))))
 
-(extend-protocol typeref
+(extend-protocol TypeRef
   com.github.javaparser.ast.type.ReferenceType
   (primitive? [this] false)
   (typeName [this]
@@ -95,7 +95,7 @@
       (throw (IllegalStateException. "No getType for the ReferenceType")))
     (typeName (.getType this))))
 
-(extend-protocol typeref
+(extend-protocol TypeRef
   com.github.javaparser.ast.type.ClassOrInterfaceType
   (primitive? [this] false)
   (typeName [this] (.getName this)))
