@@ -3,6 +3,7 @@
   (:use [app.core])
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
+  (:use [app.javaparser.navigation])
   (:use [app.operations])
   (:use [clojure.test]))
 

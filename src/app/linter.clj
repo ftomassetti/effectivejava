@@ -1,6 +1,7 @@
 (ns app.linter
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
+  (:use [app.javaparser.navigation])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
   (:use [app.utils])

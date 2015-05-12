@@ -3,6 +3,7 @@
   (:use [app.model.javaparser])
   (:use [app.operations])
   (:use [app.utils])
+  (:use [app.javaparser.navigation])
   (:import [app.operations Operation]))
 
 ; ============================================

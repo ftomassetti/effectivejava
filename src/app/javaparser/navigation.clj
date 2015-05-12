@@ -1,6 +1,7 @@
 (ns app.javaparser.navigation
   (:use [app.utils])
-  (:use [app.model.protocols]))
+  (:use [app.model.protocols])
+  (:use [app.javaparser.parsing]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
@@ -36,3 +37,36 @@
     (map
       (fn [dat] [dat, (directlyAnnidatedTypes dat)])
       (directlyAnnidatedTypes t))))
+
+(defn allTypes
+  "Get all the types in the Compilation Unit includin both top level types and annidated types"
+  [cu]
+  (flatten
+    (map
+      (fn [t] [t, (annidatedTypes t)])
+      (topLevelTypes cu))))
+
+(defn allClasses [cu]
+  (filter isClass? (allTypes cu)))
+
+(defn allInterfaces [cu]
+  (filter isInterface? (.getTypes cu)))
+
+(defn allEnums [cu]
+  (filter isEnum? (.getTypes cu)))
+
+(defn allClassesForCus [cus]
+  (flatten
+    (for [cu cus]
+      (allClasses cu))))
+
+(defn allClassesForCusTuples [cusTuples]
+  (flatten
+    (for [cuTuple cusTuples]
+      (allClasses (:cu cuTuple)))))
+
+(defn cusTuples "Get tuples of [filename cu]" [dirname]
+  (filter not-nil? (parseDirByName dirname)))
+
+(defn cus [dirname]
+  (map :cu (cusTuples dirname)))

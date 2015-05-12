@@ -2,6 +2,7 @@
   (:use [app.jarloading])
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
+  (:use [app.javaparser.navigation])
   (:use [app.symbol_solver.type_solver])
   (:use [app.model.javassist])
   (:use [clojure.test]))

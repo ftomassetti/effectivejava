@@ -1,6 +1,7 @@
 (ns app.test.jarloading
   (:use [app.jarloading])
   (:use [app.model.javaparser])
+  (:use [app.javaparser.navigation])
   (:use [clojure.test]))
 
 (def javaparser2 "test-resources/sample-jars/javaparser-core-2.0.0.jar")

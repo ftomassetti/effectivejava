@@ -4,6 +4,7 @@
   (:use [app.itemsOnLifecycle])
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
+  (:use [app.javaparser.navigation])
   (:use [clojure.test])
   (:use [app.test.helper])
   (:require [instaparse.core :as insta]))
