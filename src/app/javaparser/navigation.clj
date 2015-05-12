@@ -70,3 +70,74 @@
 
 (defn cus [dirname]
   (map :cu (cusTuples dirname)))
+
+(defn getConstructors [cl]
+  (filter (fn [m] (instance? ConstructorDeclaration m)) (.getMembers cl)))
+
+(defn allConstructorsForCus [cus]
+  (flatten
+    (for [cl (allClassesForCus cus)]
+      (getConstructors cl))))
+
+(defn getMethods [cl]
+  (filter (fn [m] (instance? MethodDeclaration m)) (.getMembers cl)))
+
+(defn getFields [cl]
+  (filter (fn [m] (instance? FieldDeclaration m)) (.getMembers cl)))
+
+(defn getNotPrivateConstructors [cl]
+  (filter isNotPrivate? (getConstructors cl)))
+
+(defn nConstructors [cl]
+  (.size (getConstructors cl)))
+
+(defn nNotPrivateConstructors [cl]
+  (.size (getNotPrivateConstructors cl)))
+
+(defn getParameters [m]
+  (let [ps (.getParameters m)]
+    (if (nil? ps)
+      (java.util.ArrayList.)
+      ps)))
+
+(defn getChildrenNodes [root]
+  (tree-seq
+    #(not-empty (.getChildrenNodes %))
+    #(.getChildrenNodes %)
+    root))
+
+(defn getMethodCallExprs [root]
+  (filter #(instance? MethodCallExpr %)
+    (getChildrenNodes root)))
+
+(defn getNameExprs [root]
+  (filter #(instance? NameExpr %)
+    (getChildrenNodes root)))
+
+(defn getMethodDeclarations [root]
+  (filter #(instance? MethodDeclaration %)
+    (getChildrenNodes root)))
+
+(defn getBlockStmts [root]
+  (filter #(instance? BlockStmt %)
+    (getChildrenNodes root)))
+
+(defn getNameExprFor [root name]
+  {:pre [root name]}
+  (first (filter (fn [ne] (= name (.getName ne))) (getNameExprs root))))
+
+(defn getMethodDeclaration [root name]
+  {:pre  [root]}
+  (first (filter (fn [ne] (= name (.getName ne))) (getMethodDeclarations root))))
+
+(defn getVariableDeclarationExprs [root]
+  (filter #(instance? VariableDeclarationExpr %)
+    (getChildrenNodes root)))
+
+(defn getVariableDeclarators [root]
+  (filter #(instance? VariableDeclarator %)
+    (getChildrenNodes root)))
+
+(defn getImports [root]
+  (filter #(instance? com.github.javaparser.ast.ImportDeclaration %)
+    (getChildrenNodes root)))
