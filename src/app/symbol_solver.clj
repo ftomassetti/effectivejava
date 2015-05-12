@@ -34,17 +34,6 @@
 (import com.github.javaparser.ast.type.PrimitiveType)
 
 ;
-; protocol typedef
-;
-
-(extend-protocol TypeDecl
-  com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
-  (allFields [this]
-    (let [fields (filter (partial instance? com.github.javaparser.ast.body.FieldDeclaration) (.getMembers this))
-          varFields (map (fn [f] (seq (.getVariables f))) fields)]
-      (flatten varFields))))
-
-;
 ; protocol FieldDecl
 ;
 

@@ -19,6 +19,9 @@
 
 (defprotocol TypeDecl
   "Defiinition of a type (a Class, an Interface or an Enum)"
+  (isEnum? [this])
+  (isClass? [this])
+  (isInterface? [this])
   (allFields [this]))
 
 (defprotocol FieldDecl

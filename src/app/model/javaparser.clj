@@ -52,18 +52,27 @@
 ; Recognize node types
 ; ============================================
 
-(defn isClass? [n]
-  (and
-   (instance? ClassOrInterfaceDeclaration n)
-   (not (.isInterface n))))
+(extend-protocol TypeDecl
+  Node
+  (isClass? [this]
+    false)
+  (isInterface? [n]
+    false)
+  (isEnum? [n]
+    (instance? EnumDeclaration n)))
 
-(defn isInterface? [n]
-  (and
-   (instance? ClassOrInterfaceDeclaration n)
-   (.isInterface n)))
-
-(defn isEnum? [n]
-  (instance? EnumDeclaration n))
+(extend-protocol TypeDecl
+  com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
+  (isClass? [this]
+    (not (.isInterface this)))
+  (isInterface? [n]
+    (.isInterface n))
+  (isEnum? [n]
+    false)
+  (allFields [this]
+    (let [fields (filter (partial instance? com.github.javaparser.ast.body.FieldDeclaration) (.getMembers this))
+          varFields (map (fn [f] (seq (.getVariables f))) fields)]
+      (flatten varFields))))
 
 ; ============================================
 ; Modifiers
