@@ -1,5 +1,5 @@
 (ns app.test.helper
-  (:use [app.javaparser])
+  (:use [app.model.javaparser])
   (:use [clojure.test]))
 
 (defn readResource [filename]
