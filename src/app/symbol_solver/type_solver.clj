@@ -3,6 +3,7 @@
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
   (:use [app.jarloading])
+  (:use [app.javassist])
   (:use [app.utils])
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation]))

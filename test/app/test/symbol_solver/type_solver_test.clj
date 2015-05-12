@@ -21,5 +21,5 @@
 
 (deftest typeSolverOnJarShouldSolveClassInProperPackages
   (let [typeSolver (typeSolverOnJar javaparser2)]
-    (is (typeSolver "com.github.javaparser.ast.Declaration"))
-    (is (= "com.github.javaparser.ast.Declaration" (getQName (typeSolver "com.github.javaparser.ast.Declaration"))))))
+    (is (typeSolver "com.github.javaparser.ast.ImportDeclaration"))
+    (is (= "com.github.javaparser.ast.ImportDeclaration" (getQName (typeSolver "com.github.javaparser.ast.ImportDeclaration"))))))

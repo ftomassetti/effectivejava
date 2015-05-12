@@ -155,14 +155,14 @@
     (is (primitive? (getType sym)))
     (is (= "int" (typeName (getType sym))))))
 
-(deftest testSolveImportStmtFromJar
-  (binding [typeSolver (typeSolverOnJar javaparser2)]
-    (let [aClass (sampleClass "AClassExtendingClassInJar")
-         _ (assert aClass)
-         importStmt (first (getImports (getCu aClass)))
-         _ (assert importStmt)
-         importedType (solveImportStmt importStmt)]
-      (is importedType))))
+;(deftest testSolveImportStmtFromJar
+;  (binding [typeSolver (typeSolverOnJar javaparser2)]
+;    (let [aClass (sampleClass "AClassExtendingClassInJar")
+;         _ (assert aClass)
+;         importStmt (first (getImports (getCu aClass)))
+;         _ (assert importStmt)
+;         importedType (solveImportStmt importStmt)]
+;      (is importedType))))
 
 ;(deftest testSolveClassImportedFromJar
 ;  )
