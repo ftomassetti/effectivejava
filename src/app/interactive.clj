@@ -1,6 +1,6 @@
 (ns app.interactive
   (:use [app.model.protocols])
-  (:use [app.javaparser])
+  (:use [app.model.javaparser])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
   (:use [app.utils])

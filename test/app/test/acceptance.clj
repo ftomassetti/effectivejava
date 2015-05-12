@@ -1,5 +1,5 @@
 (ns app.test.acceptance
-  (:use [app.javaparser])
+  (:use [app.model.javaparser])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
   (:use [clojure.test]))

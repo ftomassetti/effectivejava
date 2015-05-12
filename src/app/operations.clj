@@ -1,6 +1,6 @@
 (ns app.operations
   (:use [app.model.protocols])
-  (:use [app.javaparser]))
+  (:use [app.model.javaparser]))
 
 (import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration)
 (import com.github.javaparser.ast.body.ConstructorDeclaration)

@@ -1,4 +1,4 @@
-(ns app.javassist
+(ns app.model.javassist
   (:use [app.utils])
   (:use [app.model.protocols]))
 

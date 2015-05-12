@@ -2,7 +2,7 @@
   (:use [app.core])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
-  (:use [app.javaparser])
+  (:use [app.model.javaparser])
   (:use [clojure.test])
   (:use [app.test.helper])
   (:require [instaparse.core :as insta]))

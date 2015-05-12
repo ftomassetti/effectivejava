@@ -2,7 +2,7 @@
   (:use [app.cli])
   (:use [app.core])
   (:use [app.model.protocols])
-  (:use [app.javaparser])
+  (:use [app.model.javaparser])
   (:use [app.operations])
   (:use [clojure.test]))
 

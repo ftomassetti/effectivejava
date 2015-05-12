@@ -1,4 +1,4 @@
-(ns app.javaparser
+(ns app.model.javaparser
   (:use [app.utils])
   (:use [app.model.protocols]))
 
