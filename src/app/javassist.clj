@@ -1,5 +1,6 @@
 (ns app.javassist
   (:use [app.utils])
+  (:use [app.symbol_solver.protocols])
   (:use [app.javaparser]))
 
 ; ============================================
@@ -12,4 +13,13 @@
   (getName [this]
     (.getSimpleName this))
   (getQName [this]
+    (.getName this)))
+
+;
+; protocol fieldDecl
+;
+
+(extend-protocol fieldDecl
+  javassist.CtField
+  (fieldName [this]
     (.getName this)))

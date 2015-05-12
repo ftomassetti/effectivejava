@@ -2,6 +2,7 @@
   (:use [app.jarloading])
   (:use [app.javaparser])
   (:use [app.symbol_solver.type_solver])
+  (:use [app.javassist])
   (:use [clojure.test]))
 
 (def samplesCus (cus "test-resources/sample-codebases/type_solver_samples/"))
