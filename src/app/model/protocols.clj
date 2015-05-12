@@ -60,15 +60,15 @@
 
 (defn hasPackageLevelAccess? [withModifiers]
   (not
-    (or
-      (isPublic? withModifiers)
-      (isPrivate? withModifiers)
-      (isProtected? withModifiers))))
+   (or
+    (isPublic? withModifiers)
+    (isPrivate? withModifiers)
+    (isProtected? withModifiers))))
 
 (defn isPublicOrHasPackageLevelAccess? [withModifiers]
   (or
-    (isPublic? withModifiers)
-    (hasPackageLevelAccess? withModifiers)))
+   (isPublic? withModifiers)
+   (hasPackageLevelAccess? withModifiers)))
 
 (defn isNotPrivate? [withModifiers]
   (complement isPrivate?))

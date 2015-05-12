@@ -90,9 +90,9 @@
   "Consider one single com.github.javaparser.ast.body.FieldDeclaration, which corresponds to possibly multiple fields"
   [fieldDeclaration nameToSolve]
   (let [variables (.getVariables fieldDeclaration)
-          solvedSymbols (map (partial solveAmongVariableDeclarator nameToSolve) variables)
-          solvedSymbols' (remove nil? solvedSymbols)]
-      (first solvedSymbols')))
+        solvedSymbols (map (partial solveAmongVariableDeclarator nameToSolve) variables)
+        solvedSymbols' (remove nil? solvedSymbols)]
+    (first solvedSymbols')))
 
 (defn- solveAmongDeclaredFields [this nameToSolve]
   (let [members (.getMembers this)
@@ -139,7 +139,7 @@
         relevantImports (filter (partial isImportMatchingSimpleName? nameToSolve) imports)
         correspondingClasses (map typeSolver relevantImports)]
     (first correspondingClasses)))
-      
+
 (extend-protocol scope
   com.github.javaparser.ast.CompilationUnit
   ; TODO consider imports
@@ -147,5 +147,5 @@
     (let [typesInCu (topLevelTypes this)
           compatibleTypes (filter (fn [t] (= nameToSolve (getName t))) typesInCu)]
       (or (first compatibleTypes) 
-        (solveImportedClass this nameToSolve)
-        (solveClassInPackage (getClassPackage this) nameToSolve)))))
+          (solveImportedClass this nameToSolve)
+          (solveClassInPackage (getClassPackage this) nameToSolve)))))

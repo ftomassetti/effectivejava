@@ -272,9 +272,9 @@
 
 (defn getFieldsVariablesTuples [cl]
   (flatten
-    (for [f (getFields cl)]
-      (for [v (.getVariables f)]
-        (SingleFieldDeclaration. f v)))))
+   (for [f (getFields cl)]
+     (for [v (.getVariables f)]
+       (SingleFieldDeclaration. f v)))))
 
 ; ============================================
 ; Misc

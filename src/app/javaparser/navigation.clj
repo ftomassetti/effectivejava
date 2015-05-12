@@ -25,7 +25,7 @@
 
 (defn topLevelTypes [cu]
   (if (nil? cu) []
-    (.getTypes cu)))
+      (.getTypes cu)))
 
 (defn directlyAnnidatedTypes [t]
   (filter (fn [m] (instance? TypeDeclaration m)) (.getMembers t)))
@@ -34,17 +34,17 @@
   "Get the types annidated in the given type, recursively"
   [t]
   (flatten
-    (map
-      (fn [dat] [dat, (directlyAnnidatedTypes dat)])
-      (directlyAnnidatedTypes t))))
+   (map
+    (fn [dat] [dat, (directlyAnnidatedTypes dat)])
+    (directlyAnnidatedTypes t))))
 
 (defn allTypes
   "Get all the types in the Compilation Unit includin both top level types and annidated types"
   [cu]
   (flatten
-    (map
-      (fn [t] [t, (annidatedTypes t)])
-      (topLevelTypes cu))))
+   (map
+    (fn [t] [t, (annidatedTypes t)])
+    (topLevelTypes cu))))
 
 (defn allClasses [cu]
   (filter isClass? (allTypes cu)))
@@ -57,13 +57,13 @@
 
 (defn allClassesForCus [cus]
   (flatten
-    (for [cu cus]
-      (allClasses cu))))
+   (for [cu cus]
+     (allClasses cu))))
 
 (defn allClassesForCusTuples [cusTuples]
   (flatten
-    (for [cuTuple cusTuples]
-      (allClasses (:cu cuTuple)))))
+   (for [cuTuple cusTuples]
+     (allClasses (:cu cuTuple)))))
 
 (defn cusTuples "Get tuples of [filename cu]" [dirname]
   (filter not-nil? (parseDirByName dirname)))
@@ -76,8 +76,8 @@
 
 (defn allConstructorsForCus [cus]
   (flatten
-    (for [cl (allClassesForCus cus)]
-      (getConstructors cl))))
+   (for [cl (allClassesForCus cus)]
+     (getConstructors cl))))
 
 (defn getMethods [cl]
   (filter (fn [m] (instance? MethodDeclaration m)) (.getMembers cl)))
@@ -102,25 +102,25 @@
 
 (defn getChildrenNodes [root]
   (tree-seq
-    #(not-empty (.getChildrenNodes %))
-    #(.getChildrenNodes %)
-    root))
+   #(not-empty (.getChildrenNodes %))
+   #(.getChildrenNodes %)
+   root))
 
 (defn getMethodCallExprs [root]
   (filter #(instance? MethodCallExpr %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getNameExprs [root]
   (filter #(instance? NameExpr %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getMethodDeclarations [root]
   (filter #(instance? MethodDeclaration %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getBlockStmts [root]
   (filter #(instance? BlockStmt %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getNameExprFor [root name]
   {:pre [root name]}
@@ -132,12 +132,12 @@
 
 (defn getVariableDeclarationExprs [root]
   (filter #(instance? VariableDeclarationExpr %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getVariableDeclarators [root]
   (filter #(instance? VariableDeclarator %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))
 
 (defn getImports [root]
   (filter #(instance? com.github.javaparser.ast.ImportDeclaration %)
-    (getChildrenNodes root)))
+          (getChildrenNodes root)))

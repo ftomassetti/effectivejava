@@ -18,9 +18,9 @@
   [typeDeclarations]
   (fn [nameToSolve]
     (first
-      (filter
-        (fn [td] (= nameToSolve (getQName td)))
-        (remove isInDefaultPackage? typeDeclarations)))))
+     (filter
+      (fn [td] (= nameToSolve (getQName td)))
+      (remove isInDefaultPackage? typeDeclarations)))))
 
 ; TODO not solve the classes in default package
 (defn typeSolverOnJar
