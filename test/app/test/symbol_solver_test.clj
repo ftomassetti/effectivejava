@@ -24,7 +24,7 @@
 (deftest testSolveNameInVariableDeclarator
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
         vd (first (getVariableDeclarators aClassResolvingToLocalVar))]
-    (is (not (nil? (solveSymbol vd nil "i"))))))
+    (is (not (nil? (solveAmongVariableDeclarator "i" vd))))))
 
 (deftest testSolveNameInVariableDeclarationExpr
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")

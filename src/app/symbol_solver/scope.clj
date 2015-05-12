@@ -38,14 +38,6 @@
   (solveSymbol [this context nameToSolve])
   (solveClass [this context nameToSolve]))
 
-;(extend-protocol scope
-;  com.github.javaparser.ast.body.FieldDeclaration
-;  (solveSymbol [this context nameToSolve]
-;    (let [variables (.getVariables this)
-;          solvedSymbols (map (fn [c] (solveSymbol c nil nameToSolve)) variables)
-;          solvedSymbols' (remove nil? solvedSymbols)]
-;      (first solvedSymbols'))))
-
 (extend-protocol scope
   NameExpr
   (solveSymbol [this context nameToSolve]
@@ -77,32 +69,21 @@
     (let [fromExpr (solveSymbol (.getExpression this) this nameToSolve)]
       (or fromExpr (solveSymbol (.getParentNode this) this nameToSolve)))))
 
-(extend-protocol scope
-  VariableDeclarationExpr
-  (solveSymbol [this context nameToSolve]
-    (first (filter (fn [s] (not (nil? (solveSymbol s this nameToSolve)))) (.getVars this)))))
-
-(extend-protocol scope
-  VariableDeclarator
-  (solveSymbol [this context nameToSolve]
-    (solveSymbol (.getId this) nil nameToSolve)))
-
-(extend-protocol scope
-  VariableDeclaratorId
-  (solveSymbol [this context nameToSolve]
-    (when (= nameToSolve (.getName this))
-      this)))
-
 (defn solveClassInPackage [pakage nameToSolve]
   {:pre [typeSolver]}
   ; TODO first look into the package
   (typeSolver nameToSolve))
 
-(defn- solveAmongVariableDeclarator
+(defn solveAmongVariableDeclarator
   [nameToSolve variableDeclarator]
   (let [id (.getId variableDeclarator)]
     (when (= nameToSolve (.getName id))
       id)))
+
+(extend-protocol scope
+  VariableDeclarationExpr
+  (solveSymbol [this context nameToSolve]
+    (first (filter (partial solveAmongVariableDeclarator nameToSolve) (.getVars this)))))
 
 (defn- solveAmongFieldDeclaration
   "Consider one single com.github.javaparser.ast.body.FieldDeclaration, which corresponds to possibly multiple fields"
