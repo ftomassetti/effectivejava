@@ -1,6 +1,6 @@
 (ns app.javassist
   (:use [app.utils])
-  (:use [app.symbol_solver.protocols])
+  (:use [app.model.protocols])
   (:use [app.javaparser]))
 
 ; ============================================

@@ -4,7 +4,7 @@
   (:use [app.symbol_solver])
   (:use [app.symbol_solver.type_solver])
   (:use [app.symbol_solver.scope])
-  (:use [app.symbol_solver.protocols])
+  (:use [app.model.protocols])
   (:use [app.utils])
   (:use [clojure.test]))
 

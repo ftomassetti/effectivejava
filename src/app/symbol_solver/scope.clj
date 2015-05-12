@@ -6,7 +6,7 @@
   (:use [app.symbol_solver.type_solver])
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation])
-  (:use [app.symbol_solver.protocols]))
+  (:use [app.model.protocols]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
