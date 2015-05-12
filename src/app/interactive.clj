@@ -106,7 +106,9 @@
           (command-not-implemented command state))))))
 
 (defn interactive [state]
-  (do
-    (print "> ")
-    (flush)
-    (process state (read-line))))
+  (print "> ")
+  (flush)
+  (let [user-input (read-line)]
+    (if (empty? user-input)
+      (interactive state)
+      (process state user-input))))
