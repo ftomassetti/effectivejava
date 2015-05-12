@@ -21,3 +21,18 @@
 (import com.github.javaparser.ast.expr.VariableDeclarationExpr)
 (import com.github.javaparser.ast.body.VariableDeclarator)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
+
+(defn topLevelTypes [cu]
+  (if (nil? cu) []
+    (.getTypes cu)))
+
+(defn directlyAnnidatedTypes [t]
+  (filter (fn [m] (instance? TypeDeclaration m)) (.getMembers t)))
+
+(defn annidatedTypes
+  "Get the types annidated in the given type, recursively"
+  [t]
+  (flatten
+    (map
+      (fn [dat] [dat, (directlyAnnidatedTypes dat)])
+      (directlyAnnidatedTypes t))))

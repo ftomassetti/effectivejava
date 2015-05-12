@@ -1,7 +1,8 @@
 (ns app.model.javaparser
   (:use [app.utils])
   (:use [app.model.protocols])
-  (:use [app.javaparser.parsing]))
+  (:use [app.javaparser.parsing])
+  (:use [app.javaparser.navigation]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
@@ -217,21 +218,6 @@
 ; ============================================
 ; Accessing nodes
 ; ============================================
-
-(defn topLevelTypes [cu]
-  (if (nil? cu) []
-      (.getTypes cu)))
-
-(defn directlyAnnidatedTypes [t]
-  (filter (fn [m] (instance? TypeDeclaration m)) (.getMembers t)))
-
-(defn annidatedTypes
-  "Get the types annidated in the given type, recursively"
-  [t]
-  (flatten
-   (map
-    (fn [dat] [dat, (directlyAnnidatedTypes dat)])
-    (directlyAnnidatedTypes t))))
 
 (defn allTypes
   "Get all the types in the Compilation Unit includin both top level types and annidated types"
