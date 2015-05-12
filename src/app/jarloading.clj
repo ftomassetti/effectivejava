@@ -1,4 +1,5 @@
 (ns app.jarloading
+  (:use [app.model.protocols])
   (:use [app.javaparser])
   (:use [app.operations])
   (:use [app.utils])

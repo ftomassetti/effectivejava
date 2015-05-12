@@ -1,4 +1,5 @@
 (ns app.symbol_solver.type_solver
+  (:use [app.model.protocols])
   (:use [app.javaparser])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])

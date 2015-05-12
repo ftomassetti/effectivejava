@@ -1,7 +1,6 @@
 (ns app.javassist
   (:use [app.utils])
-  (:use [app.model.protocols])
-  (:use [app.javaparser]))
+  (:use [app.model.protocols]))
 
 ; ============================================
 ; Naming

@@ -2,6 +2,7 @@
   (:use [app.core])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
+  (:use [app.model.protocols])
   (:use [app.javaparser])
   (:use [clojure.test])
   (:use [app.test.helper])

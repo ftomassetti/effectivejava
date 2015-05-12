@@ -1,4 +1,5 @@
 (ns app.cli
+  (:use [app.model.protocols])
   (:use [app.javaparser])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])

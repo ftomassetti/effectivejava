@@ -1,5 +1,6 @@
 (ns app.javaparser
-  (:use [app.utils]))
+  (:use [app.utils])
+  (:use [app.model.protocols]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
@@ -159,10 +160,6 @@
   SingleFieldDeclaration
   (packageName [this]
     (packageName (.variable this))))
-
-(defprotocol Named
-  (getName [this])
-  (getQName [this]))
 
 (extend-protocol Named
   TypeDeclaration

@@ -1,5 +1,6 @@
 (ns app.test.symbol_solver.type_solver_test
   (:use [app.jarloading])
+  (:use [app.model.protocols])
   (:use [app.javaparser])
   (:use [app.symbol_solver.type_solver])
   (:use [app.javassist])

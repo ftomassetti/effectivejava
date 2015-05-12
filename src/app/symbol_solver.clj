@@ -1,4 +1,5 @@
 (ns app.symbol_solver
+  (:use [app.model.protocols])
   (:use [app.javaparser])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
@@ -6,8 +7,7 @@
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation])
   (:use [app.symbol_solver.type_solver])
-  (:use [app.symbol_solver.scope])
-  (:use [app.model.protocols]))
+  (:use [app.symbol_solver.scope]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
