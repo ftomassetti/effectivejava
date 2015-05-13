@@ -44,6 +44,28 @@
   )
 
 ; ============================================
+; info
+; ============================================
+
+(deftest testInfo
+  (mocking [println]
+    (info "foo")
+    (verify-call-times-for println 1)
+    (verify-first-call-args-for println " [info] " "foo")))
+
+; ============================================
+; treat-possible-errors
+; ============================================
+
+(deftest treat-possible-errors-when-errors-are-passed
+  (mocking [usageError exit-error!]
+    (treat-possible-errors {:errors ["bad1", "bad2"]} "my nice banner")
+    (verify-call-times-for usageError 1)
+    (verify-first-call-args-for usageError "my nice banner" {:errors ["bad1", "bad2"]} "")
+    (verify-call-times-for exit-error! 1)
+    (verify-first-call-args-for exit-error!)))
+
+; ============================================
 ; Other FIXME organize!
 ; ============================================
 

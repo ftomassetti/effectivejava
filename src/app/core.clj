@@ -34,30 +34,40 @@
 ;; The following methods have been extracted from the main function.
 ;; These methods should probably be moved to a different namespace.
 
+(defn exit-error!
+  "Added because you cannot mock System/exit"
+  []
+  (System/exit 1))
+
+(defn exit-success!
+  "Added because you cannot mock System/exit"
+  []
+  (System/exit 0))
+
 (defn treat-possible-errors [opts banner]
   (when (:errors opts)
     (usageError banner opts "")
-    (System/exit 1))
+    (exit-error!))
   (when (conflicting-options? opts)
     (usageError banner opts self-exclusive-modes-error)
-    (System/exit 1)))
+    (exit-error!)))
 
 (defn run-linter-mode [opts]
   (when-not (:dir opts)
     (info "Linter, no directory indicated. Using current directory")
     (linter ".")
-    (System/exit 0))
+    (exit-success!))
   (linter (:dir opts))
-  (System/exit 0))
+  (exit-success!))
 
 (defn run-interactive-mode []
   (interactive {})
-  (System/exit 0))
+  (exit-success!))
 
 (defn show-help [banner]
   (println "Printing help message, as asked")
   (println banner)
-  (System/exit 0))
+  (exit-success!))
 
 (defn run-query-mode [opts banner]
   (if
@@ -68,7 +78,7 @@
     (nil? (:errors opts)))
     (run opts)
     (do (usageError banner opts "")
-        (System/exit 1))))
+        (exit-error!))))
 
 (defn -main
   [& args]
