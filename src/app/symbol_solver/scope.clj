@@ -32,6 +32,10 @@
 (import com.github.javaparser.ast.visitor.DumpVisitor)
 (import com.github.javaparser.ast.type.PrimitiveType)
 
+; ==========================================================
+; SymbolsDeclarator: we define which nodes are declarations
+; ==========================================================
+
 (defprotocol SymbolsDeclarator
   ; Return a map where the keys are the element declared and the values are the declarations
   (declared-symbols [this]))
@@ -55,6 +59,10 @@
   com.github.javaparser.ast.body.VariableDeclarator
   (declared-symbols [this]
       {(.getName (.getId this)) (.getId this)}))
+
+; ================================================
+; scope: we define which declarations are visible
+; ================================================
 
 (defprotocol scope
   ; for example in a BlockStmt containing statements [a b c d e], when solving symbols in the context of c
