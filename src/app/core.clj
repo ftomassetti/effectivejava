@@ -10,7 +10,7 @@
 
 (defn usageError [banner opts msg]
   (if (clojure.string/blank? msg)
-    (println (str "Incorrect usage"))
+    (println "Incorrect usage")
     (println (str "Incorrect usage: " msg)))
   (when (:errors opts)
     (doseq [e (:errors opts)]

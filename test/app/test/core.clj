@@ -4,6 +4,7 @@
   (:use [app.itemsOnLifecycle])
   (:use [app.interactive])
   (:use [clojure.test])
+  (:use [conjure.core])
   (:require [instaparse.core :as insta]))
 
 (load "helper")
@@ -13,6 +14,34 @@
 (load "jarloading")
 (load "symbol_solver_test")
 (load "symbol_solver/type_solver_test")
+
+; ============================================
+; usageError
+; ============================================
+
+(deftest testWithAMessageWithoutErrors
+  (mocking [println]
+    (usageError "myBanner" {:errors nil} "bad, bad mistake my friend!")
+    (verify-call-times-for println 2)
+    (verify-first-call-args-for println "Incorrect usage: bad, bad mistake my friend!"))
+    ; TODO verify also the second call to println, if conjure supports it
+  )
+
+(deftest testWithoutAMessageWithoutErrors
+  (mocking [println]
+    (usageError "myBanner" {:errors nil} nil)
+    (verify-call-times-for println 2)
+    (verify-first-call-args-for println "Incorrect usage"))
+  ; TODO verify also the second call to println, if conjure supports it
+  )
+
+(deftest testWithoutAMessageWithErrors
+  (mocking [println]
+    (usageError "myBanner" {:errors ["bad1", "bad2"]} nil)
+    (verify-call-times-for println 4)
+    (verify-first-call-args-for println "Incorrect usage"))
+  ; TODO verify also the other calls to println, if conjure supports it
+  )
 
 ; ============================================
 ; Other FIXME organize!
