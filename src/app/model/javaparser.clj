@@ -101,6 +101,14 @@
   (localVarRef? [this] (localVarRef? (.getParentNode this)))
   (fieldRef? [this] (fieldRef? (.getParentNode this))))
 
+(extend-protocol SymbolRef
+  com.github.javaparser.ast.body.Parameter
+  (getType [this]
+    (.getType this))
+  (localVarRef? [this] false)
+  (parameterRef? [this] true)
+  (fieldRef? [this] false))
+
 ; ============================================
 ; Modifiers
 ; ============================================

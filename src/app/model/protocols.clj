@@ -27,6 +27,7 @@
 (defprotocol SymbolRef
   (getType [this])
   (localVarRef? [this])
+  (parameterRef? [this])
   (fieldRef? [this]))
 
 (defprotocol FieldDecl
