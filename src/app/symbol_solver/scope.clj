@@ -65,19 +65,6 @@
 (defn declare-symbol? [symbol-name symbols-declarator]
   (get (declared-symbols symbols-declarator) symbol-name))
 
-;(extend-protocol scope
-;  NameExpr
-;  (solveSymbol [this context nameToSolve]
-;    (when-not context
-;      (solveSymbol (.getParentNode this) nil nameToSolve))))
-
-;(extend-protocol scope
-;  AssignExpr
-;  (solveSymbol [this context nameToSolve]
-;    (if context
-;      (or (solveSymbol (.getTarget this) this nameToSolve) (solveSymbol (.getValue this) this nameToSolve))
-;      (solveSymbol (.getParentNode this) this nameToSolve))))
-
 (extend-protocol scope
   com.github.javaparser.ast.Node
   (solveSymbol [this context nameToSolve]
@@ -90,12 +77,6 @@
           decls (map (partial declare-symbol? nameToSolve) elementsToConsider)]
       (or (first decls) (solveSymbol (.getParentNode this) this nameToSolve)))))
 
-;(extend-protocol scope
-;  ExpressionStmt
-;  (solveSymbol [this context nameToSolve]
-;    (let [fromExpr (solveSymbol (.getExpression this) this nameToSolve)]
-;      (or fromExpr (solveSymbol (.getParentNode this) this nameToSolve)))))
-
 (defn solveClassInPackage [pakage nameToSolve]
   {:pre [typeSolver]}
   ; TODO first look into the package
@@ -106,11 +87,6 @@
   (let [id (.getId variableDeclarator)]
     (when (= nameToSolve (.getName id))
       id)))
-
-;(extend-protocol scope
-;  VariableDeclarationExpr
-;  (solveSymbol [this context nameToSolve]
-;    (first (filter (partial solveAmongVariableDeclarator nameToSolve) (.getVars this)))))
 
 (defn- solveAmongFieldDeclaration
   "Consider one single com.github.javaparser.ast.body.FieldDeclaration, which corresponds to possibly multiple fields"
