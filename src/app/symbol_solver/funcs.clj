@@ -5,11 +5,10 @@
   (:use [app.utils])
   (:use [app.symbol_solver.scope]))
 
-
-(defn solveNameExpr [nameExpr]
-  ; TODO consider local variables
-  ; TODO consider fields
-  ; TODO consider inherited fields
+(defn solveNameExpr
+  "given an instance of com.github.javaparser.ast.expr.NameExpr returns the declaration it refers to,
+   if it can be found, nil otherwise"
+  [nameExpr]
   (let [name (.getName nameExpr)]
     (solveSymbol nameExpr nil name)))
 

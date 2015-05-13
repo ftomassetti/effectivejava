@@ -8,12 +8,6 @@
   (:require [instaparse.core :as insta]))
 
 (load "helper")
-(load "javaparser")
-(load "operations")
-(load "acceptance")
-(load "jarloading")
-(load "symbol_solver_test")
-(load "symbol_solver/type_solver_test")
 
 ; ============================================
 ; usageError
