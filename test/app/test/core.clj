@@ -54,14 +54,47 @@
     (verify-first-call-args-for println " [info] " "foo")))
 
 ; ============================================
+; ConflictingOptions
+; ============================================
+
+(deftest testConflictingOptions
+  (is (true? (conflicting-options?
+               {:query 'mc :linter true :interactive true})))
+  (is (true? (conflicting-options?
+               {:linter true :interactive true})))
+  (is (true? (conflicting-options?
+               {:query 'mc :linter true})))
+  (is (true? (conflicting-options?
+               {:query 'mc :interactive true})))
+  (is (false? (conflicting-options?
+                {:linter false :interactive true})))
+  (is (false? (conflicting-options? {:query 'mc})))
+  (is (false? (conflicting-options? {:linter true})))
+  (is (false? (conflicting-options? {:interactive true}))))
+
+; ============================================
 ; treat-possible-errors
 ; ============================================
+
+(deftest treat-possible-errors-when-everything-is-fine
+  (mocking [usageError exit-error!]
+    (treat-possible-errors {:errors nil} "my nice banner")
+    (verify-call-times-for usageError 0)
+    (verify-call-times-for exit-error! 0)))
 
 (deftest treat-possible-errors-when-errors-are-passed
   (mocking [usageError exit-error!]
     (treat-possible-errors {:errors ["bad1", "bad2"]} "my nice banner")
     (verify-call-times-for usageError 1)
     (verify-first-call-args-for usageError "my nice banner" {:errors ["bad1", "bad2"]} "")
+    (verify-call-times-for exit-error! 1)
+    (verify-first-call-args-for exit-error!)))
+
+(deftest treat-possible-errors-with-conflicting-options
+  (mocking [usageError exit-error!]
+    (treat-possible-errors {:linter true, :interactive true} "my nice banner")
+    (verify-call-times-for usageError 1)
+    (verify-first-call-args-for usageError "my nice banner"{:linter true, :interactive true} self-exclusive-modes-error)
     (verify-call-times-for exit-error! 1)
     (verify-first-call-args-for exit-error!)))
 
@@ -120,21 +153,6 @@
 (deftest testClassWithCallToFinalizeWithParams
   (let [cl (parseType "ClassWithCallToFinalizeWithParams")]
     (is (false? (calls-finalizers? cl)))))
-
-(deftest testConflictingOptions
-  (is (true? (conflicting-options?
-              {:query 'mc :linter true :interactive true})))
-  (is (true? (conflicting-options?
-              {:linter true :interactive true})))
-  (is (true? (conflicting-options?
-              {:query 'mc :linter true})))
-  (is (true? (conflicting-options?
-              {:query 'mc :interactive true})))
-  (is (false? (conflicting-options?
-               {:linter false :interactive true})))
-  (is (false? (conflicting-options? {:query 'mc})))
-  (is (false? (conflicting-options? {:linter true})))
-  (is (false? (conflicting-options? {:interactive true}))))
 
 ; =============================================================
 ; Command parser
