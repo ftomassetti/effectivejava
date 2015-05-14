@@ -17,6 +17,19 @@
   (typeName [this])
   (baseType [this]))
 
+(defrecord RTypeRef [array primitive type-name base-type]
+  TypeRef
+  (array? [this] array)
+  (primitive? [this] primitive)
+  (typeName [this] type-name)
+  (baseType [this] base-type))
+
+(defn make-array-type-ref [type-ref]
+  (RTypeRef. true false nil type-ref))
+
+(defn make-declared-type-ref [qname]
+  (RTypeRef. false false qname nil))
+
 (defprotocol TypeDecl
   "Defiinition of a type (a Class, an Interface or an Enum)"
   (isEnum? [this])
