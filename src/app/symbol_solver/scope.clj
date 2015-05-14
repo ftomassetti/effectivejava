@@ -76,7 +76,9 @@
 (extend-protocol scope
   com.github.javaparser.ast.Node
   (solveSymbol [this context nameToSolve]
-    (solveSymbol (.getParentNode this) this nameToSolve)))
+    (solveSymbol (.getParentNode this) this nameToSolve))
+  (solveClass [this context nameToSolve]
+    (solveClass (.getParentNode this) this nameToSolve)))
 
 (extend-protocol scope
   BlockStmt

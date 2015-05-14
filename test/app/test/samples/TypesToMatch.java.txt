@@ -1,0 +1,8 @@
+package com.foo;
+
+class A {
+    A a1;
+    A[] a2;
+    com.foo.A a3;
+    com.foo.A[] a4;
+}

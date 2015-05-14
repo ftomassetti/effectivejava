@@ -7,6 +7,7 @@
   (:use [app.symbol_solver.type_solver])
   (:use [app.symbol_solver.scope])
   (:use [app.utils])
+  (:use [app.test.helper])
   (:use [clojure.test])
   (:use [app.test.symbol_solver.helper]))
 
@@ -94,3 +95,18 @@
         decl (solve-among-parameters method "foo")]
     (is decl)
     (is (instance? com.github.javaparser.ast.body.Parameter decl))))
+
+; ============================================
+; solve class name
+; ============================================
+
+(def test-solve-class-name-referring-itself
+  (let [cu (parseResource "TypesToMatch")
+        c (first (allTypes cu))
+        type-a (.getType (.get (.getMembers c) 0))
+        type-array-a (.getType (.get (.getMembers c) 1))
+        type-qname-a (.getType (.get (.getMembers c) 2))
+        type-array-qname-a (.getType (.get (.getMembers c) 3))]
+    (binding [typeSolver (jreTypeSolver)]
+      (is (= c (solveClass type-a nil "A")))
+      (is (= c (solveClass type-qname-a nil "com.foo.A"))))))
