@@ -7,7 +7,10 @@
   (let [input-command "quit\r"]
     (with-in-str
       input-command
-      (interactive []))))
+      (mocking [println print flush]
+        (interactive [])
+        (verify-call-times-for println 1)
+        (verify-first-call-args-for println "Exit...")))))
 
 (deftest list-shows-error-if-no-classes-loaded
   (let [command-sequence ["list" "quit"]
@@ -15,7 +18,7 @@
     (with-in-str
       input-string
       (mocking [println print flush]
-               (interactive [])
-               (verify-call-times-for println 2)
-               (verify-first-call-args-for
-                 println "No classes loaded. Use <load> first")))))
+        (interactive [])
+        (verify-call-times-for println 2)
+        (verify-first-call-args-for
+        println "No classes loaded. Use <load> first")))))
