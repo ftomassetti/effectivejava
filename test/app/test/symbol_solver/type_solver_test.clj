@@ -26,3 +26,5 @@
   (let [typeSolver (typeSolverOnJar javaparser2)]
     (is (typeSolver "com.github.javaparser.ast.ImportDeclaration"))
     (is (= "com.github.javaparser.ast.ImportDeclaration" (getQName (typeSolver "com.github.javaparser.ast.ImportDeclaration"))))))
+
+ADD TEST TO SOLVE Object to java.lang.Object

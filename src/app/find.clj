@@ -11,7 +11,10 @@
   (:import [app.operations Operation]))
 
 (defn param-match-type? [pair]
-  (let [[param expected-type] pair]))
+  (let [[param expected-type] pair
+        paramType (.getType param)
+        paramSolvedType (solveType paramType)]
+    (exact-match? paramSolvedType expected-type)))
 
 (defn method-match-exactly-parameters? [param-expected-types method]
   (let [params (.getParameters method)
@@ -25,6 +28,6 @@
   [cus name param-types]
   (let [ all-types (flatten (map allTypes cus))
          all-methods (flatten (map getMethods all-types))
-         methods (filter (partial = name) all-methods)
+         methods (filter (fn [m] (= name (.getName m))) all-methods)
          methods' (filter (partial method-match-exactly-parameters? param-types) methods)]
     methods'))
