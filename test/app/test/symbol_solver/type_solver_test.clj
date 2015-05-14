@@ -2,6 +2,7 @@
   (:use [app.jarloading])
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
+  (:use [app.model.reflection])
   (:use [app.javaparser.navigation])
   (:use [app.symbol_solver.type_solver])
   (:use [app.model.javassist])
@@ -27,4 +28,12 @@
     (is (typeSolver "com.github.javaparser.ast.ImportDeclaration"))
     (is (= "com.github.javaparser.ast.ImportDeclaration" (getQName (typeSolver "com.github.javaparser.ast.ImportDeclaration"))))))
 
-ADD TEST TO SOLVE Object to java.lang.Object
+(deftest jreTypeSolver-solve-java-lang-Object
+  (let [typeSolver (jreTypeSolver)]
+    (is (typeSolver "java.lang.Object"))
+    (is (= "java.lang.Object" (getQName (typeSolver "java.lang.Object"))))))
+
+(deftest jreTypeSolver-solve-Object
+  (let [typeSolver (jreTypeSolver)]
+    (is (typeSolver "Object"))
+    (is (= "java.lang.Object" (getQName (typeSolver "Object"))))))

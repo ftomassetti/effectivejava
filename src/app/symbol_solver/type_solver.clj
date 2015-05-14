@@ -29,3 +29,22 @@
   (let [entries (getClassesEntriesInJar jarPath)]
     (fn [nameToSolve]
       (findType nameToSolve entries))))
+
+(defn- solve-system-class [class-qname]
+  (let [system-class-loader (ClassLoader/getSystemClassLoader)]
+    (try 
+      (.loadClass system-class-loader class-qname)
+      (catch Exception e nil))))
+
+(defn simple-name? [name]
+  (not (.contains name ".")))
+
+(defn jreTypeSolver
+  "Solve classes part of the standard libraries. For now unfortunately it uses the standard library where this code is executed, not an arbitrary one"
+  []
+  (fn [name-to-solve]
+    (if (.startsWith name-to-solve "java.lang.")
+      (solve-system-class name-to-solve)
+      (if (simple-name? name-to-solve)
+        (solve-system-class (str "java.lang." name-to-solve))
+        nil))))
