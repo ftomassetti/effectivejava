@@ -30,6 +30,9 @@
 (def command-parser
   (insta/parser commands-grammar))
 
+(def no-classes-loaded-error
+  "No classes loaded. Use <load> first")
+
 (declare interactive)
 
 (defn- exit []
@@ -43,7 +46,7 @@
         (doseq [cu (:cus state)]
           (doseq [t (.getTypes cu)]
             (println " *" (getQName t)))))
-      (println "No classes loaded. Use <load> first"))
+      (println no-classes-loaded-error))
     (interactive state)))
 
 (defn- help [state]
