@@ -10,11 +10,19 @@
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation]))
 
+(defn type-exact-match? [type-ref1 type-ref2]
+  (and 
+    (= (nil? type-ref1) (nil? type-ref2))
+    (= (array? ref1) (array? ref2))
+    (= (primitive? ref1) (primitive? ref2))
+    (= (typeName ref1) (typeName ref2))
+    (type-exact-match? (baseType ref1) (baseType ref2))))
+
 (defn param-match-type? [pair]
   (let [[param expected-type] pair
         paramType (.getType param)
         paramSolvedType (solveType paramType)]
-    (exact-match? paramSolvedType expected-type)))
+    (type-exact-match? paramSolvedType expected-type)))
 
 (defn method-match-exactly-parameters? [param-expected-types method]
   (let [params (.getParameters method)
