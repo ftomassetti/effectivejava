@@ -48,3 +48,10 @@
       (if (simple-name? name-to-solve)
         (solve-system-class (str "java.lang." name-to-solve))
         nil))))
+
+(defn combine-solvers
+  [solver-1 solver-2]
+  (fn [name-to-solve]
+    (let [res1 (solver-1 name-to-solve)
+          res2 (when solver-2 (solver-2 name-to-solve))]
+      (or res1 res2))))
