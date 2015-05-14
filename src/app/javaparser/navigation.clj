@@ -23,6 +23,10 @@
 (import com.github.javaparser.ast.body.VariableDeclarator)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
 
+; ============================================
+; Access type declarations
+; ============================================
+
 (defn topLevelTypes [cu]
   "List of toplevel types: classes, interfaces and enums not contained in other types"
   (if (nil? cu) []
@@ -65,11 +69,19 @@
   [cus]
   (flatten (map allClasses cus)))
 
+; ============================================
+; Compilation units
+; ============================================
+
 (defn- cusTuples "Get tuples of [filename cu]" [dirname]
   (filter not-nil? (parseDirByName dirname)))
 
 (defn cus [dirname]
   (map :cu (cusTuples dirname)))
+
+; ============================================
+; Constructors
+; ============================================
 
 (defn getConstructors [cl]
   (filter (fn [m] (instance? ConstructorDeclaration m)) (.getMembers cl)))
@@ -78,12 +90,6 @@
   (flatten
    (for [cl (allClassesForCus cus)]
      (getConstructors cl))))
-
-(defn getMethods [cl]
-  (filter (fn [m] (instance? MethodDeclaration m)) (.getMembers cl)))
-
-(defn getFields [cl]
-  (filter (fn [m] (instance? FieldDeclaration m)) (.getMembers cl)))
 
 (defn getNotPrivateConstructors [cl]
   (filter isNotPrivate? (getConstructors cl)))
@@ -94,17 +100,39 @@
 (defn nNotPrivateConstructors [cl]
   (.size (getNotPrivateConstructors cl)))
 
-(defn getParameters [m]
-  (let [ps (.getParameters m)]
-    (if (nil? ps)
-      (java.util.ArrayList.)
-      ps)))
+; ============================================
+; Methods
+; ============================================
+
+(defn getMethods [cl]
+  (filter (fn [m] (instance? MethodDeclaration m)) (.getMembers cl)))
+
+; ============================================
+; Fields
+; ============================================
+
+(defn getFields [cl]
+  (filter (fn [m] (instance? FieldDeclaration m)) (.getMembers cl)))
+
+; ============================================
+; Nodes
+; ============================================
 
 (defn getChildrenNodes [root]
   (tree-seq
    #(not-empty (.getChildrenNodes %))
    #(.getChildrenNodes %)
    root))
+
+(defn getParameters [m]
+  (let [ps (.getParameters m)]
+    (if (nil? ps)
+      (java.util.ArrayList.)
+      ps)))
+
+; ============================================
+; Get Nodes of a certain type
+; ============================================
 
 (defn getMethodCallExprs [root]
   (filter #(instance? MethodCallExpr %)
@@ -122,14 +150,6 @@
   (filter #(instance? BlockStmt %)
           (getChildrenNodes root)))
 
-(defn getNameExprFor [root name]
-  {:pre [root name]}
-  (first (filter (fn [ne] (= name (.getName ne))) (getNameExprs root))))
-
-(defn getMethodDeclaration [root name]
-  {:pre  [root]}
-  (first (filter (fn [ne] (= name (.getName ne))) (getMethodDeclarations root))))
-
 (defn getVariableDeclarationExprs [root]
   (filter #(instance? VariableDeclarationExpr %)
           (getChildrenNodes root)))
@@ -141,3 +161,15 @@
 (defn getImports [root]
   (filter #(instance? com.github.javaparser.ast.ImportDeclaration %)
           (getChildrenNodes root)))
+
+; ============================================
+; Misc
+; ============================================
+
+(defn getNameExprFor [root name]
+  {:pre [root name]}
+  (first (filter (fn [ne] (= name (.getName ne))) (getNameExprs root))))
+
+(defn getMethodDeclaration [root name]
+  {:pre  [root]}
+  (first (filter (fn [ne] (= name (.getName ne))) (getMethodDeclarations root))))
