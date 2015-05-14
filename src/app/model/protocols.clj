@@ -38,6 +38,9 @@
 (defn make-reference-type-ref [qname context]
   (RTypeRef. false false true qname nil context))
 
+(defn make-primitive-type-ref [qname context]
+  (RTypeRef. false true false qname nil context))
+
 (defprotocol TypeDecl
   "Defiinition of a type (a Class, an Interface or an Enum)"
   (isEnum? [this])
