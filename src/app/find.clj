@@ -20,9 +20,8 @@
 
 (defn param-match-type? [pair]
   (let [[param expected-type] pair
-        paramType (.getType param)
-        paramSolvedType (solveType paramType)]
-    (type-exact-match? paramSolvedType expected-type)))
+        paramType (.getType param)]
+    (type-exact-match? paramType expected-type)))
 
 (defn method-match-exactly-parameters? [param-expected-types method]
   (let [params (.getParameters method)
