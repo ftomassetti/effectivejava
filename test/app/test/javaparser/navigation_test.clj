@@ -10,7 +10,10 @@
 ; topLevelTypes
 ; ============================================
 
-(deftest testTopLevelTypes
+(deftest testTopLevelTypes-nil
+  (is (= [] (topLevelTypes nil))))
+
+(deftest testTopLevelTypes-positive-case
   (let [cu (parseResource "AnnidatedTypes")
         tlt (topLevelTypes cu)
         tltNames (set (map getQName tlt))]
