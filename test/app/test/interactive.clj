@@ -8,3 +8,14 @@
     (with-in-str
       input-command
       (interactive []))))
+
+(deftest list-shows-error-if-no-classes-loaded
+  (let [command-sequence ["list" "quit"]
+        input-string (clojure.string/join "\r" command-sequence)]
+    (with-in-str
+      input-string
+      (mocking [println print flush]
+               (interactive [])
+               (verify-call-times-for println 2)
+               (verify-first-call-args-for
+                 println "No classes loaded. Use <load> first")))))
