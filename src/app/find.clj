@@ -1,6 +1,5 @@
-(ns ns ^{:author "Federico Tomassetti"
+(ns app.find ^{:author "Federico Tomassetti"
          :doc "This namespace contains methods to find elements in a collection of compilation units"}
-  app.find
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
   (:use [app.javaparser.navigation])
@@ -13,10 +12,10 @@
 (defn type-exact-match? [type-ref1 type-ref2]
   (and 
     (= (nil? type-ref1) (nil? type-ref2))
-    (= (array? ref1) (array? ref2))
-    (= (primitive? ref1) (primitive? ref2))
-    (= (typeName ref1) (typeName ref2))
-    (type-exact-match? (baseType ref1) (baseType ref2))))
+    (= (array? type-ref1) (array? type-ref2))
+    (= (primitive? type-ref1) (primitive? type-ref2))
+    (= (typeName type-ref1) (typeName type-ref2))
+    (type-exact-match? (baseType type-ref1) (baseType type-ref2))))
 
 (defn param-match-type? [pair]
   (let [[param expected-type] pair
@@ -26,11 +25,11 @@
 (defn method-match-exactly-parameters? [param-expected-types method]
   (let [params (.getParameters method)
         pairs (map vector params param-expected-types)]
-  (and 
-    (= (count params) (count param-expected-types))
-    (every? (map param-match-type? pairs)))))
+    (and
+      (= (count params) (count param-expected-types))
+      (every? param-match-type? pairs))))
 
-(defn find-methods-by-signature 
+(defn find-methods-by-signature
   "Find all the methods in the given CUs which has the given names and have parameter types exactly equals to the one given"
   [cus name param-types]
   (let [ all-types (flatten (map allTypes cus))

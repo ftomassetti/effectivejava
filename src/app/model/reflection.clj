@@ -16,3 +16,11 @@
     (.getSimpleName this))
   (getQName [this]
     (.getCanonicalName this)))
+
+; ============================================
+; TypeRef
+; ============================================
+
+(extend-protocol TypeRef
+  java.lang.Class
+  (array? [this] false))
