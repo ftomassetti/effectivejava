@@ -66,12 +66,11 @@
 ; allClassesForCus
 ; ============================================
 
-;(deftest test-all-classes-for-cus
-;  (let [cus [(parseResource "AnnidatedTypes") (parseResource "LotOfTypes")]
-;        res (allClassesForCus cus)
-;        names (set (map getQName res))]
-;
-;         ))
+(deftest test-all-classes-for-cus
+  (let [cus [(parseResource "AnnidatedTypes") (parseResource "LotOfTypes")]
+        res (allClassesForCus cus)
+        names (set (map getQName res))]
+    (is #{"E1.E1_C1" "E1.E1_C1.E1_C1_C2" "TopClass" "TopClass.Class2" "TopClass.Class2.Class3" "TopClass.Class2.Class3.Class4"})))
 
 ; ============================================
 ; allClassesForCusTuples
