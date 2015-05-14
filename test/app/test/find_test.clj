@@ -5,6 +5,7 @@
   (:use [app.model.protocols])
   (:use [app.javaparser.parsing])
   (:use [app.javaparser.navigation])
+  (:use [app.symbol_solver.type_solver])
   (:use [clojure.test])
   (:use [conjure.core])
   (:require [instaparse.core :as insta]))
@@ -17,5 +18,6 @@
 (def javaparser-cus (cus javaparser2))
 
 (deftest find-methods-by-signature-on-equals
-  (let [res (find-methods-by-signature javaparser-cus "equals" [(make-declared-type-ref "java.lang.Object")])]
-    (is (= 2 (count res)))))
+  (binding [typeSolver (jreTypeSolver)]
+    (let [res (find-methods-by-signature javaparser-cus "equals" [(make-reference-type-ref "java.lang.Object")])]
+      (is (= 2 (count res))))))

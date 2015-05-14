@@ -5,6 +5,7 @@
   (:use [app.javaparser.navigation])
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
+  (:use [app.symbol_solver.type_solver])
   (:use [app.utils])
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation]))
@@ -14,7 +15,20 @@
     (= (nil? type-ref1) (nil? type-ref2))
     (= (array? type-ref1) (array? type-ref2))
     (= (primitive? type-ref1) (primitive? type-ref2))
-    (= (typeName type-ref1) (typeName type-ref2))
+    (= (reference-type? type-ref1) (reference-type? type-ref2))
+    ; if the type is primitive the typeName must be the same
+    (or
+      (not (primitive? type-ref1))
+      (not (primitive? type-ref2))
+      (= (typeName type-ref1) (typeName type-ref2)))
+    (or
+      (not (reference-type? type-ref1))
+      (not (reference-type? type-ref2))
+      (let [referred-type1 (typeSolver (typeName type-ref1))
+            referred-type2 (typeSolver (typeName type-ref2))]
+        ; unresolved types do not match
+        (and referred-type1 referred-type2
+          (= (typeSolver (typeName type-ref1)) (typeSolver (typeName type-ref2))))))
     (type-exact-match? (baseType type-ref1) (baseType type-ref2))))
 
 (defn param-match-type? [pair]

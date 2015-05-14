@@ -14,21 +14,24 @@
 
   (array? [this])
   (primitive? [this])
+  ; class, interface and enum are reference-type
+  (reference-type? [this])
   (typeName [this])
   (baseType [this]))
 
-(defrecord RTypeRef [array primitive type-name base-type]
+(defrecord RTypeRef [array primitive reference-type type-name base-type]
   TypeRef
   (array? [this] array)
   (primitive? [this] primitive)
+  (reference-type? [this] reference-type)
   (typeName [this] type-name)
   (baseType [this] base-type))
 
 (defn make-array-type-ref [type-ref]
-  (RTypeRef. true false nil type-ref))
+  (RTypeRef. true false false nil type-ref))
 
-(defn make-declared-type-ref [qname]
-  (RTypeRef. false false qname nil))
+(defn make-reference-type-ref [qname]
+  (RTypeRef. false false true qname nil))
 
 (defprotocol TypeDecl
   "Defiinition of a type (a Class, an Interface or an Enum)"

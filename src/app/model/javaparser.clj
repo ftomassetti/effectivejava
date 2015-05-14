@@ -59,13 +59,25 @@
   (primitive? [this] true)
   (typeName [this] (.toLowerCase (.name (.getType this)))))
 
+(defn reference-type-base-type
+  "Generate a TypeRef corresponding to the base type of this. It expects an array"
+  [this array-dims]
+  (if (= 0 array-dims)
+    (make-reference-type-ref (typeName this))
+    (make-array-type-ref (reference-type-base-type this (dec array-dims)))))
+
 (extend-protocol TypeRef
   com.github.javaparser.ast.type.ReferenceType
   (primitive? [this] false)
+  (array? [this] (> (.getArrayCount this) 0))
+  (reference-type? [this] (not (array? this)))
   (typeName [this]
     (when (nil? (.getType this))
       (throw (IllegalStateException. "No getType for the ReferenceType")))
-    (typeName (.getType this))))
+    (typeName (.getType this)))
+  (baseType [this]
+    (when (array? this)
+      (reference-type-base-type this (.getArrayCount this)))))
 
 (extend-protocol TypeRef
   com.github.javaparser.ast.type.ClassOrInterfaceType
