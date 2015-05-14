@@ -67,7 +67,7 @@
    (for [cu cus]
      (allClasses cu))))
 
-(defn cusTuples "Get tuples of [filename cu]" [dirname]
+(defn- cusTuples "Get tuples of [filename cu]" [dirname]
   (filter not-nil? (parseDirByName dirname)))
 
 (defn cus [dirname]
