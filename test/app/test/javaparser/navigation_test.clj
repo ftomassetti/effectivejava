@@ -3,6 +3,7 @@
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
   (:use [app.javaparser.navigation])
+  (:use [app.javaparser.parsing])
   (:use [app.test.helper])
   (:use [clojure.test]))
 
@@ -79,9 +80,18 @@
 ; cus
 ; ============================================
 
+(deftest test-cus
+  (let [commentsCus (cus "test-resources/sample-codebases/javaparser/japa/parser/ast/comments")]
+    (is (= 6 (count commentsCus)))))
+
 ; ============================================
 ; getConstructors
 ; ============================================
+
+(deftest test-getConstructors
+  (let [blockCommentFile (parseFileByName "test-resources/sample-codebases/javaparser/japa/parser/ast/comments/BlockComment.java")
+        blockComment (first (allClasses blockCommentFile))]
+    (is (= 3 (count (getConstructors blockComment))))))
 
 ; ============================================
 ; allConstructorsForCus
