@@ -1,0 +1,31 @@
+class TopClass {
+
+  interface Intf1 {
+  
+    enum Enum1 {
+    
+    }
+    
+    interface Intf2 {
+    
+    }
+  
+  }
+  
+  class Class2 {
+  
+    class Class3 {
+    
+      class Class4 {
+      
+      }
+      
+      enum Enum2 {
+      
+      }
+    
+    }
+  
+  }
+
+}

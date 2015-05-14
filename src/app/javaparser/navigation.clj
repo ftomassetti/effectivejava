@@ -28,15 +28,15 @@
   (if (nil? cu) []
       (.getTypes cu)))
 
-(defn directlyAnnidatedTypes [t]
+(defn- directlyAnnidatedTypes [t]
   (filter (fn [m] (instance? TypeDeclaration m)) (.getMembers t)))
 
-(defn annidatedTypes
+(defn- annidatedTypes
   "Get the types annidated in the given type, recursively"
   [t]
   (flatten
    (map
-    (fn [dat] [dat, (directlyAnnidatedTypes dat)])
+    (fn [dat] [dat, (annidatedTypes dat)])
     (directlyAnnidatedTypes t))))
 
 (defn allTypes
@@ -47,14 +47,18 @@
     (fn [t] [t, (annidatedTypes t)])
     (topLevelTypes cu))))
 
-(defn allClasses [cu]
+(defn allClasses 
+  "All non-anonymous classes defined in the CU, including annidated types at all levels"
+  [cu]
   (filter isClass? (allTypes cu)))
 
 (defn allInterfaces [cu]
-  (filter isInterface? (.getTypes cu)))
+  "All non-anonymous interfaces defined in the CU, including annidated types at all levels"
+  (filter isInterface? (allTypes cu)))
 
 (defn allEnums [cu]
-  (filter isEnum? (.getTypes cu)))
+  "All non-anonymous enums defined in the CU, including annidated types at all levels"
+  (filter isEnum? (allTypes cu)))
 
 (defn allClassesForCus [cus]
   (flatten
