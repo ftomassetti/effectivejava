@@ -96,3 +96,7 @@
 ; ============================================
 ; allConstructorsForCus
 ; ============================================
+
+(deftest test-allConstructorsForCus
+  (let [blockCommentFile (parseFileByName "test-resources/sample-codebases/javaparser/japa/parser/ast/comments/BlockComment.java")]
+    (is (= 3 (count (allConstructorsForCus [blockCommentFile]))))))
