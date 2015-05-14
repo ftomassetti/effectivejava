@@ -66,3 +66,38 @@
     (is (primitive? foo2-base-base-base))
     (is (not (reference-type? foo2-base-base-base)))
     (is (= "int" (typeName foo2-base-base-base)))))
+
+(deftest test-RefType-array-reference
+  (let [cu (parseResource "RefTypes")
+        c (first (topLevelTypes cu))
+        foo3 (.getType (.get (.getMembers c) 2))
+        foo3-base (baseType foo3)
+        foo4 (.getType (.get (.getMembers c) 3))
+        foo4-base (baseType foo4)
+        foo4-base-base (baseType foo4-base)
+        foo4-base-base-base (baseType foo4-base-base)]
+    (is (array? foo3))
+    (is (not (primitive? foo3)))
+    (is (not (reference-type? foo3)))
+
+    (is (not (array? foo3-base)))
+    (is (not (primitive? foo3-base)))
+    (is (reference-type? foo3-base))
+    (is (= "A" (typeName foo3-base)))
+
+    (is (array? foo4))
+    (is (not (primitive? foo4)))
+    (is (not (reference-type? foo4)))
+
+    (is (array? foo4-base))
+    (is (not (primitive? foo4-base)))
+    (is (not (reference-type? foo4-base)))
+
+    (is (array? foo4-base-base))
+    (is (not (primitive? foo4-base-base)))
+    (is (not (reference-type? foo4-base-base)))
+
+    (is (not (array? foo4-base-base-base)))
+    (is (not (primitive? foo4-base-base-base)))
+    (is (reference-type? foo4-base-base-base))
+    (is (= "A" (typeName foo4-base-base-base)))))
