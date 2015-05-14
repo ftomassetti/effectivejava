@@ -61,10 +61,10 @@
 
 (defn reference-type-base-type
   "Generate a TypeRef corresponding to the base type of this. It expects an array"
-  [this array-dims]
+  [this array-dims context]
   (if (= 0 array-dims)
-    (make-reference-type-ref (typeName this))
-    (make-array-type-ref (reference-type-base-type this (dec array-dims)))))
+    (make-reference-type-ref (typeName this) context)
+    (make-array-type-ref (reference-type-base-type this (dec array-dims) context))))
 
 (extend-protocol TypeRef
   com.github.javaparser.ast.type.ReferenceType
@@ -77,7 +77,8 @@
     (typeName (.getType this)))
   (baseType [this]
     (when (array? this)
-      (reference-type-base-type this (.getArrayCount this)))))
+      (reference-type-base-type this (.getArrayCount this) this)))
+  (context [this] this))
 
 (extend-protocol TypeRef
   com.github.javaparser.ast.type.ClassOrInterfaceType

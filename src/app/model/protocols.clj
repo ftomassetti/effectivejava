@@ -17,21 +17,26 @@
   ; class, interface and enum are reference-type
   (reference-type? [this])
   (typeName [this])
-  (baseType [this]))
+  (baseType [this])
+  ; represent the position of the reference, it is used when solving symbols
+  ; because a reference to a class A could be related to different classes depending on the position
+  ; of the reference
+  (context [this]))
 
-(defrecord RTypeRef [array primitive reference-type type-name base-type]
+(defrecord RTypeRef [array primitive reference-type type-name base-type context]
   TypeRef
   (array? [this] array)
   (primitive? [this] primitive)
   (reference-type? [this] reference-type)
   (typeName [this] type-name)
-  (baseType [this] base-type))
+  (baseType [this] base-type)
+  (context [this] context))
 
 (defn make-array-type-ref [type-ref]
-  (RTypeRef. true false false nil type-ref))
+  (RTypeRef. true false false nil type-ref (context type-ref)))
 
-(defn make-reference-type-ref [qname]
-  (RTypeRef. false false true qname nil))
+(defn make-reference-type-ref [qname context]
+  (RTypeRef. false false true qname nil context))
 
 (defprotocol TypeDecl
   "Defiinition of a type (a Class, an Interface or an Enum)"

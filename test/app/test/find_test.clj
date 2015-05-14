@@ -19,5 +19,5 @@
 
 (deftest find-methods-by-signature-on-equals
   (binding [typeSolver (jreTypeSolver)]
-    (let [res (find-methods-by-signature javaparser-cus "equals" [(make-reference-type-ref "java.lang.Object")])]
+    (let [res (find-methods-by-signature javaparser-cus "equals" [(make-reference-type-ref "java.lang.Object" nil)])]
       (is (= 2 (count res))))))
