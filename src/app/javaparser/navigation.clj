@@ -63,9 +63,7 @@
 (defn allClassesForCus 
   "Get all classes, at all levels of annidation for all the given compilation units"
   [cus]
-  (flatten
-   (for [cu cus]
-     (allClasses cu))))
+  (flatten (map allClasses cus)))
 
 (defn- cusTuples "Get tuples of [filename cu]" [dirname]
   (filter not-nil? (parseDirByName dirname)))
