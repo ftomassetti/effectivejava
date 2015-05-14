@@ -60,7 +60,9 @@
   "All non-anonymous enums defined in the CU, including annidated types at all levels"
   (filter isEnum? (allTypes cu)))
 
-(defn allClassesForCus [cus]
+(defn allClassesForCus 
+  "Get all classes, at all levels of annidation for all the given compilation units"
+  [cus]
   (flatten
    (for [cu cus]
      (allClasses cu))))

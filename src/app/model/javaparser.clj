@@ -213,10 +213,12 @@
   (getQName [this]
     (let
      [pn (packageName this),
-      cn (getName this)]
+      cn (getName this)
+      parent (.getParentNode this)
+      prefix (if (instance? TypeDeclaration parent) (str (getQName parent) ".") "")]
       (if (.isEmpty pn)
-        cn
-        (str pn "." cn)))))
+        (str prefix cn)
+        (str prefix pn "." cn)))))
 
 (extend-protocol Named
   EnumConstantDeclaration
