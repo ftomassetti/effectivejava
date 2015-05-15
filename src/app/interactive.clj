@@ -1,10 +1,10 @@
 (ns app.interactive
-  (:use [app.model.protocols])
-  (:use [app.model.javaparser])
-  (:use [app.javaparser.navigation])
-  (:use [app.operations])
-  (:use [app.itemsOnLifecycle])
-  (:use [app.utils])
+  (:use [app.model.protocols]
+        [app.model.javaparser]
+        [app.javaparser.navigation]
+        [app.operations]
+        [app.itemsOnLifecycle]
+        [app.utils])
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation]))
 
