@@ -1,7 +1,13 @@
 (ns app.test.interactive
   (:use [app.interactive]
+        [app.javaparser.navigation]
+        [app.operations]
+        [app.itemsOnLifecycle]
         [conjure.core]
         [clojure.test]))
+
+(def javaparser-cus-path
+  "test-resources/sample-codebases/javaparser/")
 
 (defn- command-sequence->input-str [command-sequence]
   (clojure.string/join "\r" command-sequence))
@@ -35,3 +41,19 @@
                (verify-call-times-for println 2)
                (verify-first-call-args-for println
                                            no-classes-loaded-error)))))
+
+(deftest can-execute-mc-operation
+  (let [javaparser-cus {:cus (take 2 (cus javaparser-cus-path))}
+        mc-op-threshold 3
+        command-sequence [(str "mc th " mc-op-threshold) "quit"]
+        input-string (command-sequence->input-str command-sequence)]
+    (with-in-str
+      input-string
+      (mocking [println print flush printOperation]
+               (interactive javaparser-cus)
+               (verify-call-times-for printOperation 1)
+               (verify-first-call-args-for
+                 printOperation
+                 classesWithManyConstructorsOp
+                 (:cus javaparser-cus)
+                 mc-op-threshold)))))
