@@ -163,7 +163,11 @@
   ; TODO consider imports
   (solveClass [this context nameToSolve]
     (let [typesInCu (topLevelTypes this)
-          compatibleTypes (filter (fn [t] (= nameToSolve (getName t))) typesInCu)]
-      (or (first compatibleTypes) 
+          ; match types in cu using their simple name
+          compatibleTypes (filter (fn [t] (= nameToSolve (getName t))) typesInCu)
+          ; match types in cu using their qualified name
+          compatibleTypes' (filter (fn [t] (= nameToSolve (getQName t))) typesInCu)]
+      (or (first compatibleTypes)
+          (first compatibleTypes')
           (solveImportedClass this nameToSolve)
           (solveClassInPackage (getClassPackage this) nameToSolve)))))
