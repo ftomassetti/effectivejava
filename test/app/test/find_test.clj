@@ -25,8 +25,15 @@
         type-qname-a (.getType (.get (.getMembers c) 2))
         type-array-qname-a (.getType (.get (.getMembers c) 3))]
     (binding [typeSolver (jreTypeSolver)]
+      ; first match types with themselves
+      (is (type-exact-match? type-a type-a))
+      (is (type-exact-match? type-qname-a type-qname-a))
+      (is (type-exact-match? type-array-a type-array-a))
+      (is (type-exact-match? type-array-qname-a type-array-qname-a))
+      ; then match the equivalent
       (is (type-exact-match? type-a type-qname-a))
       (is (type-exact-match? type-array-a type-array-qname-a))
+      ; then verify the others does not match
       (is (not (type-exact-match? type-a type-array-a))))))
 
 ; ============================================
