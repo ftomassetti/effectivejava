@@ -43,6 +43,10 @@
   "Solve classes part of the standard libraries. For now unfortunately it uses the standard library where this code is executed, not an arbitrary one"
   []
   (fn [name-to-solve]
+    (when (nil? name-to-solve)
+      (throw (IllegalArgumentException. "null name received")))
+    (when (not (instance? String name-to-solve))
+      (throw (IllegalArgumentException. (str "name received is not a string, it is" (class name-to-solve)))))
     (if (.startsWith name-to-solve "java.lang.")
       (solve-system-class name-to-solve)
       (if (simple-name? name-to-solve)
