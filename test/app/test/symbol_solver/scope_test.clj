@@ -109,3 +109,8 @@
     (binding [typeSolver (jreTypeSolver)]
       (is (= c (solveClass type-a nil "A")))
       (is (= c (solveClass type-qname-a nil "com.foo.A"))))))
+
+(deftest test-solveClass-in-java-lang
+  (binding [typeSolver (jreTypeSolver)]
+    (is (solveClass nil nil "Object"))
+    (is (solveClass nil nil "java.lang.Object"))))

@@ -133,7 +133,7 @@
               (first solvedSymbols''))))
         amongDeclaredFields)))
   (solveClass [this context nameToSolve]
-    (solveClass (getCu this) nil nameToSolve)))
+    (solveClass (.getParentNode this) nil nameToSolve)))
 
 (defn solve-among-parameters [method nameToSolve]
   (let [parameters (.getParameters method)
@@ -146,7 +146,7 @@
     (or (solve-among-parameters this nameToSolve)
       (solveSymbol (.getParentNode this) nil nameToSolve)))
   (solveClass [this context nameToSolve]
-    (solveSymbol (.getParentNode this) nil nameToSolve)))
+    (solveClass (.getParentNode this) nil nameToSolve)))
 
 (defn qNameToSimpleName [qualifiedName]
   (last (clojure.string/split qualifiedName #"\.")))
@@ -177,4 +177,6 @@
       (or (first compatibleTypes)
           (first compatibleTypes')
           (solveImportedClass this nameToSolve)
-          (solveClassInPackage (getClassPackage this) nameToSolve)))))
+          (solveClassInPackage (getClassPackage this) nameToSolve)
+          ; we solve in nil context: it means look for absolute names
+          (solveClass nil nil nameToSolve)))))

@@ -6,6 +6,7 @@
   (:use [app.javaparser.parsing])
   (:use [app.javaparser.navigation])
   (:use [app.symbol_solver.type_solver])
+  (:use [app.symbol_solver.scope])
   (:use [clojure.test])
   (:use [conjure.core])
   (:require [instaparse.core :as insta]))
@@ -36,6 +37,26 @@
       ; then verify the others does not match
       (is (not (type-exact-match? type-a type-array-a))))))
 
+; We try to debug why type-extac-match does not match
+;(deftest test-type-exact-match-on-equals-exploratory
+;  (binding [typeSolver (jreTypeSolver)]
+;    (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
+;          m1-p (first (.getParameters m1))
+;          expected-type (make-reference-type-ref "java.lang.Object" nil)
+;          paramType (.getType m1-p)
+;          solved-p (solveClass (context paramType) nil (typeName paramType))
+;          solved-exp (solveClass (context expected-type) nil (typeName expected-type))
+;          ctx (context paramType)
+;          ctx' (.getParentNode ctx)
+;          ctx'' (.getParentNode ctx')
+;          ctx''' (.getParentNode ctx'')]
+;      (println "CONTEXT  CLASS " (class ctx) " SOLVE " (solveClass ctx nil (typeName expected-type)))
+;      (println "CONTEXT  CLASS " (class ctx') " SOLVE " (solveClass ctx' nil (typeName expected-type)))
+;      (println "CONTEXT  CLASS " (class ctx'') " SOLVE " (solveClass ctx'' nil (typeName expected-type)))
+;      (println "CONTEXT  CLASS " (class ctx''') " SOLVE " (solveClass ctx''' nil (typeName expected-type)))
+;      (is solved-p)
+;      (is solved-exp))))
+
 (deftest test-type-exact-match-on-equals
   (binding [typeSolver (jreTypeSolver)]
     (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
@@ -65,10 +86,22 @@
     (is (= 2 (count res)))))
 
 ; ============================================
+; method-match-exactly-parameters?
+; ============================================
+
+(deftest test-method-match-exactly-parameters-on-equals
+  (binding [typeSolver (jreTypeSolver)]
+    (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
+          exp-types [(make-reference-type-ref "java.lang.Object" nil)]]
+      (is (method-match-exactly-parameters? exp-types m1)))))
+
+; ============================================
 ; find-methods-by-signature
 ; ============================================
 
+; should find one because the other method named equals has this signature:
+; public static boolean equals(final Node n1, final Node n2)
 (deftest test-find-methods-by-signature-on-equals
   (binding [typeSolver (jreTypeSolver)]
     (let [res (find-methods-by-signature javaparser-cus "equals" [(make-reference-type-ref "java.lang.Object" nil)])]
-      (is (= 2 (count res))))))
+      (is (= 1 (count res))))))
