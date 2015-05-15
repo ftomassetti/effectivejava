@@ -162,7 +162,8 @@
   [cu nameToSolve]
   (let [imports (.getImports cu)
         relevantImports (filter (partial isImportMatchingSimpleName? nameToSolve) imports)
-        correspondingClasses (map typeSolver relevantImports)]
+        importNames (map (fn [i] (.getName (.getName i))) imports)
+        correspondingClasses (map typeSolver importNames)]
     (first correspondingClasses)))
 
 (extend-protocol scope
