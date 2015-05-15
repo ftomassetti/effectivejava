@@ -17,7 +17,7 @@
 ; type-exact-match?
 ; ============================================
 
-(def test-type-exact-match
+(deftest test-type-exact-match
   (let [cu (parseResource "TypesToMatch")
         c (first (allTypes cu))
         type-a (.getType (.get (.getMembers c) 0))
@@ -37,10 +37,18 @@
       (is (not (type-exact-match? type-a type-array-a))))))
 
 ; ============================================
+; find-methods-by-name
+; ============================================
+
+(deftest test-find-methods-by-name
+  (let [res (find-methods-by-name javaparser-cus "equals")]
+    (is (= 2 (count res)))))
+
+; ============================================
 ; find-methods-by-signature
 ; ============================================
 
-(deftest find-methods-by-signature-on-equals
+(deftest test-find-methods-by-signature-on-equals
   (binding [typeSolver (jreTypeSolver)]
     (let [res (find-methods-by-signature javaparser-cus "equals" [(make-reference-type-ref "java.lang.Object" nil)])]
       (is (= 2 (count res))))))
