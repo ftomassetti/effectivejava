@@ -36,6 +36,26 @@
       ; then verify the others does not match
       (is (not (type-exact-match? type-a type-array-a))))))
 
+(deftest test-type-exact-match-on-equals
+  (binding [typeSolver (jreTypeSolver)]
+    (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
+          m1-p (first (.getParameters m1))
+          expected-type (make-reference-type-ref "java.lang.Object" nil)
+          paramType (.getType m1-p)]
+      (is (type-exact-match? paramType expected-type)))))
+
+; ============================================
+; param-match-type?
+; ============================================
+
+(deftest test-param-match-type-on-equals
+  (binding [typeSolver (jreTypeSolver)]
+    (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
+          m1-p (first (.getParameters m1))
+          expected-type (make-reference-type-ref "java.lang.Object" nil)
+          pair [m1-p expected-type]]
+      (is (param-match-type? pair)))))
+
 ; ============================================
 ; find-methods-by-name
 ; ============================================
