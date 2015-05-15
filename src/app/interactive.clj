@@ -33,6 +33,17 @@
 (def no-classes-loaded-error
   "No classes loaded. Use <load> first")
 
+(def help-message
+  (str
+   "h/help                             : print this help message \n"
+   "q/quit/exit                        : close the shell \n"
+   "list                               : list classes loaded \n"
+   "load DIR                           : load classes from DIR \n"
+   "mc/many-constructors th NUM        : list classes with NUM or more constructors \n"
+   "mcp/many-constructor-params th NUM : list constructors with NUM or more parameters \n"
+   "f/finalizers                       : list classes that use finalizers \n"
+   "st/singletons                      : list singletons"))
+
 (declare interactive)
 
 (defn- exit []
@@ -49,15 +60,8 @@
       (println no-classes-loaded-error))
     (interactive state)))
 
-(defn- help [state]
-  (println "h/help                             : print this help message")
-  (println "q/quit/exit                        : close the shell")
-  (println "list                               : list classes loaded")
-  (println "load DIR                           : load classes from DIR")
-  (println "mc/many-constructors th NUM        : list classes with NUM or more constructors")
-  (println "mcp/many-constructor-params th NUM : list constructors with NUM or more parameters")
-  (println "f/finalizers                       : list classes that use finalizers")
-  (println "st/singletons                      : list singletons")
+(defn- show-help [state]
+  (println help-message)
   (interactive state))
 
 (defn- load-classes [ast]
@@ -100,7 +104,7 @@
         (case command
           :EXIT (exit)
           :LIST (list-loaded-classes state)
-          :HELP (help state)
+          :HELP (show-help state)
           :LOAD (load-classes ast)
           :MC (let [threshold (read-string (last (last (first ast))))]
                 (mc-operation state threshold))
