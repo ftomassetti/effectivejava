@@ -68,7 +68,12 @@
   ; for example in a BlockStmt containing statements [a b c d e], when solving symbols in the context of c
   ; it will contains only statements preceeding it [a b]
   (solveSymbol [this context nameToSolve])
+  ; solveClass solve on a subset of the elements of solveSymbol
   (solveClass [this context nameToSolve]))
+
+(extend-protocol scope
+  nil
+  (solveClass [this context nameToSolve] (typeSolver nameToSolve)))
 
 (defn declare-symbol? [symbol-name symbols-declarator]
   (get (declared-symbols symbols-declarator) symbol-name))
@@ -139,7 +144,9 @@
   com.github.javaparser.ast.body.MethodDeclaration
   (solveSymbol [this context nameToSolve]
     (or (solve-among-parameters this nameToSolve)
-      (solveSymbol (.getParentNode this) nil nameToSolve))))
+      (solveSymbol (.getParentNode this) nil nameToSolve)))
+  (solveClass [this context nameToSolve]
+    (solveSymbol (.getParentNode this) nil nameToSolve)))
 
 (defn qNameToSimpleName [qualifiedName]
   (last (clojure.string/split qualifiedName #"\.")))

@@ -6,6 +6,7 @@
   (:use [app.operations])
   (:use [app.itemsOnLifecycle])
   (:use [app.symbol_solver.type_solver])
+  (:use [app.symbol_solver.scope])
   (:use [app.utils])
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation]))
@@ -29,11 +30,11 @@
         (or
           (not (reference-type? type-ref1))
           (not (reference-type? type-ref2))
-          (let [referred-type1 (typeSolver (typeName type-ref1))
-                referred-type2 (typeSolver (typeName type-ref2))]
+          (let [referred-type1 (solveClass (context type-ref1) nil (typeName type-ref1))
+                referred-type2 (solveClass (context type-ref2) nil (typeName type-ref2))]
             ; unresolved types do not match
             (and referred-type1 referred-type2
-              (= (typeSolver (typeName type-ref1)) (typeSolver (typeName type-ref2))))))
+              (= referred-type1 referred-type2))))
         (or
           (and (nil? (baseType type-ref1)) (nil? (baseType type-ref2)))
           (and
