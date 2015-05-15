@@ -16,7 +16,6 @@
         vd (first (getVariableDeclarators aClassResolvingToLocalVar))]
     (is (solveAmongVariableDeclarator "i" vd))))
 
-
 (deftest testSolveNameInBlock
   (let [aClassResolvingToLocalVar (sampleClass "AClassResolvingToLocalVar")
         bs (first (getBlockStmts aClassResolvingToLocalVar))]
