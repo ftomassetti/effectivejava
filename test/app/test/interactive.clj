@@ -3,6 +3,9 @@
         [conjure.core]
         [clojure.test]))
 
+(defn- command-sequence->input-str [command-sequence]
+  (clojure.string/join "\r" command-sequence))
+
 (deftest can-quit
   (let [input-command "quit\r"]
     (with-in-str
@@ -14,7 +17,7 @@
 
 (deftest shows-help
   (let [command-sequence ["help" "quit"]
-        input-string (clojure.string/join "\r" command-sequence)]
+        input-string (command-sequence->input-str command-sequence)]
     (with-in-str
       input-string
       (mocking [println print flush]
@@ -24,7 +27,7 @@
 
 (deftest list-shows-error-if-no-classes-loaded
   (let [command-sequence ["list" "quit"]
-        input-string (clojure.string/join "\r" command-sequence)]
+        input-string (command-sequence->input-str command-sequence)]
     (with-in-str
       input-string
       (mocking [println print flush]
