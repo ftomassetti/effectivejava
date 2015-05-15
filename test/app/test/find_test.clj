@@ -3,6 +3,7 @@
   (:use [app.test.helper])
   (:use [app.find])
   (:use [app.model.protocols])
+  (:use [app.model.javaparser])
   (:use [app.javaparser.parsing])
   (:use [app.javaparser.navigation])
   (:use [app.symbol_solver.type_solver])
@@ -37,29 +38,9 @@
       ; then verify the others does not match
       (is (not (type-exact-match? type-a type-array-a))))))
 
-; We try to debug why type-extac-match does not match
-;(deftest test-type-exact-match-on-equals-exploratory
-;  (binding [typeSolver (jreTypeSolver)]
-;    (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
-;          m1-p (first (.getParameters m1))
-;          expected-type (make-reference-type-ref "java.lang.Object" nil)
-;          paramType (.getType m1-p)
-;          solved-p (solveClass (context paramType) nil (typeName paramType))
-;          solved-exp (solveClass (context expected-type) nil (typeName expected-type))
-;          ctx (context paramType)
-;          ctx' (.getParentNode ctx)
-;          ctx'' (.getParentNode ctx')
-;          ctx''' (.getParentNode ctx'')]
-;      (println "CONTEXT  CLASS " (class ctx) " SOLVE " (solveClass ctx nil (typeName expected-type)))
-;      (println "CONTEXT  CLASS " (class ctx') " SOLVE " (solveClass ctx' nil (typeName expected-type)))
-;      (println "CONTEXT  CLASS " (class ctx'') " SOLVE " (solveClass ctx'' nil (typeName expected-type)))
-;      (println "CONTEXT  CLASS " (class ctx''') " SOLVE " (solveClass ctx''' nil (typeName expected-type)))
-;      (is solved-p)
-;      (is solved-exp))))
-
 (deftest test-type-exact-match-on-equals
   (binding [typeSolver (jreTypeSolver)]
-    (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
+    (let [m1 (first (find-methods-by-qname javaparser-cus "japa.parser.ast.Node.equals"))
           m1-p (first (.getParameters m1))
           expected-type (make-reference-type-ref "java.lang.Object" nil)
           paramType (.getType m1-p)]
@@ -71,7 +52,7 @@
 
 (deftest test-param-match-type-on-equals
   (binding [typeSolver (jreTypeSolver)]
-    (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
+    (let [m1 (first (find-methods-by-qname javaparser-cus "japa.parser.ast.Node.equals"))
           m1-p (first (.getParameters m1))
           expected-type (make-reference-type-ref "java.lang.Object" nil)
           pair [m1-p expected-type]]
@@ -91,7 +72,7 @@
 
 (deftest test-method-match-exactly-parameters-on-equals
   (binding [typeSolver (jreTypeSolver)]
-    (let [m1 (first (find-methods-by-name javaparser-cus "equals"))
+    (let [m1 (first (find-methods-by-qname javaparser-cus "japa.parser.ast.Node.equals"))
           exp-types [(make-reference-type-ref "java.lang.Object" nil)]]
       (is (method-match-exactly-parameters? exp-types m1)))))
 

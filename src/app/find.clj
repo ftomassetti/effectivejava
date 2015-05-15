@@ -62,6 +62,14 @@
          methods (filter (fn [m] (= name (.getName m))) all-methods)]
     methods))
 
+(defn find-methods-by-qname
+  "Find all the methods in the given CUs which has the given QName name (e.g., japa.parser.ast.Node.equals)"
+  [cus name]
+  (let [ all-types (flatten (map allTypes cus))
+         all-methods (flatten (map getMethods all-types))
+         methods (filter (fn [m] (= name (getQName m))) all-methods)]
+    methods))
+
 (defn find-methods-by-signature
   "Find all the methods in the given CUs which has the given name and have parameter types exactly equals to the one given"
   [cus name param-types]
