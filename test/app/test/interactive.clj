@@ -53,7 +53,7 @@
                (interactive javaparser-cus)
                (verify-call-times-for printOperation 1)
                (verify-first-call-args-for
-                 printOperation
-                 classesWithManyConstructorsOp
-                 (:cus javaparser-cus)
-                 mc-op-threshold)))))
+                printOperation
+                classesWithManyConstructorsOp
+                (:cus javaparser-cus)
+                mc-op-threshold)))))
