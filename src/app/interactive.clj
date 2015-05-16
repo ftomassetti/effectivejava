@@ -13,19 +13,20 @@
 ; ============================================
 
 (def commands-grammar
-  (str
-   "<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F | ST   \n"
-   "HELP = 'help' | 'h'                                         \n"
-   "EXIT = 'exit' | 'quit' | 'q'                                \n"
-   "LOAD = 'load' <WS> STR                                      \n"
-   "LIST = 'list'                                               \n"
-   "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM         \n"
-   "MCP = ('mcp'|'many-costructor-params') <WS> 'th' <WS> NUM   \n"
-   "F = ('f'|'finalizers')                                      \n"
-   "ST = ('st'|'singletons')                                    \n"
-   "WS  = #'[\t ]+'                                             \n"
-   "NUM = #'[0-9]+'                                             \n"
-   "STR = #'\"[^\"]*\"'                                         \n"))
+  (clojure.string/join
+   "\n"
+   ["<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F | ST"
+    "HELP = 'help' | 'h'"
+    "EXIT = 'exit' | 'quit' | 'q'"
+    "LOAD = 'load' <WS> STR"
+    "LIST = 'list'"
+    "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM"
+    "MCP = ('mcp'|'many-costructor-params') <WS> 'th' <WS> NUM"
+    "F = ('f'|'finalizers')"
+    "ST = ('st'|'singletons')"
+    "WS  = #'[\t ]+'"
+    "NUM = #'[0-9]+'"
+    "STR = #'\"[^\"]*\"'"]))
 
 (def command-parser
   (insta/parser commands-grammar))
@@ -34,15 +35,16 @@
   "No classes loaded. Use <load> first")
 
 (def help-message
-  (str
-   "h/help                             : print this help message \n"
-   "q/quit/exit                        : close the shell \n"
-   "list                               : list classes loaded \n"
-   "load DIR                           : load classes from DIR \n"
-   "mc/many-constructors th NUM        : list classes with NUM or more constructors \n"
-   "mcp/many-constructor-params th NUM : list constructors with NUM or more parameters \n"
-   "f/finalizers                       : list classes that use finalizers \n"
-   "st/singletons                      : list singletons"))
+  (clojure.string/join
+   "\n"
+   ["h/help                             : print this help message"
+    "q/quit/exit                        : close the shell"
+    "list                               : list classes loaded"
+    "load DIR                           : load classes from DIR"
+    "mc/many-constructors th NUM        : list classes with NUM or more constructors"
+    "mcp/many-constructor-params th NUM : list constructors with NUM or more parameters"
+    "f/finalizers                       : list classes that use finalizers"
+    "st/singletons                      : list singletons"]))
 
 (declare interactive)
 
