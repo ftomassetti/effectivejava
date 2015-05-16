@@ -43,6 +43,9 @@
                                            no-classes-loaded-error)))))
 
 (deftest can-execute-mc-operation
+  ;; In this test we want to check whether the printOperation function of the
+  ;; app.operations namespace is called with the correct parameters.
+  ;; For this reason, we can use any compilation units and any threshold.
   (let [javaparser-cus {:cus (take 2 (cus javaparser-cus-path))}
         mc-op-threshold 3
         command-sequence [(str "mc th " mc-op-threshold) "quit"]
