@@ -126,4 +126,4 @@ Hope you enjoy this small project of mine. Feel free to open issues and ask ques
 Contributors
 ============
 
-Thanks to [David Ortiz](https://github.com/davidor) who fixed bugs, set up Travis and it is contributing many other improvements.
+[David Ortiz](https://github.com/davidor) is a regular contributor: he started fixing bugs, setting up Travis and it is contributing many other improvements.
