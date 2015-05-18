@@ -91,3 +91,18 @@
                  classesAndSingletonTypeOp
                  (:cus javaparser-cus)
                  nil)))))
+
+(deftest can-execute-f-operation
+  (let [javaparser-cus {:cus (take 2 (cus javaparser-cus-path))}
+        command-sequence ["f" "quit"]
+        input-string (command-sequence->input-str command-sequence)]
+    (with-in-str
+      input-string
+      (mocking [println print flush printOperation]
+               (interactive javaparser-cus)
+               (verify-call-times-for printOperation 1)
+               (verify-first-call-args-for
+                 printOperation
+                 finalizersOp
+                 (:cus javaparser-cus)
+                 nil)))))
