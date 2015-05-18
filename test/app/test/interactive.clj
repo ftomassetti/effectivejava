@@ -64,7 +64,7 @@
                (interactive javaparser-cus)
                (verify-call-times-for printOperation 1)
                (verify-first-call-args-for
-                 printOperation operation (:cus javaparser-cus) threshold)))))
+                printOperation operation (:cus javaparser-cus) threshold)))))
 
 (deftest can-execute-mc-operation
   (test-operation "mc" classesWithManyConstructorsOp 2))
