@@ -1,10 +1,10 @@
 (ns app.interactive
-  (:use [app.model.protocols])
-  (:use [app.model.javaparser])
-  (:use [app.javaparser.navigation])
-  (:use [app.operations])
-  (:use [app.itemsOnLifecycle])
-  (:use [app.utils])
+  (:use [app.model.protocols]
+        [app.model.javaparser]
+        [app.javaparser.navigation]
+        [app.operations]
+        [app.itemsOnLifecycle]
+        [app.utils])
   (:require [instaparse.core :as insta])
   (:import [app.operations Operation]))
 
@@ -13,25 +13,38 @@
 ; ============================================
 
 (def commands-grammar
-  (str
-   "<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F | ST   \n"
-   "HELP = 'help' | 'h'                                         \n"
-   "EXIT = 'exit' | 'quit' | 'q'                                \n"
-   "LOAD = 'load' <WS> STR                                      \n"
-   "LIST = 'list'                                               \n"
-   "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM         \n"
-   "MCP = ('mcp'|'many-costructor-params') <WS> 'th' <WS> NUM   \n"
-   "F = ('f'|'finalizers')                                      \n"
-   "ST = ('st'|'singletons')                                    \n"
-   "WS  = #'[\t ]+'                                             \n"
-   "NUM = #'[0-9]+'                                             \n"
-   "STR = #'\"[^\"]*\"'                                         \n"))
+  (clojure.string/join
+   "\n"
+   ["<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F | ST"
+    "HELP = 'help' | 'h'"
+    "EXIT = 'exit' | 'quit' | 'q'"
+    "LOAD = 'load' <WS> STR"
+    "LIST = 'list'"
+    "MC  = ('mc'|'many-constructors') <WS> 'th' <WS> NUM"
+    "MCP = ('mcp'|'many-costructor-params') <WS> 'th' <WS> NUM"
+    "F = ('f'|'finalizers')"
+    "ST = ('st'|'singletons')"
+    "WS  = #'[\t ]+'"
+    "NUM = #'[0-9]+'"
+    "STR = #'\"[^\"]*\"'"]))
 
 (def command-parser
   (insta/parser commands-grammar))
 
 (def no-classes-loaded-error
   "No classes loaded. Use <load> first")
+
+(def help-message
+  (clojure.string/join
+   "\n"
+   ["h/help                             : print this help message"
+    "q/quit/exit                        : close the shell"
+    "list                               : list classes loaded"
+    "load DIR                           : load classes from DIR"
+    "mc/many-constructors th NUM        : list classes with NUM or more constructors"
+    "mcp/many-constructor-params th NUM : list constructors with NUM or more parameters"
+    "f/finalizers                       : list classes that use finalizers"
+    "st/singletons                      : list singletons"]))
 
 (declare interactive)
 
@@ -49,15 +62,8 @@
       (println no-classes-loaded-error))
     (interactive state)))
 
-(defn- help [state]
-  (println "h/help                             : print this help message")
-  (println "q/quit/exit                        : close the shell")
-  (println "list                               : list classes loaded")
-  (println "load DIR                           : load classes from DIR")
-  (println "mc/many-constructors th NUM        : list classes with NUM or more constructors")
-  (println "mcp/many-constructor-params th NUM : list constructors with NUM or more parameters")
-  (println "f/finalizers                       : list classes that use finalizers")
-  (println "st/singletons                      : list singletons")
+(defn- show-help [state]
+  (println help-message)
   (interactive state))
 
 (defn- load-classes [ast]
@@ -100,7 +106,7 @@
         (case command
           :EXIT (exit)
           :LIST (list-loaded-classes state)
-          :HELP (help state)
+          :HELP (show-help state)
           :LOAD (load-classes ast)
           :MC (let [threshold (read-string (last (last (first ast))))]
                 (mc-operation state threshold))
