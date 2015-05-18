@@ -19,7 +19,7 @@
       (mocking [println print flush]
                (interactive [])
                (verify-call-times-for println 1)
-               (verify-first-call-args-for println "Exit...")))))
+               (verify-first-call-args-for println exit-message)))))
 
 (deftest shows-help
   (let [command-sequence ["help" "quit"]

@@ -46,10 +46,13 @@
     "f/finalizers                       : list classes that use finalizers"
     "st/singletons                      : list singletons"]))
 
+(def exit-message
+  "Exit...")
+
 (declare interactive)
 
 (defn- exit []
-  (println "Exit..."))
+  (println exit-message))
 
 (defn- list-loaded-classes [state]
   (let [loadedCus (:cus state)]
