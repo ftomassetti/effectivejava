@@ -51,7 +51,7 @@
 ;; the operations that require one).
 
 ;; All the operations can be tested in the same way.
-(defn- test-operation [op-command operation threshold]
+(defn- test-operation [op-command operation & [threshold]]
   (let [javaparser-cus {:cus (take 2 (cus javaparser-cus-path))}
         first-command (if threshold
                         (str op-command " th " threshold)
@@ -73,7 +73,7 @@
   (test-operation "mcp" constructorsWithManyParametersOp 3))
 
 (deftest can-execute-f-operation
-  (test-operation "f" finalizersOp nil))
+  (test-operation "f" finalizersOp))
 
 (deftest can-execute-st-operation
-  (test-operation "st" classesAndSingletonTypeOp nil))
+  (test-operation "st" classesAndSingletonTypeOp))
