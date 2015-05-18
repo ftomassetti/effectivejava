@@ -49,6 +49,12 @@
 (def exit-message
   "Exit...")
 
+(def operation-commands
+  {:MC classesWithManyConstructorsOp
+   :MCP constructorsWithManyParametersOp
+   :F finalizersOp
+   :ST classesAndSingletonTypeOp})
+
 (declare interactive)
 
 (defn- exit []
@@ -77,24 +83,12 @@
       (println "Java files loaded:" (count loadedCus))
       (interactive {:cus loadedCus}))))
 
-(defn- mc-operation [state threshold]
-  (printOperation classesWithManyConstructorsOp (:cus state) threshold)
-  (interactive state))
-
-(defn- mcp-operation [state threshold]
-  (printOperation constructorsWithManyParametersOp (:cus state) threshold)
-  (interactive state))
-
-(defn- f-operation [state]
-  (printOperation finalizersOp (:cus state) nil)
-  (interactive state))
-
-(defn- st-operation [state]
-  (printOperation classesAndSingletonTypeOp (:cus state) nil)
-  (interactive state))
-
 (defn- command-not-implemented [command state]
   (println "Command not implemented: " command)
+  (interactive state))
+
+(defn- operation [op-command state & [threshold]]
+  (printOperation (op-command operation-commands) (:cus state) threshold)
   (interactive state))
 
 (defn- process [state input]
@@ -112,11 +106,11 @@
           :HELP (show-help state)
           :LOAD (load-classes ast)
           :MC (let [threshold (read-string (last (last (first ast))))]
-                (mc-operation state threshold))
+                (operation :MC state threshold))
           :MCP (let [threshold (read-string (last (last (first ast))))]
-                 (mcp-operation state threshold))
-          :F (f-operation state)
-          :ST (st-operation state)
+                 (operation :MCP state threshold))
+          :F (operation :F state)
+          :ST (operation :ST state)
           (command-not-implemented command state))))))
 
 (defn interactive [state]
