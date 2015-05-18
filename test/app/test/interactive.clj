@@ -42,10 +42,15 @@
                (verify-first-call-args-for println
                                            no-classes-loaded-error)))))
 
+
+;; The next four tests check that the operations that can
+;; be used from the interactive mode (mc, mcp, etc.) work as expected.
+;; We are interested in checking whether the printOperation function of the
+;; app.operations namespace is called with the correct parameters.
+;; For this reason, we can use any compilation units and any threshold (for
+;; the operations that require one).
+
 (deftest can-execute-mc-operation
-  ;; In this test we want to check whether the printOperation function of the
-  ;; app.operations namespace is called with the correct parameters.
-  ;; For this reason, we can use any compilation units and any threshold.
   (let [javaparser-cus {:cus (take 2 (cus javaparser-cus-path))}
         mc-op-threshold 3
         command-sequence [(str "mc th " mc-op-threshold) "quit"]
