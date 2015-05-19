@@ -19,7 +19,7 @@
       (mocking [println print flush]
                (interactive [])
                (verify-call-times-for println 1)
-               (verify-first-call-args-for println "Exit...")))))
+               (verify-first-call-args-for println exit-message)))))
 
 (deftest shows-help
   (let [command-sequence ["help" "quit"]
@@ -42,13 +42,21 @@
                (verify-first-call-args-for println
                                            no-classes-loaded-error)))))
 
-(deftest can-execute-mc-operation
-  ;; In this test we want to check whether the printOperation function of the
-  ;; app.operations namespace is called with the correct parameters.
-  ;; For this reason, we can use any compilation units and any threshold.
+
+;; The next four tests check that the operations that can
+;; be used from the interactive mode (mc, mcp, etc.) work as expected.
+;; We are interested in checking whether the printOperation function of the
+;; app.operations namespace is called with the correct parameters.
+;; For this reason, we can use any compilation units and any threshold (for
+;; the operations that require one).
+
+;; All the operations can be tested in the same way.
+(defn- test-operation [op-command operation & [threshold]]
   (let [javaparser-cus {:cus (take 2 (cus javaparser-cus-path))}
-        mc-op-threshold 3
-        command-sequence [(str "mc th " mc-op-threshold) "quit"]
+        first-command (if threshold
+                        (str op-command " th " threshold)
+                        (str op-command))
+        command-sequence [first-command "quit"]
         input-string (command-sequence->input-str command-sequence)]
     (with-in-str
       input-string
@@ -56,7 +64,16 @@
                (interactive javaparser-cus)
                (verify-call-times-for printOperation 1)
                (verify-first-call-args-for
-                printOperation
-                classesWithManyConstructorsOp
-                (:cus javaparser-cus)
-                mc-op-threshold)))))
+                printOperation operation (:cus javaparser-cus) threshold)))))
+
+(deftest can-execute-mc-operation
+  (test-operation "mc" classesWithManyConstructorsOp 2))
+
+(deftest can-execute-mcp-operation
+  (test-operation "mcp" constructorsWithManyParametersOp 3))
+
+(deftest can-execute-f-operation
+  (test-operation "f" finalizersOp))
+
+(deftest can-execute-st-operation
+  (test-operation "st" classesAndSingletonTypeOp))
