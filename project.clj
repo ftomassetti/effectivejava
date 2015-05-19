@@ -1,7 +1,7 @@
 (defproject effectivejava "0.2.0-SNAPSHOT"
   :description "A Java linter and a tool for running queries on your Java codebase"
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [com.github.javaparser/javaparser-core "2.0.0"]
+                 [com.github.javaparser/javaparser-core "2.1.0"]
                  [org.clojure/tools.cli "0.3.1"]
                  [instaparse "1.3.6"]
                  [org.javassist/javassist "3.19.0-GA"]
