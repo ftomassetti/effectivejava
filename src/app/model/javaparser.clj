@@ -1,4 +1,5 @@
 (ns app.model.javaparser
+  (:import [clojure.lang Named])
   (:use [app.utils])
   (:use [app.model.protocols])
   (:use [app.javaparser.parsing])
@@ -290,6 +291,11 @@
   SingleFieldDeclaration
   (getName [this]
     (getName (.getId (.variable this)))))
+
+(extend-protocol Named
+  com.github.javaparser.ast.type.ClassOrInterfaceType
+  (getName [this]
+    (.getName this)))
 
 ; ============================================
 ; Accessing nodes

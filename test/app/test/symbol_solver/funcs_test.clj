@@ -114,3 +114,19 @@
           _ (assert importStmt)
           importedType (solveImportStmt importStmt)]
       (is importedType))))
+
+; ============================================
+; solveSuperclass
+; ============================================
+
+(deftest testSolveSuperclassSimpleCase
+  (binding [typeSolver (typeSolverOnJar javaparser2)]
+    (let [scA (sampleClass "SC_A")
+          _ (assert scA)
+          scB (sampleClass "SC_B")
+          _ (assert scB)
+          scC (sampleClass "SC_C")
+          _ (assert scC)]
+      (is (= scB (solveSuperclass scA)))
+      (is (= scC (solveSuperclass scB)))
+      (is (nil? (solveSuperclass scC))))))

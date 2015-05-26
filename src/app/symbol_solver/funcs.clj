@@ -15,3 +15,8 @@
 (defn solveImportStmt [importStmt]
   (let [name (importQName importStmt)]
     (solveClass (getCu importStmt) nil name)))
+
+(defn solveSuperclass [classDecl]
+  (let [superclass (first (.getExtends classDecl))]
+    (when superclass
+      (solveClass classDecl nil (getName superclass)))))
