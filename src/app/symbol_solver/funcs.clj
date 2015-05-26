@@ -16,7 +16,17 @@
   (let [name (importQName importStmt)]
     (solveClass (getCu importStmt) nil name)))
 
-(defn solveSuperclass [classDecl]
+(defn solveSuperclass
+  "Return the definition of the superclass if the class has a superclass and if can be solved"
+  [classDecl]
   (let [superclass (first (.getExtends classDecl))]
     (when superclass
       (solveClass classDecl nil (getName superclass)))))
+
+(defn getAllSuperclasses
+  "Get all the superclasses of the given class declaration (recursively)"
+  [classDecl]
+  (let [directSuperclass (solveSuperclass classDecl)]
+    (if directSuperclass
+      (into [directSuperclass] (getAllSuperclasses directSuperclass))
+      [])))
