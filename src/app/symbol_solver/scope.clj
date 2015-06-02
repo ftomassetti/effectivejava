@@ -3,7 +3,6 @@
   (:use [app.model.javaparser])
   (:use [app.javaparser.navigation])
   (:use [app.operations])
-  (:use [app.itemsOnLifecycle])
   (:use [app.utils])
   (:use [app.symbol_solver.type_solver])
   (:require [instaparse.core :as insta])

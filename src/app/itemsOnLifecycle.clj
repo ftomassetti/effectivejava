@@ -4,6 +4,8 @@
   (:use [app.operations])
   (:use [app.utils])
   (:use [app.javaparser.navigation])
+  (:use [app.symbol_solver.funcs])
+  (:use [app.symbol_solver.type_solver])
   (:import [app.operations Operation]))
 
 ; ============================================
@@ -118,10 +120,10 @@
 ; ITEM 4
 ; ============================================
 
-(defn isUtilClass? 
+(defn isUtilClass?
   [cl]
   (let [ms (getMethods cl)]
-    (and 
+    (and
      (pos? (count ms))
      (every? isStatic? ms))))
 
@@ -190,3 +192,32 @@
    classes-using-finalizers
    []
    [:class]))
+
+; ============================================
+; ITEM 10
+; ============================================
+
+(defn overrides-toString? [class]
+  (->> (getMethods class)
+       (filter #(= (getName %) "toString"))
+       (filter #(empty? (getParameters %)))
+       (count)
+       (= 1)))
+
+(defn hierarchy-overrides-toString? [type-solver-classes class]
+  (binding [typeSolver (typeSolverOnList type-solver-classes)]
+    (->> (conj (getAllSuperclasses class) class)
+         (some overrides-toString?)
+         (true?))))
+
+(defn classes-that-do-not-override-toString [params]
+  (let [classes (flatten (map allClasses (:cus params)))]
+    (map #(vec (list % nil))
+         (filter #(complement (hierarchy-overrides-toString? classes %))
+                 classes))))
+
+(def toStringOp
+  (Operation.
+    classes-that-do-not-override-toString
+    []
+    [:class]))

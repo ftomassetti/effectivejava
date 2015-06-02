@@ -27,7 +27,9 @@
    (Check. utilsClassesOp {:onlyIncorrect true}
            "This is a utils class and it should have exactly one private constructor taking no params")
    (Check. finalizersOp {}
-           "This class calls finalize(). Finalizers are considered to be unpredictable and often dangerous.")])
+           "This class calls finalize(). Finalizers are considered to be unpredictable and often dangerous.")
+   (Check. toStringOp {}
+           "This class and its superclasses do not override toString().")])
 
 (defn replaceParamsInMessage [message result]
   (clojure.string/replace message "#1#" (toString (nth result 1))))

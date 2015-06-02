@@ -3,11 +3,14 @@
   (:use [app.test.helper])
   (:use [app.itemsOnLifecycle])
   (:use [app.interactive])
+  (:use [app.javaparser.navigation])
   (:use [clojure.test])
   (:use [conjure.core])
   (:require [instaparse.core :as insta]))
 
 (load "helper")
+
+(def sampleClassesItem10Test (cus "test-resources/sample-codebases/samples/test_item10"))
 
 ; ============================================
 ; usageError
@@ -147,6 +150,30 @@
 (deftest testClassWithCallToFinalizeWithParams
   (let [cl (parseType "ClassWithCallToFinalizeWithParams")]
     (is (false? (calls-finalizers? cl)))))
+
+(deftest testClassThatOverridesToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassThatOverridesToString")
+                          type-solver-classes))]
+    (is (hierarchy-overrides-toString? type-solver-classes cl))))
+
+(deftest testClassWhoseParentsOverrideToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString")
+                          type-solver-classes))]
+    (is (hierarchy-overrides-toString? type-solver-classes cl))))
+
+(deftest testClassThatDeclaresToStringWithParams
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassThatDeclaresToStringWithParams")
+                          type-solver-classes))]
+    (is (false? (hierarchy-overrides-toString? type-solver-classes cl)))))
+
+(deftest testClassThatDoesNotOverrideToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassThatDoesNotOverrideToString")
+                          type-solver-classes))]
+    (is (false? (hierarchy-overrides-toString? type-solver-classes cl)))))
 
 ; =============================================================
 ; Command parser
