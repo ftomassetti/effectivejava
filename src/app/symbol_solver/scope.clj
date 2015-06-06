@@ -93,8 +93,8 @@
 
 (defn solveClassInPackage [pakage nameToSolve]
   {:pre [typeSolver]}
-  ; TODO first look into the package
-  (typeSolver nameToSolve))
+  (let [qualified-name (if pakage (str (packageName pakage) "." nameToSolve) nameToSolve)]
+    (typeSolver qualified-name)))
 
 (defn solveAmongVariableDeclarator
   [nameToSolve variableDeclarator]
