@@ -159,22 +159,6 @@
                           type-solver-classes))]
     (is (hierarchy-overrides-toString? type-solver-classes cl))))
 
-(deftest test-getAllSuperclasses-depth-0
-  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
-        cl (first (filter #(= (.getName %) "ParentClassThatOverridesToString") type-solver-classes))]
-    (binding [typeSolver (typeSolverOnList type-solver-classes)]
-      (let [superclasses (getAllSuperclasses cl)]
-        (is (= 0 (count superclasses)))))))
-
-
-(deftest test-getAllSuperclasses-depth-1
-  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
-        cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString") type-solver-classes))]
-    (binding [typeSolver (typeSolverOnList type-solver-classes)]
-      (let [superclasses (getAllSuperclasses cl)]
-        (is (= 1 (count superclasses)))))))
-
-
 (deftest testClassWhoseParentsOverrideToString
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
         cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString")
@@ -192,6 +176,21 @@
         cl (first (filter #(= (.getName %) "ClassThatDoesNotOverrideToString")
                           type-solver-classes))]
     (is (false? (hierarchy-overrides-toString? type-solver-classes cl)))))
+
+(deftest test-getAllSuperclasses-depth-0
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ParentClassThatOverridesToString") type-solver-classes))]
+    (binding [typeSolver (typeSolverOnList type-solver-classes)]
+      (let [superclasses (getAllSuperclasses cl)]
+        (is (= 0 (count superclasses)))))))
+
+
+(deftest test-getAllSuperclasses-depth-1
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString") type-solver-classes))]
+    (binding [typeSolver (typeSolverOnList type-solver-classes)]
+      (let [superclasses (getAllSuperclasses cl)]
+        (is (= 1 (count superclasses)))))))
 
 ; =============================================================
 ; Command parser
