@@ -157,37 +157,48 @@
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
         cl (first (filter #(= (.getName %) "ClassThatOverridesToString")
                           type-solver-classes))]
-    (is (hierarchy-overrides-toString? type-solver-classes cl))))
+    (is (false? (does-not-override-toString-but-should?
+                 type-solver-classes cl)))))
 
 (deftest testClassWhoseParentsOverrideToString
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
         cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString")
                           type-solver-classes))]
-    (is (hierarchy-overrides-toString? type-solver-classes cl))))
+    (is (false? (does-not-override-toString-but-should?
+                 type-solver-classes cl)))))
 
 (deftest testClassThatDeclaresToStringWithParams
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
-        cl (first (filter #(= (.getName %) "ClassThatDeclaresToStringWithParams")
-                          type-solver-classes))]
-    (is (false? (hierarchy-overrides-toString? type-solver-classes cl)))))
+        cl (first (filter
+                   #(= (.getName %) "ClassThatDeclaresToStringWithParams")
+                   type-solver-classes))]
+    (is (does-not-override-toString-but-should? type-solver-classes cl))))
 
 (deftest testClassThatDoesNotOverrideToString
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
         cl (first (filter #(= (.getName %) "ClassThatDoesNotOverrideToString")
                           type-solver-classes))]
-    (is (false? (hierarchy-overrides-toString? type-solver-classes cl)))))
+    (is (does-not-override-toString-but-should? type-solver-classes cl))))
+
+(deftest testUtilClassThatDoesNotOverrideToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "UtilsClassDoesNotOverrideToString")
+                          type-solver-classes))]
+    (is (false? (does-not-override-toString-but-should?
+                 type-solver-classes cl)))))
 
 (deftest test-getAllSuperclasses-depth-0
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
-        cl (first (filter #(= (.getName %) "ParentClassThatOverridesToString") type-solver-classes))]
+        cl (first (filter #(= (.getName %) "ParentClassThatOverridesToString")
+                          type-solver-classes))]
     (binding [typeSolver (typeSolverOnList type-solver-classes)]
       (let [superclasses (getAllSuperclasses cl)]
         (is (= 0 (count superclasses)))))))
 
-
 (deftest test-getAllSuperclasses-depth-1
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
-        cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString") type-solver-classes))]
+        cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString")
+                          type-solver-classes))]
     (binding [typeSolver (typeSolverOnList type-solver-classes)]
       (let [superclasses (getAllSuperclasses cl)]
         (is (= 1 (count superclasses)))))))

@@ -197,27 +197,37 @@
 ; ITEM 10
 ; ============================================
 
-(defn overrides-toString? [class]
+(defn- overrides-toString? [class]
   (->> (getMethods class)
        (filter #(= (getName %) "toString"))
        (filter #(empty? (getParameters %)))
        (count)
        (= 1)))
 
-(defn hierarchy-overrides-toString? [type-solver-classes class]
+(defn- hierarchy-overrides-toString? [type-solver-classes class]
   (binding [typeSolver (typeSolverOnList type-solver-classes)]
     (->> (conj (getAllSuperclasses class) class)
          (some overrides-toString?)
          (true?))))
 
-(defn classes-that-do-not-override-toString [params]
+(defn does-not-override-toString-but-should? [classes class]
+  (and (not (hierarchy-overrides-toString? classes class))
+       (not (isUtilClass? class))))
+
+(defn classes-that-do-not-override-toString-but-should
+  "Item10 of Effective Java recommends that all classes should override
+   toString or one of its parents in the class hierarchy should. There is
+   one exception: util classes, because they do not have any parameters.
+   This method returns all the classes that are not util classes and that
+   do not override toString (and neither do their parent classes)."
+  [params]
   (let [classes (flatten (map allClasses (:cus params)))]
     (map #(vec (list % nil))
-         (filter #(complement (hierarchy-overrides-toString? classes %))
+         (filter #(does-not-override-toString-but-should? classes %)
                  classes))))
 
 (def toStringOp
   (Operation.
-    classes-that-do-not-override-toString
-    []
-    [:class]))
+   classes-that-do-not-override-toString-but-should
+   []
+   [:class]))
