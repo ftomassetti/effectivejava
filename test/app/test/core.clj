@@ -98,7 +98,7 @@
            (verify-first-call-args-for exit-error!)))
 
 ; ============================================
-; Other FIXME organize!
+; Item 3 - Singletons
 ; ============================================
 
 (deftest testIsPublicFieldSingletonPositive
@@ -137,6 +137,10 @@
   (let [cl (parseType "NotSingletonEnum_NotOnlyInstance")]
     (is (not (isSingletonEnum? cl)))))
 
+; ============================================
+; Item 7 - Avoid finalizers
+; ============================================
+
 (deftest testClassCallsFinalizer
   (let [cl (parseType "ClassWithFinalizers")]
     (is (true? (calls-finalizers? cl)))))
@@ -152,6 +156,10 @@
 (deftest testClassWithCallToFinalizeWithParams
   (let [cl (parseType "ClassWithCallToFinalizeWithParams")]
     (is (false? (calls-finalizers? cl)))))
+
+; ============================================
+; Item 10 - Override toString()
+; ============================================
 
 (deftest testClassThatOverridesToString
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
@@ -187,6 +195,10 @@
     (is (false? (does-not-override-toString-but-should?
                  type-solver-classes cl)))))
 
+; ============================================
+; Type solver gets superclasses correctly
+; ============================================
+
 (deftest test-getAllSuperclasses-depth-0
   (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
         cl (first (filter #(= (.getName %) "ParentClassThatOverridesToString")
@@ -203,9 +215,9 @@
       (let [superclasses (getAllSuperclasses cl)]
         (is (= 1 (count superclasses)))))))
 
-; =============================================================
+; ============================================
 ; Command parser
-; =============================================================
+; ============================================
 
 (deftest testUnknown
   (is (insta/failure? (command-parser "a not valid command"))))
