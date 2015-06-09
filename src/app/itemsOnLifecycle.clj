@@ -215,7 +215,7 @@
        (not (isUtilClass? class))))
 
 (defn classes-that-do-not-override-toString-but-should
-  "Item10 of Effective Java recommends that all classes should override
+  "Item 10 of Effective Java recommends that all classes should override
    toString or one of its parents in the class hierarchy should. There is
    one exception: util classes, because they do not have any parameters.
    This method returns all the classes that are not util classes and that
