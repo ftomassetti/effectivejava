@@ -195,6 +195,13 @@
     (is (false? (does-not-override-toString-but-should?
                  type-solver-classes cl)))))
 
+(deftest abstractClassDoesNotNeedToOverrideToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "AbstractClassDoesNotOverrideToString")
+                          type-solver-classes))]
+    (is (false? (does-not-override-toString-but-should?
+                 type-solver-classes cl)))))
+
 ; ============================================
 ; Type solver gets superclasses correctly
 ; ============================================
