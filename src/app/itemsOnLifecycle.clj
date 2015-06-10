@@ -212,7 +212,8 @@
 
 (defn does-not-override-toString-but-should? [classes class]
   (and (not (hierarchy-overrides-toString? classes class))
-       (not (isUtilClass? class))))
+       (not (isUtilClass? class))
+       (not (isAbstract? class))))
 
 (defn classes-that-do-not-override-toString-but-should
   "Item 10 of Effective Java recommends that all classes should override
