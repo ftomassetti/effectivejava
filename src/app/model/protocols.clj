@@ -81,7 +81,8 @@
   (isPublic? [this])
   (isProtected? [this])
   (isStatic? [this])
-  (isFinal? [this]))
+  (isFinal? [this])
+  (isAbstract? [this]))
 
 (defn hasPackageLevelAccess? [withModifiers]
   (not

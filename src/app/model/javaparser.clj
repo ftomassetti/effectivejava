@@ -140,7 +140,9 @@
   (isStatic? [this]
     (ModifierSet/isStatic (.getModifiers this)))
   (isFinal? [this]
-    (ModifierSet/isFinal (.getModifiers this))))
+    (ModifierSet/isFinal (.getModifiers this)))
+  (isAbstract? [this]
+    (ModifierSet/isAbstract (.getModifiers this))))
 
 (extend-protocol WithModifiers
   ConstructorDeclaration
