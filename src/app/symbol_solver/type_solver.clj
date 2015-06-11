@@ -2,7 +2,6 @@
   (:use [app.model.protocols])
   (:use [app.model.javaparser])
   (:use [app.operations])
-  (:use [app.itemsOnLifecycle])
   (:use [app.jarloading])
   (:use [app.utils])
   (:require [instaparse.core :as insta])

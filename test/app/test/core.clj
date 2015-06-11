@@ -3,11 +3,16 @@
   (:use [app.test.helper])
   (:use [app.itemsOnLifecycle])
   (:use [app.interactive])
+  (:use [app.javaparser.navigation])
   (:use [clojure.test])
   (:use [conjure.core])
+  (:use [app.symbol_solver.funcs])
+  (:use [app.symbol_solver.type_solver])
   (:require [instaparse.core :as insta]))
 
 (load "helper")
+
+(def sampleClassesItem10Test (cus "test-resources/sample-codebases/samples/test_item10"))
 
 ; ============================================
 ; usageError
@@ -93,7 +98,7 @@
            (verify-first-call-args-for exit-error!)))
 
 ; ============================================
-; Other FIXME organize!
+; Item 3 - Singletons
 ; ============================================
 
 (deftest testIsPublicFieldSingletonPositive
@@ -132,6 +137,10 @@
   (let [cl (parseType "NotSingletonEnum_NotOnlyInstance")]
     (is (not (isSingletonEnum? cl)))))
 
+; ============================================
+; Item 7 - Avoid finalizers
+; ============================================
+
 (deftest testClassCallsFinalizer
   (let [cl (parseType "ClassWithFinalizers")]
     (is (true? (calls-finalizers? cl)))))
@@ -148,9 +157,74 @@
   (let [cl (parseType "ClassWithCallToFinalizeWithParams")]
     (is (false? (calls-finalizers? cl)))))
 
-; =============================================================
+; ============================================
+; Item 10 - Override toString()
+; ============================================
+
+(deftest testClassThatOverridesToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassThatOverridesToString")
+                          type-solver-classes))]
+    (is (false? (does-not-override-toString-but-should?
+                 type-solver-classes cl)))))
+
+(deftest testClassWhoseParentsOverrideToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString")
+                          type-solver-classes))]
+    (is (false? (does-not-override-toString-but-should?
+                 type-solver-classes cl)))))
+
+(deftest testClassThatDeclaresToStringWithParams
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter
+                   #(= (.getName %) "ClassThatDeclaresToStringWithParams")
+                   type-solver-classes))]
+    (is (does-not-override-toString-but-should? type-solver-classes cl))))
+
+(deftest testClassThatDoesNotOverrideToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassThatDoesNotOverrideToString")
+                          type-solver-classes))]
+    (is (does-not-override-toString-but-should? type-solver-classes cl))))
+
+(deftest testUtilClassThatDoesNotOverrideToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "UtilsClassDoesNotOverrideToString")
+                          type-solver-classes))]
+    (is (false? (does-not-override-toString-but-should?
+                 type-solver-classes cl)))))
+
+(deftest abstractClassDoesNotNeedToOverrideToString
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "AbstractClassDoesNotOverrideToString")
+                          type-solver-classes))]
+    (is (false? (does-not-override-toString-but-should?
+                 type-solver-classes cl)))))
+
+; ============================================
+; Type solver gets superclasses correctly
+; ============================================
+
+(deftest test-getAllSuperclasses-depth-0
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ParentClassThatOverridesToString")
+                          type-solver-classes))]
+    (binding [typeSolver (typeSolverOnList type-solver-classes)]
+      (let [superclasses (getAllSuperclasses cl)]
+        (is (= 0 (count superclasses)))))))
+
+(deftest test-getAllSuperclasses-depth-1
+  (let [type-solver-classes (flatten (map allTypes sampleClassesItem10Test))
+        cl (first (filter #(= (.getName %) "ClassWhoseParentOverridesToString")
+                          type-solver-classes))]
+    (binding [typeSolver (typeSolverOnList type-solver-classes)]
+      (let [superclasses (getAllSuperclasses cl)]
+        (is (= 1 (count superclasses)))))))
+
+; ============================================
 ; Command parser
-; =============================================================
+; ============================================
 
 (deftest testUnknown
   (is (insta/failure? (command-parser "a not valid command"))))

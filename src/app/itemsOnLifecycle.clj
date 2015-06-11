@@ -4,6 +4,8 @@
   (:use [app.operations])
   (:use [app.utils])
   (:use [app.javaparser.navigation])
+  (:use [app.symbol_solver.funcs])
+  (:use [app.symbol_solver.type_solver])
   (:import [app.operations Operation]))
 
 ; ============================================
@@ -118,10 +120,10 @@
 ; ITEM 4
 ; ============================================
 
-(defn isUtilClass? 
+(defn isUtilClass?
   [cl]
   (let [ms (getMethods cl)]
-    (and 
+    (and
      (pos? (count ms))
      (every? isStatic? ms))))
 
@@ -188,5 +190,45 @@
 (def finalizersOp
   (Operation.
    classes-using-finalizers
+   []
+   [:class]))
+
+; ============================================
+; ITEM 10
+; ============================================
+
+(defn- overrides-toString? [class]
+  (->> (getMethods class)
+       (filter #(= (getName %) "toString"))
+       (filter #(empty? (getParameters %)))
+       (count)
+       (= 1)))
+
+(defn- hierarchy-overrides-toString? [type-solver-classes class]
+  (binding [typeSolver (typeSolverOnList type-solver-classes)]
+    (->> (conj (getAllSuperclasses class) class)
+         (some overrides-toString?)
+         (true?))))
+
+(defn does-not-override-toString-but-should? [classes class]
+  (and (not (hierarchy-overrides-toString? classes class))
+       (not (isUtilClass? class))
+       (not (isAbstract? class))))
+
+(defn classes-that-do-not-override-toString-but-should
+  "Item 10 of Effective Java recommends that all classes should override
+   toString or one of its parents in the class hierarchy should. There is
+   one exception: util classes, because they do not have any parameters.
+   This method returns all the classes that are not util classes and that
+   do not override toString (and neither do their parent classes)."
+  [params]
+  (let [classes (flatten (map allClasses (:cus params)))]
+    (map #(vec (list % nil))
+         (filter #(does-not-override-toString-but-should? classes %)
+                 classes))))
+
+(def toStringOp
+  (Operation.
+   classes-that-do-not-override-toString-but-should
    []
    [:class]))

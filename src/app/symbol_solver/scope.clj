@@ -3,7 +3,6 @@
   (:use [app.model.javaparser])
   (:use [app.javaparser.navigation])
   (:use [app.operations])
-  (:use [app.itemsOnLifecycle])
   (:use [app.utils])
   (:use [app.symbol_solver.type_solver])
   (:require [instaparse.core :as insta])
@@ -94,8 +93,8 @@
 
 (defn solveClassInPackage [pakage nameToSolve]
   {:pre [typeSolver]}
-  ; TODO first look into the package
-  (typeSolver nameToSolve))
+  (let [qualified-name (if pakage (str (packageName pakage) "." nameToSolve) nameToSolve)]
+    (typeSolver qualified-name)))
 
 (defn solveAmongVariableDeclarator
   [nameToSolve variableDeclarator]
