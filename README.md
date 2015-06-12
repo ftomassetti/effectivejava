@@ -90,9 +90,9 @@ Effective Java (the book) items implemented
 
 | Item   | Status  |
 | ------  |---------|
-| Item 1  | TODO |
+| Item 1  | Done |
 | item 2  | TODO |
-| item 3  | TODO |
+| item 3  | Done |
 | item 4  | Done |
 | item 5  | TODO |
 | item 6  | TODO |
@@ -100,7 +100,8 @@ Effective Java (the book) items implemented
 | item 8  | Planned for v0.2 |
 | item 9  | Planned for v0.2 |
 | item 10  | Done | 
-| item 2  | TODO |
+| item 11  | TODO |
+| ...item 78 | TODO |
 
 Dev info
 ========
