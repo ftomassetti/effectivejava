@@ -85,6 +85,23 @@ I am just getting started so I implemented only a few queries for now:
 * _st=singleton type_: find if a type implements the singleton pattern and distinguish between the three types (public field, static factory, singleton enum)
 * _u=utils classes_: find classes having only static methods and verify they have exactly one private constructor taking no parameters
 
+Effective Java (the book) items implemented
+===========================================
+
+| Item   | Status  |
+| ------  |---------|
+| Item 1  | TODO |
+| item 2  | TODO |
+| item 3  | TODO |
+| item 4  | Done |
+| item 5  | TODO |
+| item 6  | TODO |
+| item 7  | Done |
+| item 8  | Planned for v0.2 |
+| item 9  | Planned for v0.2 |
+| item 10  | Done | 
+| item 2  | TODO |
+
 Dev info
 ========
 The project is written in Clojure using a java library called [JavaParser](https://github.com/javaparser/javaparser).
