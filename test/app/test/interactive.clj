@@ -77,3 +77,6 @@
 
 (deftest can-execute-st-operation
   (test-operation "st" classesAndSingletonTypeOp))
+
+(deftest can-execute-ts-operation
+  (test-operation "ts" toStringOp))
