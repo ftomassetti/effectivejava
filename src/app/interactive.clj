@@ -15,7 +15,7 @@
 (def commands-grammar
   (clojure.string/join
    "\n"
-   ["<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F | ST"
+   ["<COMMAND> = HELP | EXIT | LOAD | LIST | MC | MCP | F | ST | TS"
     "HELP = 'help' | 'h'"
     "EXIT = 'exit' | 'quit' | 'q'"
     "LOAD = 'load' <WS> STR"
@@ -24,6 +24,7 @@
     "MCP = ('mcp'|'many-costructor-params') <WS> 'th' <WS> NUM"
     "F = ('f'|'finalizers')"
     "ST = ('st'|'singletons')"
+    "TS = ('ts'|'toString')"
     "WS  = #'[\t ]+'"
     "NUM = #'[0-9]+'"
     "STR = #'\"[^\"]*\"'"]))
@@ -44,7 +45,8 @@
     "mc/many-constructors th NUM        : list classes with NUM or more constructors"
     "mcp/many-constructor-params th NUM : list constructors with NUM or more parameters"
     "f/finalizers                       : list classes that use finalizers"
-    "st/singletons                      : list singletons"]))
+    "st/singletons                      : list singletons"
+    "ts/toString                        : list classes that do not override toString()"]))
 
 (def exit-message
   "Exit...")
@@ -53,7 +55,8 @@
   {:MC classesWithManyConstructorsOp
    :MCP constructorsWithManyParametersOp
    :F finalizersOp
-   :ST classesAndSingletonTypeOp})
+   :ST classesAndSingletonTypeOp
+   :TS toStringOp})
 
 (declare interactive)
 
@@ -111,6 +114,7 @@
                  (operation :MCP state threshold))
           :F (operation :F state)
           :ST (operation :ST state)
+          :TS (operation :TS state)
           (command-not-implemented command state))))))
 
 (defn interactive [state]

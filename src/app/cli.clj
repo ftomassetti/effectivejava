@@ -16,7 +16,7 @@
               ["-i" "--interactive" "launch interactive mode" :flag true :default false]
               ["-l" "--linter" "launch linter mode" :flag true :default false]
               ["-d" "--dir DIRNAME" "directory containing the code to check (default current dir)" :default "."]
-              ["-q" "--query QUERYNAME" "REQUIRED: Query to perform: mc=many constructors, mcp=many constructor parameters, st=singleton type, u=utils classes"]
+              ["-q" "--query QUERYNAME" "REQUIRED: Query to perform: mc=many constructors, mcp=many constructor parameters, st=singleton type, ts=overrides toString()?, u=utils classes"]
               ["-t" "--threshold VALUE" "Threshold to be used in the query" :default 0
                :parse-fn #(Integer/parseInt %)
                :validate [#(>= % 0) "Must be a number equal or greater to 0"]]])
@@ -26,6 +26,7 @@
    :mc classesWithManyConstructorsOp
    :mcp constructorsWithManyParametersOp
    :st classesAndSingletonTypeOp
+   :ts toStringOp
    :u utilsClassesOp})
 
 (defn run [opts]
