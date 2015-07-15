@@ -1,6 +1,6 @@
 (ns effectivejava.test.interactive
   (:use [effectivejava.interactive]
-        [effectivejava.javaparser.navigation]
+        [effectivejava.javaparser.facade]
         [effectivejava.operations]
         [effectivejava.itemsOnLifecycle]
         [conjure.core]

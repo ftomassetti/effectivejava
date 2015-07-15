@@ -4,7 +4,7 @@
   (:use [effectivejava.itemsOnLifecycle])
   (:use [effectivejava.model.protocols])
   (:use [effectivejava.model.javaparser])
-  (:use [effectivejava.javaparser.navigation])
+  (:use [effectivejava.javaparser.facade])
   (:use [clojure.test])
   (:use [effectivejava.test.helper])
   (:require [instaparse.core :as insta]))

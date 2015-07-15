@@ -3,7 +3,7 @@
   (:use [effectivejava.model.protocols])
   (:use [effectivejava.model.javaparser])
   (:use [effectivejava.model.reflection])
-  (:use [effectivejava.javaparser.navigation])
+  (:use [effectivejava.javaparser.facade])
   (:use [effectivejava.symbol_solver.type_solver])
   (:use [effectivejava.model.javassist])
   (:use [clojure.test]))

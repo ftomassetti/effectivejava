@@ -1,7 +1,7 @@
 (ns effectivejava.test.helper
   (:use [effectivejava.model.javaparser])
   (:use [clojure.test])
-  (:use [effectivejava.javaparser.parsing]))
+  (:use [effectivejava.javaparser.facade]))
 
 (defn readResource [filename]
   (let [resourceName (str "effectivejava/test/samples/" filename ".java.txt")

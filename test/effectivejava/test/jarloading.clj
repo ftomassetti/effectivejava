@@ -1,7 +1,7 @@
 (ns effectivejava.test.jarloading
   (:use [effectivejava.jarloading])
   (:use [effectivejava.model.javaparser])
-  (:use [effectivejava.javaparser.navigation])
+  (:use [effectivejava.javaparser.facade])
   (:use [clojure.test]))
 
 (def javaparser2 "test-resources/sample-jars/javaparser-core-2.0.0.jar")

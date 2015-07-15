@@ -2,8 +2,7 @@
   (:use [effectivejava.itemsOnLifecycle])
   (:use [effectivejava.model.protocols])
   (:use [effectivejava.model.javaparser])
-  (:use [effectivejava.javaparser.navigation])
-  (:use [effectivejava.javaparser.parsing])
+  (:use [effectivejava.javaparser.facade])
   (:use [effectivejava.test.helper])
   (:use [clojure.test]))
 

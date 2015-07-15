@@ -3,7 +3,7 @@
   (:use [effectivejava.test.helper])
   (:use [effectivejava.itemsOnLifecycle])
   (:use [effectivejava.interactive])
-  (:use [effectivejava.javaparser.navigation])
+  (:use [effectivejava.javaparser.facade])
   (:use [clojure.test])
   (:use [conjure.core])
   (:use [effectivejava.symbol_solver.funcs])
