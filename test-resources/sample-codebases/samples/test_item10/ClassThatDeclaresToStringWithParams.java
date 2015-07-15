@@ -1,4 +1,4 @@
-package app.test.samples;
+package effectivejava.test.samples;
 
 public class ClassThatDeclaresToStringWithParams {
 
