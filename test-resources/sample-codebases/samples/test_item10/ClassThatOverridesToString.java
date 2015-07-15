@@ -1,4 +1,4 @@
-package app.test.samples;
+package effectivejava.test.samples;
 
 public class ClassThatOverridesToString {
 
@@ -14,7 +14,7 @@ public class ClassThatOverridesToString {
 
     @Override
     public String toString() {
-        return "app.test.samples.ClassThatOverridesToString{" +
+        return "effectivejava.test.samples.ClassThatOverridesToString{" +
                 "a=" + a +
                 '}';
     }
