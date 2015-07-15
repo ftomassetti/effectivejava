@@ -6,7 +6,7 @@
   (:use [effectivejava.model.protocols])
   (:use [effectivejava.model.javaparser])
   (:use [effectivejava.itemsOnLifecycle])
-  (:use [effectivejava.javaparser.facade])
+  (:use [effectivejava.javaparser.navigation])
   (:use [effectivejava.operations])
   (:use [clojure.test]))
 
@@ -127,10 +127,10 @@
 (deftest run-invoke-the-right-stuff
   (let [opts {:dir "mydir", :threshold 43, :query :mcp}]
     (stubbing [cus '(:cu1 :cu2 :cu3)]
-              (mocking [println printOperation]
-                       (run opts)
-                       (verify-call-times-for println 1)
-                       (verify-call-times-for printOperation 1)
-                       (verify-first-call-args-for println "Considering" 3 "Java files")
-                       (verify-first-call-args-for printOperation constructorsWithManyParametersOp '(:cu1 :cu2 :cu3) 43)))))
+      (mocking [println printOperation]
+        (run opts)
+        (verify-call-times-for println 1)
+        (verify-call-times-for printOperation 1)
+        (verify-first-call-args-for println "Considering" 3 "Java files")
+        (verify-first-call-args-for printOperation constructorsWithManyParametersOp '(:cu1 :cu2 :cu3) 43)))))
 
