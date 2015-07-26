@@ -1,8 +1,7 @@
 (ns effectivejava.find ^{:author "Federico Tomassetti"
          :doc "This namespace contains methods to find elements in a collection of compilation units"}
-  (:use [effectivejava.model.protocols])
-  (:use [effectivejava.model.javaparser])
-  (:use [effectivejava.javaparser.navigation])
+  (:use [effectivejava.model.facade])
+  (:use [effectivejava.javaparser.facade])
   (:use [effectivejava.operations])
   (:use [effectivejava.itemsOnLifecycle])
   (:use [effectivejava.symbol_solver.type_solver])
