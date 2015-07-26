@@ -1,7 +1,6 @@
 (ns effectivejava.linter
-  (:use [effectivejava.model.protocols])
-  (:use [effectivejava.model.javaparser])
-  (:use [effectivejava.javaparser.navigation])
+  (:use [effectivejava.model.facade])
+  (:use [effectivejava.javaparser.facade])
   (:use [effectivejava.operations])
   (:use [effectivejava.itemsOnLifecycle])
   (:use [effectivejava.utils])

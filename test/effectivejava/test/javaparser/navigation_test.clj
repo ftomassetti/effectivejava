@@ -1,7 +1,6 @@
 (ns effectivejava.test.javaparser.navigation_test
   (:use [effectivejava.itemsOnLifecycle])
-  (:use [effectivejava.model.protocols])
-  (:use [effectivejava.model.javaparser])
+  (:use [effectivejava.model.facade])
   (:use [effectivejava.javaparser.facade])
   (:use [effectivejava.test.helper])
   (:use [clojure.test]))

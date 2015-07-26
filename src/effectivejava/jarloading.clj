@@ -1,6 +1,5 @@
 (ns effectivejava.jarloading
-  (:use [effectivejava.model.protocols])
-  (:use [effectivejava.model.javaparser])
+  (:use [effectivejava.model.facade])
   (:use [effectivejava.operations])
   (:use [effectivejava.utils])
   (:import [effectivejava.operations Operation]))

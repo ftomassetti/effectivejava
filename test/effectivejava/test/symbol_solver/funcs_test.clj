@@ -1,7 +1,6 @@
 (ns effectivejava.test.symbol_solver.funcs_test
   (:use [effectivejava.jarloading])
-  (:use [effectivejava.model.protocols])
-  (:use [effectivejava.model.javaparser])
+  (:use [effectivejava.model.facade])
   (:use [effectivejava.javaparser.facade])
   (:use [effectivejava.symbol_solver.funcs])
   (:use [effectivejava.symbol_solver.type_solver])

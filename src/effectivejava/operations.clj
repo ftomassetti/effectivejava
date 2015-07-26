@@ -1,6 +1,5 @@
 (ns effectivejava.operations
-  (:use [effectivejava.model.protocols])
-  (:use [effectivejava.model.javaparser]))
+  (:use [effectivejava.model.facade]))
 
 (import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration)
 (import com.github.javaparser.ast.body.ConstructorDeclaration)
