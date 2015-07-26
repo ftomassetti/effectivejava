@@ -1,6 +1,5 @@
 (ns effectivejava.symbol_solver.type_solver
-  (:use [effectivejava.model.protocols])
-  (:use [effectivejava.model.javaparser])
+  (:use [effectivejava.model.facade])
   (:use [effectivejava.operations])
   (:use [effectivejava.jarloading])
   (:use [effectivejava.utils])

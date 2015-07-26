@@ -313,14 +313,3 @@
 ; Misc
 ; ============================================
 
-(defn getCu [node]
-  (if (instance? com.github.javaparser.ast.CompilationUnit node)
-    node
-    (let [pn (.getParentNode node)]
-      (if pn
-        (getCu pn)
-        (throw (IllegalStateException. "The root is not a CU"))))))
-
-(defn getClassPackage [classDecl]
-  (let [cu (getCu classDecl)]
-    (.getPackage cu)))

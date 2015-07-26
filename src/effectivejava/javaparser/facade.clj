@@ -3,5 +3,5 @@
   (:import [effectivejava.javaparser.navigation])
   (:import [effectivejava.javaparser.parsing]))
 
-(import-vars [effectivejava.javaparser.navigation allTypes allClasses allInterfaces allEnums allClassesForCus cus topLevelTypes getConstructors allConstructorsForCus getMethodDeclaration getNameExprFor getImports getVariableDeclarators getBlockStmts])
+(import-vars [effectivejava.javaparser.navigation allTypes allClasses allInterfaces allEnums allClassesForCus cus topLevelTypes getConstructors allConstructorsForCus getMethodDeclaration getNameExprFor getImports getVariableDeclarators getBlockStmts getCu getClassPackage])
 (import-vars [effectivejava.javaparser.parsing parseFile parseString parseFileByName])

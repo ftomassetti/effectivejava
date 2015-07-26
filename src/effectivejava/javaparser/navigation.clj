@@ -1,6 +1,5 @@
 (ns effectivejava.javaparser.navigation
   (:use [effectivejava.utils])
-  (:use [effectivejava.model.protocols])
   (:use [effectivejava.javaparser.parsing]))
 
 (import com.github.javaparser.JavaParser)
@@ -22,6 +21,26 @@
 (import com.github.javaparser.ast.expr.VariableDeclarationExpr)
 (import com.github.javaparser.ast.body.VariableDeclarator)
 (import com.github.javaparser.ast.body.VariableDeclaratorId)
+
+
+(defn javaparser-is-class? [node]
+  (and
+    (instance? com.github.javaparser.ast.body.ClassOrInterfaceDeclaration node)
+    (not (.isInterface node))))
+
+(defn javaparser-is-interface? [node]
+  (and
+    (instance? com.github.javaparser.ast.body.ClassOrInterfaceDeclaration node)
+    (.isInterface node)))
+
+(defn javaparser-is-enum? [node]
+  (instance? EnumDeclaration node))
+
+(defn javaparser-is-private? [node]
+  (ModifierSet/isPrivate (.getModifiers node)))
+
+(defn javaparser-is-not-private? [node]
+  (complement javaparser-is-private?))
 
 ; ============================================
 ; Access type declarations
@@ -54,15 +73,15 @@
 (defn allClasses 
   "All non-anonymous classes defined in the CU, including annidated types at all levels"
   [cu]
-  (filter isClass? (allTypes cu)))
+  (filter javaparser-is-class? (allTypes cu)))
 
 (defn allInterfaces [cu]
   "All non-anonymous interfaces defined in the CU, including annidated types at all levels"
-  (filter isInterface? (allTypes cu)))
+  (filter javaparser-is-interface? (allTypes cu)))
 
 (defn allEnums [cu]
   "All non-anonymous enums defined in the CU, including annidated types at all levels"
-  (filter isEnum? (allTypes cu)))
+  (filter javaparser-is-enum? (allTypes cu)))
 
 (defn allClassesForCus 
   "Get all classes, at all levels of annidation for all the given compilation units"
@@ -92,7 +111,7 @@
      (getConstructors cl))))
 
 (defn getNotPrivateConstructors [cl]
-  (filter isNotPrivate? (getConstructors cl)))
+  (filter javaparser-is-not-private? (getConstructors cl)))
 
 (defn nConstructors [cl]
   (.size (getConstructors cl)))
@@ -173,3 +192,15 @@
 (defn getMethodDeclaration [root name]
   {:pre  [root]}
   (first (filter (fn [ne] (= name (.getName ne))) (getMethodDeclarations root))))
+
+(defn getCu [node]
+  (if (instance? com.github.javaparser.ast.CompilationUnit node)
+    node
+    (let [pn (.getParentNode node)]
+      (if pn
+        (getCu pn)
+        (throw (IllegalStateException. "The root is not a CU"))))))
+
+(defn getClassPackage [classDecl]
+  (let [cu (getCu classDecl)]
+    (.getPackage cu)))

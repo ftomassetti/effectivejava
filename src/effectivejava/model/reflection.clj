@@ -1,8 +1,7 @@
 (ns effectivejava.model.reflection
   (:use [effectivejava.utils])
   (:use [effectivejava.model.protocols])
-  (:use [effectivejava.javaparser.parsing])
-  (:use [effectivejava.javaparser.navigation]))
+  (:use [effectivejava.javaparser.facade]))
 
 ; Needed only for system classes
 

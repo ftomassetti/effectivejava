@@ -1,6 +1,5 @@
 (ns effectivejava.javaparser.parsing
-  (:use [effectivejava.utils])
-  (:use [effectivejava.model.protocols]))
+  (:use [effectivejava.utils]))
 
 (import com.github.javaparser.JavaParser)
 (import com.github.javaparser.ast.CompilationUnit)
