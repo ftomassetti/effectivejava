@@ -1,7 +1,7 @@
 (ns effectivejava.interactive
   (:use [effectivejava.model.protocols]
         [effectivejava.model.javaparser]
-        [effectivejava.javaparser.navigation]
+        [effectivejava.javaparser.facade]
         [effectivejava.operations]
         [effectivejava.itemsOnLifecycle]
         [effectivejava.utils])
